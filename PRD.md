@@ -42,7 +42,7 @@ Exemples : `/` → profil par défaut (`creatif`) · `/dev` → `developpeur` ·
 ## 4. Fonctionnalités
 
 ### 4.1 Front-end public
-- **Header** : navigation Accueil · Projets · Compétences · À propos · Contact, bouton d'action orienté conversion, menu mobile accessible. Réagit au défilement (voir `DESIGN.md`).
+- **Header** : navigation Accueil · Projets · Compétences · À propos · Contact, bouton d'action orienté conversion, menu mobile accessible. Réagit au défilement (voir `DESIGN.md`). Le nom et la ligne de métier viennent des réglages du site, pas du code.
 - **Hero piloté par le profil** : titre, sous-titre, accroche, deux boutons, visuel. Un appel à l'action visible sans défiler sur desktop.
 - **Projets sélectionnés** puis page `/projets` : grille filtrable par domaine, cartes avec grande image de couverture.
 - **Page projet** `/projets/[slug]` : étude de cas, liens (Canva, Figma, Drive, GitHub, démo), technologies, galerie avec lightbox, vidéo YouTube/Vimeo intégrée.
@@ -57,6 +57,7 @@ Exemples : `/` → profil par défaut (`creatif`) · `/dev` → `developpeur` ·
 - Projets : créer, modifier, masquer, supprimer, ordonner ; **téléverser** couverture et galerie.
 - **Médiathèque** (nouveau) : voir, réutiliser, supprimer les images téléversées.
 - **Profils** (nouveau) : formulaire du Hero, choix du template avec aperçu, sections (visibilité, ordre), projets affichés, variables, SEO, activation.
+- **Réglages du site** (nouveau) : nom affiché, ligne de métier, e-mail public, WhatsApp, réseaux.
 - Sous-portfolios : liste, URL, statut actif/inactif (existant).
 - Messages reçus et statistiques de visites (existant).
 - L'authentification et les routes d'administration existantes ne sont pas réécrites.
@@ -94,7 +95,7 @@ Un profil inconnu ou inactif renvoie une page 404.
 
 ## 7. Modèle de données
 
-**Existant (à lire dans `schema.prisma`, ne pas supposer) :** `Project`, `SubPortfolio`, `Visit`, `ContactMessage`, tables d'authentification.
+**Existant (à lire dans `schema.prisma`, ne pas supposer) :** `Project`, `SubPortfolio`, `SubPortfolioProject`, `Visit`, `ContactMessage`. Conventions de nommage du schéma : français (`titre`, `actif`, `ordre`…) ; les nouveaux modèles les suivent.
 
 **Ajouts (migrations additives uniquement, testées sur une branche Neon) :**
 
@@ -138,7 +139,11 @@ model Profile {
 }
 ```
 
-Le champ `Project` reçoit en plus un `coverMediaId` optionnel ; l'ancien champ d'image reste en place.
+Le champ `Project` reçoit en plus un `coverMediaId` optionnel ; l'ancien champ d'image (`coverImage`) et l'ancienne galerie (`links.gallery`, JSON) restent lisibles.
+
+**`SiteSettings` (une seule ligne, tous champs optionnels sauf le nom) :** nom affiché, ligne de métier du header, e-mail public, WhatsApp, liens de réseaux. Alimente le header et le footer de toutes les pages. Un champ vide n'affiche rien : **jamais de valeur factice** (l'audit a relevé un faux numéro WhatsApp et une adresse e-mail sur un domaine pas encore acheté).
+
+**Visites :** le modèle `Visit` stocke aujourd'hui l'adresse IP brute. Ce n'est pas compatible avec l'engagement « statistiques légères et respectueuses ». On cesse de l'écrire (voir `ROADMAP.md`, étape 12).
 
 **Forme du JSON `hero` (validée par Zod) :** `headline`, `subline`, `tagline?`, `ctaPrimary { label, href }`, `ctaSecondary { label, href }`, `media { kind: "image" | "abstract", alt }`. Les statistiques éventuelles du Hero sont **calculées** depuis la base (nombre de projets publiés), jamais saisies à la main.
 
@@ -146,9 +151,9 @@ Le champ `Project` reçoit en plus un `coverMediaId` optionnel ; l'ancien champ 
 
 ## 8. Stack et règles de versions
 
-- **Conservé :** Next.js (App Router) + TypeScript, Tailwind CSS, Prisma 7 + Neon, NextAuth (credentials), Resend, Cloudinary, Vercel.
+- **Conservé (versions relevées à l'audit, octobre 2026) :** Next.js 16 (App Router, Turbopack) + TypeScript, React 19.3, Tailwind CSS 4, Prisma 7 + Neon (adaptateur Neon), Zod 4, Lucide, Resend, Cloudinary, Vercel. **L'authentification est maison** (jose + bcryptjs, cookie de session HttpOnly) : il n'y a pas de NextAuth.
 - **Animation :** GSAP + ScrollTrigger (+ SplitText, Flip), Lenis pour le défilement fluide. GSAP est désormais gratuit, plugins compris. **Une seule bibliothèque d'animation** : pas de nouvelle utilisation de Framer Motion ; la retirer si elle n'est plus utilisée.
-- **3D :** Three.js via React Three Fiber v9 et drei v10, qui requièrent React 19. Si le projet est sur React 18, utiliser R3F v8 et drei v9, ou migrer proprement. L'agent **vérifie les versions installées avant d'ajouter** toute dépendance.
+- **3D :** Three.js est déjà installé et un Hero 3D en Three.js « pur » fonctionne déjà. Par défaut, **on le conserve** (moins de dépendances). React Three Fiber et drei ne s'ajoutent que si un besoin précis le justifie, **après vérification** qu'ils supportent la version de React installée (19.3). L'agent vérifie les versions avant d'ajouter toute dépendance.
 - Aucune dépendance ajoutée « pour décorer ». Chaque ajout est justifié dans le rapport d'étape.
 
 ## 9. Services, limites et coûts (vérifiés en octobre 2026)
@@ -182,3 +187,6 @@ Multi-utilisateurs, paiement, blog avec CMS, mode sombre/clair choisi par le vis
 | Neon | 512 Mo | 1 Go, mise en veille après 5 min |
 | Resend | 3 000 par mois | Plafond de 100 par jour, restriction du domaine d'envoi |
 | Vercel | « gratuit » | Non commercial : décision à prendre avant la production |
+| Authentification | NextAuth (prévu) | Authentification maison déjà en place (jose + bcryptjs) : à auditer à l'étape 9 |
+| Coordonnées publiques | En dur dans le code | Réglages du site modifiables, aucune valeur factice |
+| Statistiques de visites | IP brute stockée | IP non enregistrée, robots filtrés (étape 12) |

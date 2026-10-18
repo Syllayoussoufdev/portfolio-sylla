@@ -48,7 +48,7 @@ src/templates/
 ## 4. Header, navigation, footer (communs)
 
 - **Libellés :** Accueil · Projets · Compétences · À propos · Contact. Pas de nom ambigu.
-- **Disposition :** logo (nom + une ligne de métier) à gauche, liens répartis avec de **vraies marges** (au moins 32 px entre les liens, pas de bloc serré au centre), bouton d'action à droite (« Me contacter » ou « Discutons de votre projet »).
+- **Disposition :** logo (nom + une ligne de métier, tous deux issus des réglages du site) à gauche, liens répartis avec de **vraies marges** (au moins 32 px entre les liens, pas de bloc serré au centre), bouton d'action à droite (« Me contacter » ou « Discutons de votre projet »).
 - **Comportement au défilement :** en haut de page, header transparent et plus haut ; après environ 80 px, il **se compacte** (hauteur réduite, fond givré ou plein selon le template) ; il se masque quand on descend et réapparaît quand on remonte. Le lien actif suit la section visible.
 - **Mobile :** menu plein écran, ouvert et fermé au clavier (`Échap`), focus piégé tant qu'il est ouvert, bouton d'action toujours visible.
 - **Footer :** réseaux, WhatsApp, e-mail, liens légaux. Aucune mention inventée.

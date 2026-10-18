@@ -1,6 +1,7 @@
 # ROADMAP — Portfolio Sylla (v3)
 
 Suite du projet à partir de l'état actuel. À lire avec `PRD.md` (produit) et `DESIGN.md` (rendu).
+**Version 3.1 : ajustée après l'audit de l'étape 0** (Next.js 16, React 19.3, authentification maison, réglages du site, adresses IP, galerie JSON).
 
 ## 0. Vue d'ensemble
 
@@ -86,7 +87,8 @@ Termine par le rapport d'étape et attends ma validation.
 - Composant d'envoi : glisser-déposer, aperçu, progression, erreurs lisibles, formats et taille contrôlés, **texte alternatif obligatoire**.
 - Intégration au formulaire de projet (couverture et galerie : ordre, choix de la couverture) et page `/admin/medias` (liste, réutilisation, suppression refusée si le média est utilisé).
 - Configuration `next/image`, CSP mise à jour (`img-src`, `connect-src` pour Cloudinary), `.env.example`.
-- Compatibilité : les projets qui ont encore une URL d'image continuent de s'afficher.
+- Compatibilité : les projets qui ont encore une URL d'image (`coverImage`) ou une galerie dans `links.gallery` continuent de s'afficher.
+- Les routes de signature et de suppression vérifient la session **elles-mêmes** (cookie), sans compter uniquement sur le proxy.
 - Script de migration des anciennes images, **en mode simulation uniquement** (dry-run), non exécuté.
 
 **Critères :** une image téléversée apparaît en couverture et survit au rechargement · un fichier non image ou trop lourd est refusé · sans connexion admin, la route de signature répond 401 · le secret n'apparaît dans aucun fichier du bundle client · un projet ancien s'affiche encore · build propre.
@@ -98,7 +100,8 @@ Implémente le téléversement direct vers Cloudinary avec signature serveur (ro
 le modèle Media (migration additive : décris-la et attends ma validation AVANT de l'appliquer),
 le composant d'envoi (texte alternatif obligatoire), l'intégration au formulaire de projet
 (couverture + galerie ordonnée), la page /admin/medias, la config next/image et la CSP.
-Les projets existants avec une URL d'image doivent continuer de s'afficher.
+Les projets existants avec une URL d'image (coverImage) ou une galerie dans links.gallery doivent continuer de s'afficher.
+Les routes de signature et de suppression vérifient la session admin elles-mêmes (cookie), pas seulement via le proxy.
 Écris le script de migration des anciennes images en dry-run, sans l'exécuter.
 Termine par le rapport d'étape (gabarit du ROADMAP) et attends ma validation.
 ```
@@ -106,13 +109,13 @@ Termine par le rapport d'étape (gabarit du ROADMAP) et attends ma validation.
 ### Étape 2 — Données des profils
 
 **Objectif :** stocker en base le contenu des Hero et la configuration des templates.
-**Livrables :** modèle `Profile` (voir PRD, section 7) et migration additive · schémas Zod (`hero`, `sections`, `variables`) · module partagé des **slugs réservés** · script de **seed idempotent** : un profil par défaut (placeholders « à remplacer ») et un profil pour chaque sous-portfolio existant · fonctions d'accès (`getDefaultProfile`, `getProfileBySlug`) avec repli propre si aucun profil n'existe · tests unitaires des schémas et de la validation de slug.
+**Livrables :** modèle `Profile` (voir PRD, section 7) et migration additive · schémas Zod (`hero`, `sections`, `variables`) · module partagé des **slugs réservés** · modèle **`SiteSettings`** (une seule ligne : nom affiché, ligne de métier, e-mail public, WhatsApp, réseaux ; tous optionnels sauf le nom) · script de **seed idempotent** : un profil par défaut (placeholders « à remplacer ») et un profil pour chaque sous-portfolio existant · fonctions d'accès (`getDefaultProfile`, `getProfileBySlug`) avec repli propre si aucun profil n'existe · tests unitaires des schémas et de la validation de slug.
 **Critères :** migration appliquée sur la branche de dev uniquement · seed rejouable sans doublon · les routes actuelles fonctionnent toujours.
 
 ```
 Lis PRD.md (sections 3, 6, 7), DESIGN.md (section 2) et ROADMAP.md. Exécute UNIQUEMENT l'étape 2.
 Lis d'abord le schéma Prisma réel et les conventions du projet (Prisma 7).
-Ajoute le modèle Profile (migration additive : décris-la, attends ma validation avant de l'appliquer),
+Ajoute les modèles Profile et SiteSettings (migration additive : décris-la, attends ma validation avant de l'appliquer), en suivant les conventions de nommage du schéma existant (titre, actif, ordre…),
 les schémas Zod, la liste partagée des slugs réservés, le seed idempotent et les fonctions d'accès.
 Ne modifie aucune page publique dans cette étape. Ajoute des tests unitaires.
 Termine par le rapport d'étape et attends ma validation.
@@ -121,13 +124,13 @@ Termine par le rapport d'étape et attends ma validation.
 ### Étape 3 — Dashboard : page « Profils »
 
 **Objectif :** modifier le Hero, le template et les sections sans toucher au code.
-**Livrables :** pages `/admin/profils` (liste), création, édition · formulaire : titre, sous-titre, accroche, deux boutons (libellé et lien), visuel choisi dans la médiathèque, template (avec aperçu), variante d'accent, sections (visibilité et ordre avec boutons **accessibles au clavier**, pas seulement le glisser-déposer), projets affichés (réutiliser la logique des sous-portfolios), variables, SEO, activation · validation Zod côté serveur · refus des slugs réservés ou en doublon · revalidation des pages publiques à l'enregistrement · **aperçu** `/admin/profils/[id]/apercu` qui rend le vrai composant public avec les données en cours d'édition.
+**Livrables :** pages `/admin/profils` (liste), création, édition · page `/admin/reglages` (réglages du site : nom, ligne de métier, e-mail public, WhatsApp, réseaux) · formulaire : titre, sous-titre, accroche, deux boutons (libellé et lien), visuel choisi dans la médiathèque, template (avec aperçu), variante d'accent, sections (visibilité et ordre avec boutons **accessibles au clavier**, pas seulement le glisser-déposer), projets affichés (réutiliser la logique des sous-portfolios), variables, SEO, activation · validation Zod côté serveur · refus des slugs réservés ou en doublon · revalidation des pages publiques à l'enregistrement · **aperçu** `/admin/profils/[id]/apercu` qui rend le vrai composant public avec les données en cours d'édition.
 **Critères :** tout est protégé par l'authentification · une valeur invalide affiche une erreur claire · un profil créé apparaît en base · le back-office existant n'est pas régressé.
 
 ```
 Lis PRD.md, DESIGN.md et ROADMAP.md. Exécute UNIQUEMENT l'étape 3. Le back-office existant est
 fonctionnel : AJOUTE la section Profils sans réécrire l'existant, avec le même style que le dashboard.
-Implémente liste, création, édition, aperçu (voir ROADMAP étape 3), validation Zod côté serveur,
+Implémente liste, création, édition, aperçu et la page Réglages du site (voir ROADMAP étape 3), validation Zod côté serveur,
 slugs réservés refusés, revalidation des pages publiques. Réordonnancement des sections accessible au clavier.
 Termine par le rapport d'étape et attends ma validation.
 ```
@@ -135,13 +138,13 @@ Termine par le rapport d'étape et attends ma validation.
 ### Étape 4 — Socle des templates et routage public
 
 **Objectif :** que `/` et `/[profil]` s'affichent d'après un profil et son template.
-**Livrables :** registre de templates et attribut `data-template` · tokens CSS par template (provisoires acceptés, le template `developpeur` reprend l'aspect actuel) · composants de section **pilotés par les données** (aucun texte métier en dur) · nouveau header et footer communs (comportement au défilement, menu mobile accessible, libellés du PRD) · `/` charge le profil par défaut, `/[profil]` charge le profil correspondant, 404 si inconnu ou inactif, aucun conflit avec les routes fixes · `generateMetadata` par profil · retrait du contenu inventé relevé à l'audit.
+**Livrables :** registre de templates et attribut `data-template` · tokens CSS par template (provisoires acceptés, le template `developpeur` reprend l'aspect actuel) · composants de section **pilotés par les données** (aucun texte métier en dur) · nouveau header et footer communs (comportement au défilement, menu mobile accessible, libellés du PRD), alimentés par `SiteSettings` (champ vide = rien d'affiché, aucune valeur factice) · `/` charge le profil par défaut, `/[profil]` charge le profil correspondant, 404 si inconnu ou inactif, aucun conflit avec les routes fixes · `generateMetadata` par profil · retrait du contenu inventé relevé à l'audit.
 **Critères :** modifier le titre du Hero dans le dashboard change la page publique · changer le template change les tokens appliqués · `/projets`, `/projets/[slug]`, `/contact` répondent toujours · build propre.
 
 ```
 Lis PRD.md, DESIGN.md (sections 2, 3, 4) et ROADMAP.md. Exécute UNIQUEMENT l'étape 4.
 Mets en place le registre de templates, data-template, les composants de section pilotés par le profil,
-le nouveau header/footer communs, le routage / et /[profil] depuis la base, les métadonnées par profil.
+le nouveau header/footer communs alimentés par SiteSettings (champ vide = rien d'affiché), le routage / et /[profil] depuis la base, les métadonnées par profil.
 Retire le contenu inventé listé dans docs/AUDIT-2BIS.md. Conserve les routes /projets, /projets/[slug], /contact.
 Le template « developpeur » doit reproduire l'aspect actuel. Aucune animation lourde dans cette étape.
 Termine par le rapport d'étape et attends ma validation.
@@ -150,13 +153,13 @@ Termine par le rapport d'étape et attends ma validation.
 ### Étape 5 — Moteur de mouvement et 3D
 
 **Objectif :** une infrastructure unique, réutilisée par les trois templates.
-**Livrables :** dépendances vérifiées puis ajoutées (GSAP et `@gsap/react`, Lenis, Three.js avec React Three Fiber et drei dans la version compatible avec React) · fournisseur de mouvement (un seul enregistrement des plugins, Lenis synchronisé avec ScrollTrigger) · utilitaires : révélation, titre découpé, effet magnétique, progression de défilement, gestion de `prefers-reduced-motion` et `matchMedia` · composant de scène 3D chargé à la demande avec détection WebGL, pause hors écran et image de remplacement · retrait de Framer Motion si elle n'est plus utilisée · `docs/MOTION.md` (comment utiliser chaque brique) · page de démonstration **réservée au développement** (absente en production).
+**Livrables :** dépendances : GSAP et Three.js sont **déjà installés** ; ajouter `@gsap/react` et Lenis ; React Three Fiber et drei **seulement si le besoin est justifié** et si leur compatibilité avec React 19.3 est vérifiée, sinon garder le Three.js « pur » existant · fournisseur de mouvement (un seul enregistrement des plugins, Lenis synchronisé avec ScrollTrigger) · utilitaires : révélation, titre découpé, effet magnétique, progression de défilement, gestion de `prefers-reduced-motion` et `matchMedia` · composant de scène 3D chargé à la demande avec détection WebGL, pause hors écran et image de remplacement · retrait de Framer Motion si elle n'est plus utilisée · `docs/MOTION.md` (comment utiliser chaque brique) · page de démonstration **réservée au développement** (absente en production).
 **Critères :** aucune erreur en console · la navigation entre pages ne duplique pas les déclencheurs de défilement · avec mouvement réduit, le contenu est visible et immobile · le défilement natif et le clavier ne sont jamais bloqués.
 
 ```
 Lis PRD.md (section 8), DESIGN.md (sections 8 et 9) et ROADMAP.md. Exécute UNIQUEMENT l'étape 5.
-Vérifie d'abord les versions de React et Next.js installées, puis choisis les versions compatibles de
-GSAP, Lenis, Three.js, React Three Fiber et drei (R3F v9 / drei v10 exigent React 19). Justifie chaque ajout.
+Les versions installées sont dans docs/AUDIT-2BIS.md (GSAP et Three.js sont déjà présents). Ajoute seulement @gsap/react et Lenis.
+N'ajoute React Three Fiber / drei que si tu justifies le besoin ET vérifies leur compatibilité avec React 19.3 ; sinon conserve le Three.js pur. Justifie chaque ajout.
 Construis le fournisseur de mouvement, les utilitaires, le composant de scène 3D (chargement à la demande,
 pause hors écran, repli sans WebGL) et docs/MOTION.md. Page de démonstration réservée au développement.
 N'applique rien encore aux templates. Termine par le rapport d'étape et attends ma validation.
@@ -171,7 +174,7 @@ N'applique rien encore aux templates. Termine par le rapport d'étape et attends
 ```
 Lis PRD.md, DESIGN.md (sections 5, 8, 10, 11, 12) et ROADMAP.md. Exécute UNIQUEMENT l'étape 6.
 Implémente le template « creatif » en réutilisant ce qui est récupérable du premier portfolio (commits
-identifiés dans docs/AUDIT-2BIS.md), mais en le rendant piloté par les données du profil.
+identifiés dans docs/AUDIT-2BIS.md, s'ils existent ; sinon pars de DESIGN.md et de la maquette fournie), mais en le rendant piloté par les données du profil.
 Assets manquants : placeholders de verre légendés « à remplacer », jamais de fausse photo.
 Implémente les 7 points du « contrat de mouvement » et indique dans le rapport, un par un,
 ce que tu as réellement vérifié (desktop, mobile, mouvement réduit).
@@ -206,11 +209,11 @@ Dans le rapport, indique pour chaque point du contrat ce qui a été réellement
 
 ### Étape 9 — Contrôle qualité de la phase 2bis
 
-**Livrables :** matrice de tests : 3 templates × (mobile, tablette, desktop) · routes (`/`, `/projets`, `/projets/[slug]`, `/contact`, `/[profil]`, 404) · parcours admin (téléverser, créer un profil, changer de template, aperçu, publier) · clavier et lecteur d'écran sur les pages principales · mouvement réduit · Lighthouse mobile par template (**chiffres réels**) · taille des paquets JavaScript · correctifs. Le fichier `docs/QA-2BIS.md` liste ce qui est réussi, échoué, non testé.
+**Livrables :** matrice de tests : 3 templates × (mobile, tablette, desktop) · routes (`/`, `/projets`, `/projets/[slug]`, `/contact`, `/[profil]`, 404) · parcours admin (téléverser, créer un profil, changer de template, aperçu, publier) · clavier et lecteur d'écran sur les pages principales · **revue de l'authentification maison** (cookie HttpOnly / Secure / SameSite, durée de session, secret JWT fort sans valeur par défaut, limitation des tentatives de connexion, protection de `/api/admin/*`) · mouvement réduit · Lighthouse mobile par template (**chiffres réels**) · taille des paquets JavaScript · correctifs. Le fichier `docs/QA-2BIS.md` liste ce qui est réussi, échoué, non testé.
 
 ```
 Lis ROADMAP.md. Exécute UNIQUEMENT l'étape 9 : contrôle qualité de la phase 2bis, sans nouvelle fonctionnalité.
-Teste la matrice décrite à l'étape 9, corrige les régressions, et produis docs/QA-2BIS.md avec les résultats réels
+Teste la matrice décrite à l'étape 9, fais une revue de l'authentification maison (attributs du cookie, secret JWT, limitation des tentatives de connexion, protection de /api/admin/*), corrige les régressions, et produis docs/QA-2BIS.md avec les résultats réels
 (réussi / échoué / non testé, scores Lighthouse mesurés). N'invente aucun résultat.
 Termine par le rapport d'étape et attends ma validation.
 ```
@@ -223,7 +226,7 @@ Termine par le rapport d'étape et attends ma validation.
 
 ### Étape 10 — Contact et Resend
 
-**Livrables :** envoi par Resend depuis `onboarding@resend.dev` vers l'adresse du compte Resend (domaine non vérifié) · validation Zod · champ anti-spam invisible · **limitation de débit** compatible Vercel (la mémoire du serveur n'est pas persistante : proposer la solution la plus simple, demander validation si elle exige un nouveau service) · **le message est enregistré en base avant l'envoi** ; un échec d'e-mail ne casse pas l'expérience du visiteur et est journalisé · contenu de l'e-mail échappé, `Reply-To` = e-mail du visiteur · états d'envoi et de succès · aucune promesse de délai de réponse.
+**Livrables :** (en partant de la Server Action existante `app/actions/contact.ts`) envoi par Resend depuis `onboarding@resend.dev` vers l'adresse du compte Resend (domaine non vérifié) · validation Zod · champ anti-spam invisible · **limitation de débit** compatible Vercel (la mémoire du serveur n'est pas persistante : proposer la solution la plus simple, demander validation si elle exige un nouveau service) · **le message est enregistré en base avant l'envoi** ; un échec d'e-mail ne casse pas l'expérience du visiteur et est journalisé · contenu de l'e-mail échappé, `Reply-To` = e-mail du visiteur · états d'envoi et de succès · aucune promesse de délai de réponse.
 
 ```
 Lis PRD.md, DESIGN.md (section 11) et ROADMAP.md. Exécute UNIQUEMENT l'étape 10.
@@ -248,10 +251,10 @@ dans le dashboard (couverture, galerie, liens, vidéo) et signale tout défaut. 
 
 ### Étape 12 — SEO et pages légales
 
-**Livrables :** métadonnées par page et par profil, images de partage (Open Graph), `sitemap.xml`, `robots.txt` (administration exclue), balises canoniques, données structurées « Person » · pages `/mentions-legales` et `/confidentialite` (le formulaire collecte des données personnelles) · liens dans le footer. **Les textes légaux sont des modèles à faire relire** ; l'agent n'est pas juriste et ne doit pas inventer d'informations sur ton statut.
+**Livrables :** métadonnées par page et par profil, images de partage (Open Graph), `sitemap.xml`, `robots.txt` (administration exclue), balises canoniques, données structurées « Person » · pages `/mentions-legales` et `/confidentialite` (le formulaire collecte des données personnelles) · liens dans le footer · **statistiques de visites** : cesser d'enregistrer l'adresse IP brute (ne plus l'écrire ; mettre les valeurs existantes à NULL après ma validation), filtrer les robots, exclure mes propres visites, décrire ce traitement dans la politique de confidentialité. **Les textes légaux sont des modèles à faire relire** ; l'agent n'est pas juriste et ne doit pas inventer d'informations sur ton statut.
 
 ```
-Lis PRD.md et ROADMAP.md. Exécute UNIQUEMENT l'étape 12 : métadonnées, images Open Graph, sitemap, robots
+Lis PRD.md et ROADMAP.md. Exécute UNIQUEMENT l'étape 12 (inclut l'arrêt de l'enregistrement des adresses IP brutes dans Visit, le filtrage des robots et l'exclusion des visites admin) : métadonnées, images Open Graph, sitemap, robots
 (admin exclue), canoniques, données structurées Person, pages /mentions-legales et /confidentialite sous forme
 de modèles avec champs « à compléter » (n'invente aucune information sur mon statut ni mon adresse).
 Termine par le rapport d'étape et attends ma validation.
@@ -277,7 +280,7 @@ Termine par le rapport d'étape et attends ma validation.
 **Décision à prendre avant :** le plan Hobby est réservé à un usage non commercial. Options : demander l'avis du support Vercel, passer à Pro (20 $/mois), ou héberger ailleurs après vérification de la compatibilité Next.js.
 
 **Agent :** préparer `DEPLOY.md` (variables d'environnement Production et Preview, région des fonctions Frankfurt `fra1`, commande de migration `prisma migrate deploy` exécutée de façon contrôlée, vérification de la CSP, plan de retour arrière), `.env.example` à jour, build propre.
-**Sylla :** importer le dépôt dans Vercel, saisir les variables (production = branche Neon `main`), relier `syllayoussouf.com`, mettre `NEXTAUTH_URL` sur l'adresse définitive, vérifier le domaine d'envoi dans Resend (enregistrements DNS) puis passer l'expéditeur sur ton domaine.
+**Sylla :** importer le dépôt dans Vercel, saisir les variables (production = branche Neon `main`), relier `syllayoussouf.com`, mettre à jour les variables d'URL et de session de l'authentification maison sur l'adresse définitive, vérifier le domaine d'envoi dans Resend (enregistrements DNS) puis passer l'expéditeur sur ton domaine.
 **Test de fumée en production :** pages publiques, connexion admin, téléversement d'une image, envoi d'un message de contact, 404, `/[profil]`, e-mail reçu.
 
 ```

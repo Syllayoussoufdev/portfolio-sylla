@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { getDefaultProfile, getSiteSettings } from "@/lib/profiles";
+import { getSkillsForSubPortfolio } from "@/lib/skills";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SectionRenderer } from "@/components/SectionRenderer";
@@ -23,6 +24,8 @@ export default async function HomePage() {
     getDefaultProfile(),
     getSiteSettings(),
   ]);
+
+  const skillCategories = await getSkillsForSubPortfolio(profile.subPortfolioId);
 
   // Chargement des projets selon la configuration du profil
   let visibleProjects = [];
@@ -73,6 +76,7 @@ export default async function HomePage() {
             settings={settings}
             template={profile.template}
             variables={profile.variables as Record<string, unknown>}
+            skillCategories={skillCategories}
           />
         ))}
       </main>

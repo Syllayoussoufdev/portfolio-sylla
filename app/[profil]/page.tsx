@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isReservedSlug } from "@/lib/constants/reserved-slugs";
 import { getProfileBySlug, getSiteSettings } from "@/lib/profiles";
+import { getSkillsForSubPortfolio } from "@/lib/skills";
 import { prisma } from "@/lib/prisma";
 import { trackVisit } from "@/lib/analytics";
 import { Navbar } from "@/components/Navbar";
@@ -61,7 +62,10 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
     subPortfolioId: profile.subPortfolioId || undefined,
   });
 
-  const settings = await getSiteSettings();
+  const [settings, skillCategories] = await Promise.all([
+    getSiteSettings(),
+    getSkillsForSubPortfolio(profile.subPortfolioId),
+  ]);
 
   // Extraction des projets : soit depuis le sous-portfolio rattaché, soit tous les projets visibles
   let visibleProjects = [];
@@ -112,6 +116,7 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
             settings={settings}
             template={profile.template}
             variables={profile.variables as Record<string, unknown>}
+            skillCategories={skillCategories}
           />
         ))}
       </main>

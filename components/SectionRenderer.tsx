@@ -22,6 +22,8 @@ import type { HeroData, SectionKey } from "@/lib/validations/profile";
 import type { MediaData, SiteSettingsData } from "@/lib/profiles";
 import type { ProjectData } from "./ProjectCard";
 
+import type { SkillCategoryWithSkills } from "@/lib/skills";
+
 interface SectionRendererProps {
   sectionKey: SectionKey;
   hero?: HeroData;
@@ -30,6 +32,7 @@ interface SectionRendererProps {
   settings?: SiteSettingsData | null;
   template?: string;
   variables?: Record<string, unknown> | null;
+  skillCategories?: SkillCategoryWithSkills[];
 }
 
 export function SectionRenderer({
@@ -40,6 +43,7 @@ export function SectionRenderer({
   settings,
   template = "creatif",
   variables,
+  skillCategories,
 }: SectionRendererProps) {
   switch (sectionKey) {
     case "hero": {
@@ -110,8 +114,7 @@ export function SectionRenderer({
     }
 
     case "competences": {
-      const skillsFamilies = (variables?.skillsFamilies as string[]) || undefined;
-      return <SkillsSection skillsFamilies={skillsFamilies} />;
+      return <SkillsSection categories={skillCategories} />;
     }
 
     case "parcours":

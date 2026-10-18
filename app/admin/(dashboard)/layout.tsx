@@ -14,6 +14,7 @@ import {
   ExternalLink,
   LogOut,
   Sparkles,
+  Cpu,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -88,6 +89,14 @@ export default async function AdminDashboardLayout({
             >
               <Layers className="w-4 h-4" />
               <span>Sous-portfolios</span>
+            </Link>
+
+            <Link
+              href="/admin/competences"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-[#475569] hover:bg-slate-100/80 hover:text-[#2563EB] transition-colors"
+            >
+              <Cpu className="w-4 h-4 text-[#F97316]" />
+              <span>Compétences &amp; Outils</span>
             </Link>
 
             <Link

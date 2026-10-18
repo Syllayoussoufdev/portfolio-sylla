@@ -52,6 +52,7 @@ model SubPortfolio {
   createdAt   DateTime              @default(now())
 
   projects    SubPortfolioProject[]
+  skills      SubPortfolioSkillCategory[]
   visits      Visit[]
   profile     Profile?
 
@@ -187,5 +188,63 @@ model SiteSettings {
   twitter     String?
   instagram   String?
   updatedAt   DateTime @updatedAt
+}
+
+// ----------------------------------------------------
+// 9. Compétences & Outils par Grandes Familles (CRUD & Groupage)
+// ----------------------------------------------------
+enum SkillType {
+  COMPETENCE // Savoir-faire / Expertise technique (ex: Architecture API, Responsive Design)
+  OUTIL      // Logiciel / Framework / Outil de production (ex: Next.js, Figma, Premiere Pro)
+}
+
+model SkillCategory {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  titre       String
+  description String?  @db.Text
+  icon        String   @default("Code") // Nom d'icône Lucide (Code, Palette, Film, Server, Smartphone, Terminal, etc.)
+  ordre       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  skills        Skill[]
+  subPortfolios SubPortfolioSkillCategory[]
+
+  @@index([slug])
+  @@index([ordre])
+}
+
+model Skill {
+  id          String    @id @default(cuid())
+  nom         String
+  type        SkillType @default(COMPETENCE) // Séparation claire : COMPETENCE vs OUTIL
+  niveau      String?   // "Avancé", "Expert", "Maîtrisé", "Production", etc.
+  pourcentage Int?      // Niveau de maîtrise chiffré (0-100) pour affichage adaptatif
+  icon        String?   // Identifiant de logo / icône optionnel
+  categoryId  String
+  ordre       Int       @default(0)
+  visible     Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  category SkillCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+  @@index([type])
+  @@index([ordre])
+}
+
+model SubPortfolioSkillCategory {
+  subPortfolioId String
+  categoryId     String
+  ordre          Int      @default(0)
+
+  subPortfolio SubPortfolio  @relation(fields: [subPortfolioId], references: [id], onDelete: Cascade)
+  category     SkillCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([subPortfolioId, categoryId])
+  @@index([subPortfolioId])
+  @@index([categoryId])
 }
 

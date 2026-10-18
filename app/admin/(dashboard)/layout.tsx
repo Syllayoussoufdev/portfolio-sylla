@@ -5,6 +5,7 @@ import { logoutAction } from "../actions/auth";
 import {
   LayoutDashboard,
   FolderKanban,
+  Image as ImageIcon,
   Layers,
   BarChart3,
   MessageSquare,
@@ -61,6 +62,14 @@ export default async function AdminDashboardLayout({
             >
               <FolderKanban className="w-4 h-4" />
               <span>Projets</span>
+            </Link>
+
+            <Link
+              href="/admin/medias"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-[#475569] hover:bg-slate-100/80 hover:text-[#2563EB] transition-colors"
+            >
+              <ImageIcon className="w-4 h-4" />
+              <span>Médiathèque</span>
             </Link>
 
             <Link

@@ -55,6 +55,17 @@ export async function createProjectAction(
     video: (formData.get("link_video") as string) || "",
   };
 
+  const coverMediaId = (formData.get("coverMediaId") as string) || null;
+  const rawGalleryIds = formData.get("galleryMediaIds") as string;
+  let galleryMediaIds: string[] = [];
+  try {
+    if (rawGalleryIds) {
+      galleryMediaIds = JSON.parse(rawGalleryIds);
+    }
+  } catch {
+    galleryMediaIds = [];
+  }
+
   const parsed = ProjectSchema.safeParse({
     titre: formData.get("titre"),
     slug: (formData.get("slug") as string)?.toLowerCase().trim(),
@@ -83,14 +94,34 @@ export async function createProjectAction(
     return { error: `Le slug "/${data.slug}" est déjà utilisé par un autre projet.` };
   }
 
+  // Rétrocompatibilité : si coverMediaId est défini mais coverImage est vide, synchroniser l'URL
+  let resolvedCoverImage = data.coverImage || null;
+  if (coverMediaId) {
+    const media = await prisma.media.findUnique({ where: { id: coverMediaId } });
+    if (media) {
+      resolvedCoverImage = media.url;
+    }
+  }
+
+  // Si des médias de galerie sont renseignés, mettre à jour links.gallery pour rétrocompatibilité
+  if (galleryMediaIds.length > 0) {
+    const galleryMedias = await prisma.media.findMany({
+      where: { id: { in: galleryMediaIds } },
+    });
+    const mediaMap = new Map(galleryMedias.map((m) => [m.id, m.url]));
+    const galleryUrls = galleryMediaIds.map((id) => mediaMap.get(id)).filter(Boolean);
+    (data.links as Record<string, unknown>).gallery = galleryUrls;
+  }
+
   try {
-    await prisma.project.create({
+    const created = await prisma.project.create({
       data: {
         titre: data.titre,
         slug: data.slug,
         description: data.description,
         contenu: data.contenu || null,
-        coverImage: data.coverImage || null,
+        coverImage: resolvedCoverImage,
+        coverMediaId: coverMediaId || null,
         tags: data.tags,
         links: data.links,
         ordre: data.ordre,
@@ -98,6 +129,17 @@ export async function createProjectAction(
         featured: data.featured,
       },
     });
+
+    // Insérer les entrées ordonnées dans ProjectMedia
+    if (galleryMediaIds.length > 0) {
+      await prisma.projectMedia.createMany({
+        data: galleryMediaIds.map((mediaId, position) => ({
+          projectId: created.id,
+          mediaId,
+          position,
+        })),
+      });
+    }
   } catch (err) {
     console.error("Erreur création projet:", err);
     return { error: "Impossible de créer le projet en base de données." };
@@ -138,6 +180,17 @@ export async function updateProjectAction(
     video: (formData.get("link_video") as string) || "",
   };
 
+  const coverMediaId = (formData.get("coverMediaId") as string) || null;
+  const rawGalleryIds = formData.get("galleryMediaIds") as string;
+  let galleryMediaIds: string[] = [];
+  try {
+    if (rawGalleryIds) {
+      galleryMediaIds = JSON.parse(rawGalleryIds);
+    }
+  } catch {
+    galleryMediaIds = [];
+  }
+
   const parsed = ProjectSchema.safeParse({
     titre: formData.get("titre"),
     slug: (formData.get("slug") as string)?.toLowerCase().trim(),
@@ -169,6 +222,28 @@ export async function updateProjectAction(
     return { error: `Le slug "/${data.slug}" est déjà utilisé par un autre projet.` };
   }
 
+  // Rétrocompatibilité : synchroniser coverImage avec coverMedia si disponible
+  let resolvedCoverImage = data.coverImage || null;
+  if (coverMediaId) {
+    const media = await prisma.media.findUnique({ where: { id: coverMediaId } });
+    if (media) {
+      resolvedCoverImage = media.url;
+    }
+  }
+
+  // Mettre à jour links.gallery pour rétrocompatibilité
+  if (galleryMediaIds.length > 0) {
+    const galleryMedias = await prisma.media.findMany({
+      where: { id: { in: galleryMediaIds } },
+    });
+    const mediaMap = new Map(galleryMedias.map((m) => [m.id, m.url]));
+    const galleryUrls = galleryMediaIds.map((mId) => mediaMap.get(mId)).filter(Boolean);
+    (data.links as Record<string, unknown>).gallery = galleryUrls;
+  } else {
+    // Si la galerie a été vidée
+    (data.links as Record<string, unknown>).gallery = [];
+  }
+
   try {
     await prisma.project.update({
       where: { id },
@@ -177,7 +252,8 @@ export async function updateProjectAction(
         slug: data.slug,
         description: data.description,
         contenu: data.contenu || null,
-        coverImage: data.coverImage || null,
+        coverImage: resolvedCoverImage,
+        coverMediaId: coverMediaId || null,
         tags: data.tags,
         links: data.links,
         ordre: data.ordre,
@@ -185,6 +261,21 @@ export async function updateProjectAction(
         featured: data.featured,
       },
     });
+
+    // Mettre à jour la galerie ProjectMedia (remplacement des jointures)
+    await prisma.projectMedia.deleteMany({
+      where: { projectId: id },
+    });
+
+    if (galleryMediaIds.length > 0) {
+      await prisma.projectMedia.createMany({
+        data: galleryMediaIds.map((mediaId, position) => ({
+          projectId: id,
+          mediaId,
+          position,
+        })),
+      });
+    }
   } catch (err) {
     console.error("Erreur modification projet:", err);
     return { error: "Impossible de mettre à jour le projet en base de données." };

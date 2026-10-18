@@ -11,6 +11,13 @@ export default async function EditProjectPage({
   const { id } = await params;
   const project = await prisma.project.findUnique({
     where: { id },
+    include: {
+      coverMedia: true,
+      mediaGallery: {
+        include: { media: true },
+        orderBy: { position: "asc" },
+      },
+    },
   });
 
   if (!project) {

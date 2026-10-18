@@ -13,8 +13,15 @@ import {
   Globe,
   FolderOpen,
   Video,
+  Image as ImageIcon,
+  Plus,
+  Trash2,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import { GithubIcon, FigmaIcon } from "@/components/icons";
+import { MediaPickerModal } from "@/components/admin/MediaPickerModal";
+import { type UploadedMedia } from "@/components/admin/MediaUploader";
 
 interface ProjectFormProps {
   initialData?: {
@@ -24,6 +31,12 @@ interface ProjectFormProps {
     description: string;
     contenu: string | null;
     coverImage: string | null;
+    coverMediaId?: string | null;
+    coverMedia?: { id: string; url: string; alt: string; format?: string; width?: number; height?: number } | null;
+    mediaGallery?: {
+      media: { id: string; url: string; alt: string; format?: string; width?: number; height?: number };
+      position: number;
+    }[];
     tags: string[];
     links: unknown;
     ordre: number;
@@ -80,6 +93,79 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
 
   const [selectedTags, setSelectedTags] = useState<string[]>(initialData?.tags || []);
   const [customTagInput, setCustomTagInput] = useState("");
+
+  // Gestion Couverture Cloudinary & Rétrocompatibilité
+  const [coverMedia, setCoverMedia] = useState<{
+    id: string;
+    url: string;
+    alt: string;
+  } | null>(initialData?.coverMedia || null);
+  const [coverImageUrl, setCoverImageUrl] = useState(
+    initialData?.coverImage || initialData?.coverMedia?.url || ""
+  );
+
+  // Gestion Galerie ordonnée (ProjectMedia)
+  const [galleryItems, setGalleryItems] = useState<{
+    id: string;
+    url: string;
+    alt: string;
+  }[]>(
+    initialData?.mediaGallery
+      ? initialData.mediaGallery.map((g) => ({
+          id: g.media.id,
+          url: g.media.url,
+          alt: g.media.alt,
+        }))
+      : []
+  );
+
+  // Modal sélecteur de média
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerTarget, setPickerTarget] = useState<"cover" | "gallery">("cover");
+
+  const openPickerForCover = () => {
+    setPickerTarget("cover");
+    setPickerOpen(true);
+  };
+
+  const openPickerForGallery = () => {
+    setPickerTarget("gallery");
+    setPickerOpen(true);
+  };
+
+  const handleMediaSelected = (media: UploadedMedia) => {
+    if (pickerTarget === "cover") {
+      setCoverMedia({
+        id: media.id,
+        url: media.url,
+        alt: media.alt,
+      });
+      setCoverImageUrl(media.url);
+    } else {
+      if (!galleryItems.some((item) => item.id === media.id)) {
+        setGalleryItems([...galleryItems, { id: media.id, url: media.url, alt: media.alt }]);
+      }
+    }
+  };
+
+  const removeCover = () => {
+    setCoverMedia(null);
+    setCoverImageUrl("");
+  };
+
+  const moveGalleryItem = (index: number, direction: "up" | "down") => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= galleryItems.length) return;
+    const newItems = [...galleryItems];
+    const temp = newItems[index];
+    newItems[index] = newItems[targetIndex];
+    newItems[targetIndex] = temp;
+    setGalleryItems(newItems);
+  };
+
+  const removeGalleryItem = (id: string) => {
+    setGalleryItems(galleryItems.filter((item) => item.id !== id));
+  };
 
   const toggleTag = (t: string) => {
     if (selectedTags.includes(t)) {
@@ -234,17 +320,177 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
           />
         </div>
 
-        {/* Image de couverture */}
-        <div>
-          <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider mb-2">
-            URL de l&apos;image de couverture (Ratio 16:9 recommandé)
-          </label>
+        {/* Image de couverture principale (Cloudinary / Rétrocompatible) */}
+        <div className="pt-2 border-t border-slate-100 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider">
+                Image de couverture principale *
+              </label>
+              <p className="text-[11px] text-slate-500">
+                Format 16:9 recommandé • Téléversement direct Cloudinary avec texte alternatif
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={openPickerForCover}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 text-[#2563EB] hover:bg-blue-100 text-xs font-semibold transition-colors cursor-pointer"
+            >
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>{coverMedia || coverImageUrl ? "Modifier l'image" : "Choisir une image"}</span>
+            </button>
+          </div>
+
+          {/* Aperçu de la couverture */}
+          {coverMedia || coverImageUrl ? (
+            <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video max-h-72 flex items-center justify-center group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={coverMedia?.url || coverImageUrl}
+                alt={coverMedia?.alt || "Image de couverture"}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 p-4 flex flex-col justify-between">
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={removeCover}
+                    className="p-1.5 rounded-lg bg-black/60 hover:bg-red-600 text-white transition-colors cursor-pointer"
+                    title="Retirer la couverture"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="text-white space-y-0.5">
+                  <div className="text-xs font-semibold truncate">
+                    {coverMedia?.alt || "Image saisie manuellement"}
+                  </div>
+                  <div className="text-[10px] font-mono text-slate-300 truncate">
+                    {coverMedia?.url || coverImageUrl}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div
+              onClick={openPickerForCover}
+              className="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center hover:border-[#2563EB] hover:bg-blue-50/30 transition-all cursor-pointer bg-slate-50/50"
+            >
+              <ImageIcon className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+              <p className="text-xs font-semibold text-[#0F172A]">
+                Aucune image de couverture sélectionnée
+              </p>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Cliquez pour choisir dans la médiathèque ou téléverser
+              </p>
+            </div>
+          )}
+
+          {/* Champs masqués transmis au serveur */}
+          <input type="hidden" name="coverMediaId" value={coverMedia?.id || ""} />
+          <input type="hidden" name="coverImage" value={coverMedia?.url || coverImageUrl} />
+
+          {/* Option repliable : saisie manuelle d'URL (compatibilité) */}
+          <details className="text-[11px] text-slate-500 pt-1">
+            <summary className="cursor-pointer hover:text-slate-800 font-medium">
+              Options avancées (URL directe / fallback externe)
+            </summary>
+            <div className="mt-2">
+              <input
+                type="url"
+                value={coverImageUrl}
+                onChange={(e) => {
+                  setCoverImageUrl(e.target.value);
+                  setCoverMedia(null);
+                }}
+                placeholder="https://... URL directe de secours"
+                className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#2563EB]"
+              />
+            </div>
+          </details>
+        </div>
+
+        {/* Galerie d'images ordonnée (ProjectMedia) */}
+        <div className="pt-4 border-t border-slate-100 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider">
+                Galerie de visuels ordonnée (ProjectMedia)
+              </label>
+              <p className="text-[11px] text-slate-500">
+                Ajoutez des captures ou maquettes et ajustez leur ordre d&apos;affichage avec les flèches.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={openPickerForGallery}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#0F172A] text-xs font-semibold transition-colors cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5 text-[#2563EB]" />
+              <span>Ajouter à la galerie</span>
+            </button>
+          </div>
+
+          {galleryItems.length === 0 ? (
+            <div className="border border-dashed border-slate-200 rounded-xl p-4 text-center text-xs text-slate-400 bg-slate-50/30">
+              Aucune image dans la galerie pour le moment.
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {galleryItems.map((item, index) => (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white transition-all"
+                >
+                  <span className="w-5 text-center text-xs font-mono font-semibold text-slate-400">
+                    #{index + 1}
+                  </span>
+                  <div className="w-16 h-10 rounded-lg overflow-hidden bg-slate-900 shrink-0 border border-slate-200">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={item.url} alt={item.alt} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-[#0F172A] truncate">{item.alt}</p>
+                    <p className="text-[10px] font-mono text-slate-400 truncate">{item.url}</p>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      disabled={index === 0}
+                      onClick={() => moveGalleryItem(index, "up")}
+                      className="p-1 rounded-md text-slate-500 hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent"
+                      title="Monter"
+                    >
+                      <ArrowUp className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      disabled={index === galleryItems.length - 1}
+                      onClick={() => moveGalleryItem(index, "down")}
+                      className="p-1 rounded-md text-slate-500 hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent"
+                      title="Descendre"
+                    >
+                      <ArrowDown className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeGalleryItem(item.id)}
+                      className="p-1 rounded-md text-red-500 hover:bg-red-50 ml-1"
+                      title="Retirer de la galerie"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Champ JSON masqué contenant les IDs ordonnés */}
           <input
-            type="url"
-            name="coverImage"
-            defaultValue={initialData?.coverImage || ""}
-            placeholder="https://res.cloudinary.com/... ou lien d'image directe"
-            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 text-[#0F172A] text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:bg-white transition-all"
+            type="hidden"
+            name="galleryMediaIds"
+            value={JSON.stringify(galleryItems.map((item) => item.id))}
           />
         </div>
       </div>
@@ -440,6 +686,18 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
           </div>
         </div>
       </div>
+
+      {/* Modal sélecteur de média */}
+      <MediaPickerModal
+        isOpen={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={handleMediaSelected}
+        title={
+          pickerTarget === "cover"
+            ? "Choisir ou téléverser l'image de couverture"
+            : "Ajouter un visuel à la galerie ordonnée"
+        }
+      />
     </form>
   );
 }

@@ -46,7 +46,7 @@ export function ParcoursSection() {
             </div>
 
             {/* Carte éditoriale de l'étape */}
-            <div className="editorial-card p-6 bg-white border border-slate-200/90 rounded-2xl space-y-2">
+            <div className="editorial-card p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl space-y-2">
               <div className="sm:hidden flex items-center gap-1.5 text-xs font-mono font-semibold text-[var(--accent)] mb-1">
                 <Calendar className="w-3.5 h-3.5" />
                 <span>{exp.periode}</span>
@@ -54,7 +54,7 @@ export function ParcoursSection() {
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                 <h3 className="text-base font-bold text-[var(--ink)]">{exp.role}</h3>
-                <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-slate-100 text-[var(--muted)] w-fit">
+                <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[var(--bg)] border border-[var(--border)] text-[var(--muted)] w-fit">
                   {exp.contexte}
                 </span>
               </div>

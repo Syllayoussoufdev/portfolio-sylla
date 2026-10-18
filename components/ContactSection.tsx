@@ -44,10 +44,10 @@ export function ContactSection({ settings }: ContactSectionProps) {
               {email && (
                 <a
                   href={`mailto:${email}`}
-                  className="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[var(--accent)]/40 hover:shadow-md transition-all group"
+                  className="flex items-center justify-between p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)]/50 hover:shadow-md transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-[var(--accent)] flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
@@ -57,7 +57,7 @@ export function ContactSection({ settings }: ContactSectionProps) {
                       </span>
                     </div>
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-[var(--accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  <ArrowUpRight className="w-4 h-4 text-[var(--subtle)] group-hover:text-[var(--accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 </a>
               )}
 
@@ -66,20 +66,20 @@ export function ContactSection({ settings }: ContactSectionProps) {
                   href={`https://wa.me/${cleanWhatsapp}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-emerald-500/40 hover:shadow-md transition-all group"
+                  className="flex items-center justify-between p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)] hover:border-emerald-500/50 hover:shadow-md transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
                       <MessageCircle className="w-5 h-5" />
                     </div>
                     <div>
                       <span className="text-xs font-mono text-[var(--subtle)] block">WhatsApp</span>
-                      <span className="text-sm font-semibold text-[var(--ink)] group-hover:text-emerald-600 transition-colors">
+                      <span className="text-sm font-semibold text-[var(--ink)] group-hover:text-emerald-500 transition-colors">
                         Échange direct par messagerie
                       </span>
                     </div>
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  <ArrowUpRight className="w-4 h-4 text-[var(--subtle)] group-hover:text-emerald-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 </a>
               )}
             </div>
@@ -88,10 +88,10 @@ export function ContactSection({ settings }: ContactSectionProps) {
 
         {/* Colonne Droite : Formulaire épuré 3 champs */}
         <div className="lg:col-span-7">
-          <div className="editorial-card p-6 sm:p-10 bg-white border border-slate-200/90 rounded-3xl shadow-xl shadow-slate-900/5">
+          <div className="editorial-card p-6 sm:p-10 bg-[var(--surface)] border border-[var(--border)] rounded-3xl shadow-xl shadow-black/5">
             {state.success ? (
               <div className="p-8 text-center space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-7 h-7" />
                 </div>
                 <h3 className="text-xl font-bold text-[var(--ink)]">Message bien reçu !</h3>
@@ -102,7 +102,7 @@ export function ContactSection({ settings }: ContactSectionProps) {
             ) : (
               <form action={formAction} className="space-y-5">
                 {state.error && (
-                  <div className="p-4 rounded-xl bg-red-50 border border-red-200/80 text-red-700 text-xs flex items-center gap-2">
+                  <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 text-xs flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 shrink-0" />
                     <span>{state.error}</span>
                   </div>
@@ -111,7 +111,7 @@ export function ContactSection({ settings }: ContactSectionProps) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <label htmlFor="nom" className="block text-xs font-semibold text-[var(--ink)]">
-                      Votre nom ou entreprise <span className="text-blue-600">*</span>
+                      Votre nom ou entreprise <span className="text-[var(--accent)]">*</span>
                     </label>
                     <input
                       type="text"
@@ -119,13 +119,13 @@ export function ContactSection({ settings }: ContactSectionProps) {
                       name="nom"
                       required
                       placeholder="Ex: Alexandre Martin"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] transition-all bg-slate-50/50"
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] transition-all bg-[var(--bg)] text-[var(--ink)] placeholder:text-[var(--subtle)]"
                     />
                   </div>
 
                   <div className="space-y-1.5">
                     <label htmlFor="email" className="block text-xs font-semibold text-[var(--ink)]">
-                      Votre adresse email <span className="text-blue-600">*</span>
+                      Votre adresse email <span className="text-[var(--accent)]">*</span>
                     </label>
                     <input
                       type="email"
@@ -133,14 +133,14 @@ export function ContactSection({ settings }: ContactSectionProps) {
                       name="email"
                       required
                       placeholder="alexandre@domaine.com"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] transition-all bg-slate-50/50"
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] transition-all bg-[var(--bg)] text-[var(--ink)] placeholder:text-[var(--subtle)]"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
                   <label htmlFor="message" className="block text-xs font-semibold text-[var(--ink)]">
-                    Votre message ou brief <span className="text-blue-600">*</span>
+                    Votre message ou brief <span className="text-[var(--accent)]">*</span>
                   </label>
                   <textarea
                     id="message"
@@ -148,14 +148,14 @@ export function ContactSection({ settings }: ContactSectionProps) {
                     rows={5}
                     required
                     placeholder="Décrivez votre projet, vos objectifs, ou vos délais envisagés..."
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] transition-all bg-slate-50/50 resize-y"
+                    className="w-full px-4 py-3 rounded-xl border border-[var(--border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] transition-all bg-[var(--bg)] text-[var(--ink)] placeholder:text-[var(--subtle)] resize-y"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-[var(--ink)] hover:opacity-90 active:scale-[0.98] text-white text-sm font-semibold shadow-md shadow-slate-900/10 transition-all cursor-pointer disabled:opacity-50"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-[var(--ink)] text-[var(--bg)] hover:opacity-90 active:scale-[0.98] text-sm font-semibold shadow-md transition-all cursor-pointer disabled:opacity-50"
                 >
                   <Send className="w-4 h-4 text-[var(--accent)]" />
                   <span>{isPending ? "Envoi en cours..." : "Envoyer le message"}</span>

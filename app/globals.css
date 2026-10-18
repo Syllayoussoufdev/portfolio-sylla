@@ -16,13 +16,13 @@
   --radius-pill: 999px;
 }
 
-/* Template Développeur : bleu nuit, précision (aspect sobre et rigoureux) */
+/* Template Développeur : blanc et bleu, calme et rigueur technologique (Style Image 1 & Aquilas Dev) */
 [data-template="developpeur"] {
   --bg: #F8FAFC;
   --surface: #FFFFFF;
   --ink: #0B132B;
   --accent: #2563EB;
-  --accent-2: #F5B83D;
+  --accent-2: #38BDF8;
   --muted: #475569;
   --subtle: #64748B;
   --border: #E2E8F0;
@@ -30,7 +30,7 @@
   --glass-border: rgba(226, 232, 240, 0.8);
 }
 
-/* Template Créatif : verre givré bleu/orange (DESIGN.md section 5) */
+/* Template Créatif : verre givré bleu/orange très vivant (Style Image 1) */
 [data-template="creatif"] {
   --bg: #F9FAFB;
   --surface: #FFFFFF;
@@ -40,22 +40,22 @@
   --muted: #475569;
   --subtle: #64748B;
   --border: rgba(226, 232, 240, 0.85);
-  --glass: rgba(255, 255, 255, 0.55);
-  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.85);
 }
 
-/* Template Immersif : sombre, 3D au centre (DESIGN.md section 7) */
+/* Template Immersif : studio de création, motion et showreel 3D de luxe (Style Image 3) */
 [data-template="immersif"] {
-  --bg: #07080D;
-  --surface: #0E1017;
-  --ink: #EDEFF5;
-  --accent: #7C5CFF;
-  --accent-2: #FF4D9D;
-  --muted: #A3A8B8;
-  --subtle: #64748B;
-  --border: #1E2235;
-  --glass: rgba(14, 16, 23, 0.75);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --bg: #090514;
+  --surface: #120B22;
+  --ink: #F8FAFC;
+  --accent: #C084FC;
+  --accent-2: #F472B6;
+  --muted: #CBD5E1;
+  --subtle: #94A3B8;
+  --border: #2A174A;
+  --glass: rgba(18, 11, 34, 0.85);
+  --glass-border: rgba(192, 132, 252, 0.25);
 }
 
 @theme inline {
@@ -71,6 +71,7 @@
   --font-bebas: var(--font-bebas);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-syne: var(--font-syne);
 }
 
 body {
@@ -127,3 +128,23 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Ruban Défilant Marquee (Aquilas Dev style) */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: inline-flex;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+

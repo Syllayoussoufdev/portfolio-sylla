@@ -111,6 +111,7 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
             projects={visibleProjects}
             settings={settings}
             template={profile.template}
+            variables={profile.variables as Record<string, unknown>}
           />
         ))}
       </main>

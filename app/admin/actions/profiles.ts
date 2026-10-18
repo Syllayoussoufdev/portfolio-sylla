@@ -71,6 +71,9 @@ function parseFormData(formData: FormData): {
   const rawSubPortfolioId = (formData.get("subPortfolioId") as string) || null;
   const heroMediaId = (formData.get("heroMediaId") as string) || null;
 
+  // Extraction des familles de compétences sélectionnées
+  const rawSkillsFamilies = formData.getAll("skillsFamilies") as string[];
+
   const rawProfile = {
     label,
     slug,
@@ -78,7 +81,9 @@ function parseFormData(formData: FormData): {
     accent: (formData.get("accent") as string) || "default",
     hero: heroData,
     sections,
-    variables: {},
+    variables: {
+      skillsFamilies: rawSkillsFamilies,
+    },
     seoTitle: (formData.get("seoTitle") as string) || null,
     seoDescription: (formData.get("seoDescription") as string) || null,
     heroMediaId: heroMediaId && heroMediaId !== "" ? heroMediaId : null,

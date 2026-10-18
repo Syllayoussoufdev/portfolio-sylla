@@ -74,9 +74,9 @@ export function Navbar({ settings }: NavbarProps) {
 
   const navLinks = [
     { href: "/#hero", label: "Accueil" },
+    { href: "/#a-propos", label: "À propos" },
     { href: "/#projets", label: "Projets" },
     { href: "/#competences", label: "Compétences" },
-    { href: "/#a-propos", label: "À propos" },
     { href: "/#contact", label: "Contact" },
   ];
 
@@ -99,13 +99,13 @@ export function Navbar({ settings }: NavbarProps) {
         aria-label="Navigation principale"
         className={`pointer-events-auto px-6 transition-all duration-300 flex items-center justify-between gap-6 sm:gap-10 max-w-6xl w-full rounded-2xl ${
           isScrolled
-            ? "bg-white/90 backdrop-blur-xl border border-slate-200/90 shadow-md shadow-slate-900/5 py-2.5"
-            : "bg-white/50 backdrop-blur-md border border-slate-200/50 shadow-xs py-4"
+            ? "bg-[var(--glass)] backdrop-blur-xl border border-[var(--border)] shadow-lg shadow-black/5 py-2.5"
+            : "bg-[var(--glass)] backdrop-blur-md border border-[var(--glass-border)] shadow-xs py-4"
         }`}
       >
         {/* Logo & Identité issue de SiteSettings */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-8 h-8 rounded-xl bg-[var(--ink)] text-white flex items-center justify-center font-bebas text-lg shadow-xs transition-transform group-hover:scale-105">
+          <div className="w-8 h-8 rounded-xl bg-[var(--ink)] text-[var(--bg)] flex items-center justify-center font-bebas text-lg shadow-xs transition-transform group-hover:scale-105">
             {initials}
           </div>
           <div className="flex flex-col">
@@ -137,7 +137,7 @@ export function Navbar({ settings }: NavbarProps) {
         <div className="flex items-center gap-3">
           <Link
             href="/#contact"
-            className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--ink)] hover:opacity-90 text-white text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
+            className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--ink)] hover:opacity-90 text-[var(--bg)] text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
           >
             <span>Me contacter</span>
             <ArrowRight className="w-3.5 h-3.5 text-[var(--accent)]" />
@@ -147,7 +147,7 @@ export function Navbar({ settings }: NavbarProps) {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-[var(--ink)] hover:bg-slate-100 transition-colors cursor-pointer"
+            className="md:hidden p-2 rounded-xl text-[var(--ink)] hover:bg-[var(--surface)] transition-colors cursor-pointer"
             aria-label={mobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={mobileMenuOpen}
           >

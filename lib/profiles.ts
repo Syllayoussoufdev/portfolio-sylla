@@ -30,9 +30,9 @@ export const FALLBACK_DEFAULT_PROFILE = {
   } as HeroData,
   sections: [
     { key: "hero", visible: true, order: 0 },
-    { key: "projets", visible: true, order: 1 },
-    { key: "competences", visible: true, order: 2 },
-    { key: "apropos", visible: true, order: 3 },
+    { key: "apropos", visible: true, order: 1 },
+    { key: "projets", visible: true, order: 2 },
+    { key: "competences", visible: true, order: 3 },
     { key: "parcours", visible: true, order: 4 },
     { key: "contact", visible: true, order: 5 },
   ] as SectionItem[],

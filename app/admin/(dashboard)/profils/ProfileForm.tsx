@@ -24,6 +24,7 @@ import { type ProfileActionState } from "../../actions/profiles";
 import { MediaPickerModal } from "@/components/admin/MediaPickerModal";
 import { type UploadedMedia } from "@/components/admin/MediaUploader";
 import { isReservedSlug } from "@/lib/constants/reserved-slugs";
+import { MASTER_SKILL_CATEGORIES } from "@/lib/constants/skills";
 import type { HeroData, SectionItem, TemplateName } from "@/lib/validations/profile";
 
 interface ProfileFormProps {
@@ -118,9 +119,9 @@ export function ProfileForm({
   // Sections
   const defaultSections: SectionItem[] = [
     { key: "hero", visible: true, order: 0 },
-    { key: "projets", visible: true, order: 1 },
-    { key: "competences", visible: true, order: 2 },
-    { key: "apropos", visible: true, order: 3 },
+    { key: "apropos", visible: true, order: 1 },
+    { key: "projets", visible: true, order: 2 },
+    { key: "competences", visible: true, order: 3 },
     { key: "parcours", visible: true, order: 4 },
     { key: "contact", visible: true, order: 5 },
   ];
@@ -130,6 +131,20 @@ export function ProfileForm({
       ? (initialData.sections as SectionItem[])
       : defaultSections
   );
+
+  // Familles de compétences sélectionnées pour ce profil / sous-portfolio
+  const initialVariables = (initialData?.variables || {}) as Record<string, unknown>;
+  const [selectedSkillFamilies, setSelectedSkillFamilies] = useState<string[]>(
+    Array.isArray(initialVariables.skillsFamilies)
+      ? (initialVariables.skillsFamilies as string[])
+      : MASTER_SKILL_CATEGORIES.map((c) => c.id)
+  );
+
+  const toggleSkillFamily = (id: string) => {
+    setSelectedSkillFamilies((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
 
   // Gestion du slug automatique
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -735,7 +750,67 @@ export function ProfileForm({
         />
       </div>
 
-      {/* Section 4 : Référencement SEO & Visibilité */}
+      {/* Section 4 : Filtrage des Compétences & Outils par Famille */}
+      <div className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-5">
+        <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+          <h2 className="text-base font-semibold text-[#0F172A] flex items-center gap-2">
+            <Code className="w-4 h-4 text-[#2563EB]" />
+            Grandes Familles de Compétences &amp; Outils
+          </h2>
+          <span className="text-xs text-[#64748B] font-mono">
+            {selectedSkillFamilies.length} sélectionnée{selectedSkillFamilies.length > 1 ? "s" : ""}
+          </span>
+        </div>
+
+        <p className="text-xs text-[#64748B]">
+          Choisissez précisément quelles familles de compétences et outils doivent être visibles sur ce profil / sous-portfolio (ex : cibler uniquement Frontend + Backend pour un profil dev).
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+          {MASTER_SKILL_CATEGORIES.map((cat) => {
+            const isChecked = selectedSkillFamilies.includes(cat.id);
+            return (
+              <label
+                key={cat.id}
+                className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-3 select-none ${
+                  isChecked
+                    ? "bg-blue-50/50 border-[#2563EB]/40 shadow-xs"
+                    : "bg-slate-50/50 border-slate-200 opacity-60 hover:opacity-100"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  name="skillsFamilies"
+                  value={cat.id}
+                  checked={isChecked}
+                  onChange={() => toggleSkillFamily(cat.id)}
+                  className="mt-1 w-4 h-4 text-[#2563EB] rounded focus:ring-blue-500 cursor-pointer"
+                />
+                <div className="space-y-1">
+                  <div className="text-sm font-bold text-[#0F172A]">
+                    {cat.title}
+                  </div>
+                  <div className="text-xs text-[#64748B]">
+                    {cat.description}
+                  </div>
+                  <div className="flex flex-wrap gap-1 pt-1.5">
+                    {cat.skills.map((s) => (
+                      <span
+                        key={s}
+                        className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white border border-slate-200 text-[#475569]"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </label>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Section 5 : Référencement SEO & Visibilité */}
       <div className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-5">
         <h2 className="text-base font-semibold text-[#0F172A] border-b border-slate-100 pb-3">
           Référencement SEO & Activation

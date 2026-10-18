@@ -9,34 +9,30 @@ import {
   ShieldCheck,
   Zap,
 } from "lucide-react";
+import { MASTER_SKILL_CATEGORIES } from "@/lib/constants/skills";
 
-export function SkillsSection() {
-  const skillCategories = [
-    {
-      title: "Développement Frontend",
-      icon: Code,
-      description: "Interfaces web rapides, accessibles et réactives.",
-      skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "HTML5 / CSS3", "State Management"],
-    },
-    {
-      title: "Backend & Architectures API",
-      icon: Server,
-      description: "Logique serveur robuste, bases relationnelles et sécurité.",
-      skills: ["Laravel", "Node.js", "PostgreSQL", "Prisma ORM", "REST API", "Auth / JWT"],
-    },
-    {
-      title: "Mobile & Multiplateforme",
-      icon: Smartphone,
-      description: "Applications mobiles fluides et expériences cross-platform.",
-      skills: ["React Native", "Flutter", "PWA", "Responsive Web Design", "Optimisation tactile"],
-    },
-    {
-      title: "UI/UX & Outils Créatifs",
-      icon: Palette,
-      description: "Prototypage interactif, design systems et médias.",
-      skills: ["Figma", "Design System", "Canva", "Montage Vidéo", "UI Motion", "Direction Artistique"],
-    },
-  ];
+interface SkillsSectionProps {
+  skillsFamilies?: string[];
+}
+
+const ICON_MAP = {
+  Code,
+  Server,
+  Smartphone,
+  Palette,
+  Terminal,
+};
+
+export function SkillsSection({ skillsFamilies }: SkillsSectionProps) {
+  // Filtrage selon les familles choisies pour ce profil / sous-portfolio
+  const displayCategories = React.useMemo(() => {
+    if (!skillsFamilies || skillsFamilies.length === 0) {
+      return MASTER_SKILL_CATEGORIES;
+    }
+    return MASTER_SKILL_CATEGORIES.filter((cat) =>
+      skillsFamilies.includes(cat.id)
+    );
+  }, [skillsFamilies]);
 
   const corePrinciples = [
     {
@@ -60,42 +56,52 @@ export function SkillsSection() {
     <section id="competences" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24">
       {/* En-tête de section */}
       <div className="space-y-3 mb-14 text-center max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200/80 text-[#0B132B] text-xs font-medium">
-          <Terminal className="w-3.5 h-3.5 text-[#2563EB]" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[var(--surface)] border border-[var(--border)] text-[var(--ink)] text-xs font-mono font-medium">
+          <Terminal className="w-3.5 h-3.5 text-[var(--accent)]" />
           <span>Expertises &amp; Savoir-faire</span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0B132B]">
+        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--ink)]">
           Compétences &amp; Technologies
         </h2>
 
-        <p className="text-sm sm:text-base text-[#475569] leading-relaxed">
+        <p className="text-sm sm:text-base text-[var(--muted)] leading-relaxed">
           Une boîte à outils moderne orientée production, axée sur les technologies fiables du marché.
         </p>
       </div>
 
-      {/* Grille des 4 pôles de compétences */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-        {skillCategories.map((cat) => {
-          const Icon = cat.icon;
+      {/* Grille des pôles de compétences filtrés par sous-portfolio */}
+      <div
+        className={`grid gap-6 mb-16 ${
+          displayCategories.length === 1
+            ? "grid-cols-1 max-w-md mx-auto"
+            : displayCategories.length === 2
+            ? "grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto"
+            : displayCategories.length === 3
+            ? "grid-cols-1 md:grid-cols-3"
+            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+        }`}
+      >
+        {displayCategories.map((cat) => {
+          const Icon = ICON_MAP[cat.iconName] || Terminal;
           return (
             <div
-              key={cat.title}
-              className="editorial-card p-6 flex flex-col justify-between bg-white border border-slate-200/90 rounded-2xl"
+              key={cat.id}
+              className="editorial-card p-6 flex flex-col justify-between bg-[var(--surface)] border border-[var(--border)] rounded-2xl transition-all hover:border-[var(--accent)]/50"
             >
               <div>
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center mb-4">
                   <Icon className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-semibold text-[#0B132B] mb-2">{cat.title}</h3>
-                <p className="text-xs text-[#64748B] mb-6 leading-relaxed">{cat.description}</p>
+                <h3 className="text-base font-semibold text-[var(--ink)] mb-2">{cat.title}</h3>
+                <p className="text-xs text-[var(--muted)] mb-6 leading-relaxed">{cat.description}</p>
               </div>
 
-              <div className="flex flex-wrap gap-1.5 pt-4 border-t border-slate-100">
+              <div className="flex flex-wrap gap-1.5 pt-4 border-t border-[var(--border)]">
                 {cat.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200/70 text-[#334155]"
+                    className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-[var(--bg)] border border-[var(--border)] text-[var(--ink)]"
                   >
                     {skill}
                   </span>
@@ -107,16 +113,16 @@ export function SkillsSection() {
       </div>
 
       {/* Bandeau d'approche de travail / Principes */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 rounded-3xl bg-slate-900 text-white shadow-xl shadow-slate-900/10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 rounded-3xl bg-[var(--surface)] border border-[var(--border)] text-[var(--ink)] shadow-xl shadow-black/5">
         {corePrinciples.map((principle) => {
           const Icon = principle.icon;
           return (
             <div key={principle.title} className="space-y-2">
-              <div className="flex items-center gap-2.5 text-blue-400 font-semibold text-sm">
+              <div className="flex items-center gap-2.5 text-[var(--accent)] font-semibold text-sm">
                 <Icon className="w-4 h-4" />
                 <span>{principle.title}</span>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-[var(--muted)] leading-relaxed">
                 {principle.description}
               </p>
             </div>

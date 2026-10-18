@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Bebas_Neue, Caveat } from "next/font/google";
+import { Geist, Geist_Mono, Bebas_Neue, Caveat, Syne } from "next/font/google";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import "./globals.css";
 
@@ -24,6 +24,12 @@ const caveat = Caveat({
   subsets: ["latin"],
 });
 
+const syne = Syne({
+  variable: "--font-syne",
+  subsets: ["latin"],
+  weight: ["500", "700", "800"],
+});
+
 export const metadata: Metadata = {
   title: "Sylla Youssouf — Portfolio Creative Engineer",
   description: "Portfolio de Sylla Youssouf : Design, Développement Web, Montage Vidéo, IA et Direction Créative.",
@@ -37,7 +43,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${caveat.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${caveat.variable} ${syne.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-[#F9FAFB] text-[#0F172A]">
         <MotionProvider>{children}</MotionProvider>

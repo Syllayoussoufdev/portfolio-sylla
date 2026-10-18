@@ -72,6 +72,7 @@ export default async function HomePage() {
             projects={visibleProjects}
             settings={settings}
             template={profile.template}
+            variables={profile.variables as Record<string, unknown>}
           />
         ))}
       </main>

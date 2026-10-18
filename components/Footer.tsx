@@ -36,7 +36,7 @@ export function Footer({ settings }: FooterProps) {
   );
 
   return (
-    <footer className="border-t border-slate-200/80 bg-white py-12 px-4 sm:px-6">
+    <footer className="border-t border-[var(--border)] bg-[var(--surface)] text-[var(--ink)] py-12 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Identité issue de SiteSettings */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
@@ -55,21 +55,21 @@ export function Footer({ settings }: FooterProps) {
           <Link href="/#hero" className="hover:text-[var(--accent)] transition-colors">
             Accueil
           </Link>
+          <Link href="/#a-propos" className="hover:text-[var(--accent)] transition-colors">
+            À propos
+          </Link>
           <Link href="/#projets" className="hover:text-[var(--accent)] transition-colors">
             Projets
           </Link>
           <Link href="/#competences" className="hover:text-[var(--accent)] transition-colors">
             Compétences
           </Link>
-          <Link href="/#a-propos" className="hover:text-[var(--accent)] transition-colors">
-            À propos
-          </Link>
           <Link href="/#contact" className="hover:text-[var(--accent)] transition-colors">
             Contact
           </Link>
           <Link
             href="/admin"
-            className="text-slate-400 hover:text-slate-600 transition-colors font-mono"
+            className="text-[var(--subtle)] hover:text-[var(--ink)] transition-colors font-mono"
           >
             Admin
           </Link>
@@ -81,7 +81,7 @@ export function Footer({ settings }: FooterProps) {
             <a
               href={`mailto:${settings.emailPublic}`}
               title={`Écrire à ${settings.emailPublic}`}
-              className="p-2 rounded-xl text-slate-500 hover:text-[var(--accent)] hover:bg-slate-50 transition-colors border border-slate-200/60"
+              className="p-2 rounded-xl text-[var(--muted)] hover:text-[var(--accent)] hover:bg-[var(--glass)] transition-colors border border-[var(--border)]"
             >
               <Mail className="w-4 h-4" />
             </a>
@@ -93,7 +93,7 @@ export function Footer({ settings }: FooterProps) {
               target="_blank"
               rel="noopener noreferrer"
               title="Discuter sur WhatsApp"
-              className="p-2 rounded-xl text-slate-500 hover:text-emerald-600 hover:bg-slate-50 transition-colors border border-slate-200/60"
+              className="p-2 rounded-xl text-[var(--muted)] hover:text-emerald-500 hover:bg-[var(--glass)] transition-colors border border-[var(--border)]"
             >
               <MessageCircle className="w-4 h-4" />
             </a>
@@ -105,7 +105,7 @@ export function Footer({ settings }: FooterProps) {
               target="_blank"
               rel="noopener noreferrer"
               title="GitHub"
-              className="p-2 rounded-xl text-slate-500 hover:text-[var(--ink)] hover:bg-slate-50 transition-colors border border-slate-200/60"
+              className="p-2 rounded-xl text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--glass)] transition-colors border border-[var(--border)]"
             >
               <GithubIcon className="w-4 h-4" />
             </a>

@@ -1,28 +1,28 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #F9FAFB;
+  --bg: #F8FAFC;
   --surface: #FFFFFF;
-  --glass: rgba(255, 255, 255, 0.55);
-  --blue: #2563EB;
-  --orange: #F97316;
-  --ink: #0F172A;
+  --ink: #0B132B;
+  --accent: #2563EB;
   --muted: #475569;
-  --border-glass: rgba(255, 255, 255, 0.7);
+  --subtle: #64748B;
+  --border: #E2E8F0;
+  --glass: rgba(255, 255, 255, 0.85);
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
-  --color-glass: var(--glass);
-  --color-blue: var(--blue);
-  --color-orange: var(--orange);
   --color-ink: var(--ink);
+  --color-accent: var(--accent);
   --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-border: var(--border);
+  --color-glass: var(--glass);
   --font-bebas: var(--font-bebas);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-hand: var(--font-caveat);
 }
 
 body {
@@ -30,18 +30,32 @@ body {
   color: var(--ink);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Matière verre givré conforme DESIGN.md */
+/* Verre contemporain épuré */
 .glass {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 20px;
-  box-shadow:
-    0 8px 32px rgba(15, 23, 42, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px -2px rgba(11, 19, 43, 0.04);
+}
+
+/* Carte éditoriale sobre */
+.editorial-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-card:hover {
+  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 12px 30px -4px rgba(11, 19, 43, 0.08);
+  transform: translateY(-2px);
 }
 
 @supports not (backdrop-filter: blur(1px)) {
@@ -50,10 +64,11 @@ body {
   }
 }
 
-@media (prefers-reduced-transparency: reduce) {
-  .glass {
-    background: #ffffff;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

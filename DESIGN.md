@@ -1,191 +1,200 @@
-# Direction Visuelle & Système de Design — Portfolio Sylla (v2)
+# Direction Visuelle & Système de Design — Portfolio Sylla (v3)
 
-Ce document remplace la v1 (thème sombre zinc/émeraude). Il fixe le système de design du **Portfolio Dynamique Multi-casquettes** de Sylla Youssouf : direction « humaine », matière « verre givré », contraste bleu électrique / orange vif sur fond clair.
+Remplace la v2. Le site propose **trois templates** (`creatif`, `developpeur`, `immersif`) construits sur un socle commun. Ce document fixe le socle, chaque template, le mouvement, les médias, l'accessibilité et la performance.
 
-> **Pour l'agent de code :** ce fichier est la source de vérité visuelle. En cas de conflit avec `PRD.md` sur le périmètre fonctionnel, le PRD gagne. En cas de conflit sur le rendu, ce fichier gagne. Si un point est marqué « ouvert » (section 10), ne pas l'inventer : demander.
-
----
-
-## 1. Philosophie
-
-- **Positionnement :** « Creative Engineer » avec un visage. Le site doit montrer la rigueur d'un développeur **et** la spontanéité d'un créatif. Un recruteur doit sentir une personne, pas un template.
-- **Matière :** verre givré posé sur des taches de couleur floutées, sur fond clair et aéré.
-- **Ton :** chaleureux, direct, haut de gamme mais accessible. Phrases courtes, verbes simples, pas de jargon de vendeur.
-- **Règle de retenue :** le **Hero** est le seul endroit où l'on dépense toute l'audace (photo détourée, doodles, titre XXL). Le reste du site reste calme et lisible. Si un effet ne sert pas la lecture, il est retiré.
+> **Pour l'agent de code.**
+> 1. Ce fichier est la source de vérité visuelle ; le code implémenté doit rester cohérent avec lui. Tout écart est documenté ici.
+> 2. Les valeurs marquées **(proposition)** sont à valider avec Sylla avant d'être figées. Ne pas les présenter comme définitives.
+> 3. Ne jamais inventer de contenu : chiffres, badges, certifications, clients, délais de réponse. Les textes viennent du profil (base de données). Les valeurs d'exemple de ce document sont des **placeholders**.
+> 4. Pour le template `developpeur`, documenter d'abord les tokens réellement présents dans le code actuel, puis appliquer les évolutions ci-dessous.
 
 ---
 
-## 2. Couleurs (thème clair unique en V0)
+## 1. Intention
 
-Pas de bascule sombre/clair en V0 (hors périmètre PRD).
+- **Créatif d'abord.** Le portfolio d'un expert en communication digitale et graphiste, qui est aussi développeur : le site prouve les deux.
+- **Humain et original.** Une personne derrière le site : photo détourée, annotations manuscrites, ton direct.
+- **Une audace par page.** Chaque page a **un seul moment spectaculaire** (le Hero). Le reste reste lisible et calme. Si un effet ne sert ni la lecture ni la mémorisation, il est supprimé.
+- **Pas de template générique.** Éviter : grille de cartes identiques partout, un seul rayon de bordure, étiquettes en majuscules espacées au-dessus de chaque titre, numérotation décorative hors séquences réelles, un seul mot coloré par titre.
 
-| Rôle | Valeur | Usage |
-|---|---|---|
-| Fond principal | `#F9FAFB` | Arrière-plan des pages |
-| Surface pleine | `#FFFFFF` | Fallback des cartes sans verre, formulaires |
-| Verre | `rgba(255,255,255,0.55)` | Cartes givrées (voir section 4) |
-| Bleu électrique | `#2563EB` | Liens, bordures actives, badges tech, titres d'accent |
-| Orange vif | `#F97316` | CTA principal, surbrillances, doodles |
-| Encre | `#0F172A` | Texte principal, texte posé sur orange |
-| Gris texte | `#475569` | Texte secondaire (voir note contraste) |
-| Gris trait | `#64748B` | Traits de liaison, icônes décoratives uniquement |
-| Orbes | `#3B82F6` + `#FB923C` | Taches floutées en arrière-plan |
+## 2. Architecture du design
 
-**Règles de contraste (obligatoires) :**
-- Le texte secondaire sur verre utilise `#475569`, **pas** `#64748B` (qui descend sous 4,5:1 dès que le verre est teinté par un orbe).
-- L'orange `#F97316` ne sert **jamais** de couleur de texte sur fond clair (contraste insuffisant). Texte sur bouton orange = encre `#0F172A`.
-- Texte blanc autorisé uniquement sur le bleu `#2563EB`.
-- Vérifier chaque combinaison à 4,5:1 minimum (3:1 pour le texte ≥ 24 px).
+- Le template actif est posé sur l'élément racine : `<div data-template="creatif">`.
+- Chaque template définit ses **tokens** en variables CSS (`--bg`, `--surface`, `--ink`, `--muted`, `--accent`, `--accent-2`, `--radius-*`, polices), sa **composition** de sections, ses **variantes de Hero**, son **preset de mouvement**.
+- Les composants de section (`Hero`, `Projets`, `Competences`, `Apropos`, `Parcours`, `Contact`) reçoivent leurs **données** en props (issues du profil) et choisissent leur **mise en page** selon le template. Un composant ne contient aucun texte métier en dur.
+- Aucune couleur en dur dans un composant. Tout passe par les tokens.
+- Les variantes `accent` du profil = jeux de tokens prévalidés (contraste vérifié), pas des couleurs libres.
 
-Définir ces valeurs en variables CSS dans `globals.css` (`--bg`, `--glass`, `--blue`, `--orange`, `--ink`, `--muted`) et les exposer à Tailwind. Aucune couleur en dur dans les composants.
+```
+src/templates/
+  registry.ts          // { creatif, developpeur, immersif }
+  creatif/    tokens.css  layout.tsx  hero.tsx  motion.ts
+  developpeur/ ...
+  immersif/    ...
+```
 
----
+## 3. Socle commun
 
-## 3. Typographie
+**Grille et espacement.** Conteneur 1280 px maximum, marges latérales fluides (`clamp(1rem, 4vw, 3rem)`). Échelle d'espacement 4 · 8 · 12 · 16 · 24 · 32 · 48 · 72 · 112 px. Sections séparées par 96 à 160 px sur desktop, 64 à 96 px sur mobile.
 
-Quatre familles au maximum, chargées avec `next/font` (pas de `<link>` externe) :
+**Rayons.** Trois niveaux seulement : 12 px (champs, badges), 20 px (cartes, panneaux), 999 px (boutons). Le template `immersif` peut ajouter 0 px pour des visuels plein cadre.
 
-| Rôle | Police | Règles |
-|---|---|---|
-| Titres XXL (Hero, grands titres de section) | **Bebas Neue** | Une seule graisse, majuscules natives. Jamais en corps de texte, jamais sous 32 px. |
-| Interface et corps | **Geist Sans** (ou Inter) | `text-sm` à `text-base`, `leading-relaxed`, lignes de moins de 80 caractères. |
-| Technique (slugs, tags, chiffres) | **Geist Mono** | Uniquement pour ce qui est réellement technique. |
-| Annotations manuscrites | **Caveat** (ou équivalent) | Notes, étiquettes volantes, légendes de doodles. Jamais pour du contenu important. |
+**Points de rupture.** 640 · 768 · 1024 · 1280 px. Conception mobile d'abord.
 
-Échelle : Hero `clamp(4rem, 12vw, 11rem)` · H2 `text-3xl` à `text-5xl` (Bebas) · H3 `text-lg` à `text-xl` (Geist, semi-gras) · corps `text-base`.
+**Typographie (principes).** Un titre expressif, un texte très lisible, une police technique pour les slugs et tags uniquement. Lignes de moins de 80 caractères. Chargement par `next/font`. Le Hero utilise `clamp()` pour la taille.
 
-Éviter : étiquettes en majuscules espacées au-dessus de chaque titre, numérotation décorative (01 / 02 / 03) hors des vraies séquences, un seul mot coloré dans chaque titre.
+**Sections et clés.** `hero` · `projets` · `competences` · `apropos` · `parcours` (optionnelle) · `contact`. Ordre et visibilité viennent du profil.
 
----
+## 4. Header, navigation, footer (communs)
 
-## 4. Matière « verre givré »
+- **Libellés :** Accueil · Projets · Compétences · À propos · Contact. Pas de nom ambigu.
+- **Disposition :** logo (nom + une ligne de métier) à gauche, liens répartis avec de **vraies marges** (au moins 32 px entre les liens, pas de bloc serré au centre), bouton d'action à droite (« Me contacter » ou « Discutons de votre projet »).
+- **Comportement au défilement :** en haut de page, header transparent et plus haut ; après environ 80 px, il **se compacte** (hauteur réduite, fond givré ou plein selon le template) ; il se masque quand on descend et réapparaît quand on remonte. Le lien actif suit la section visible.
+- **Mobile :** menu plein écran, ouvert et fermé au clavier (`Échap`), focus piégé tant qu'il est ouvert, bouton d'action toujours visible.
+- **Footer :** réseaux, WhatsApp, e-mail, liens légaux. Aucune mention inventée.
 
-Recette de base (classe utilitaire `.glass`) :
+## 5. Template `creatif` — verre givré bleu/orange
+
+Reprend le premier portfolio. Humain, chaleureux, coloré.
+
+**Couleurs.**
+
+| Rôle | Valeur |
+|---|---|
+| Fond | `#F9FAFB` |
+| Surface pleine | `#FFFFFF` |
+| Verre | `rgba(255,255,255,0.55)` |
+| Bleu électrique | `#2563EB` |
+| Orange vif | `#F97316` |
+| Encre | `#0F172A` |
+| Texte secondaire | `#475569` |
+| Orbes | `#3B82F6` et `#FB923C` |
+
+Règles de contraste : texte secondaire sur verre en `#475569` (jamais `#64748B`) ; l'orange n'est **jamais** une couleur de texte sur fond clair ; texte sur bouton orange = encre ; texte blanc uniquement sur le bleu. Contraste minimum 4,5:1 (3:1 au-dessus de 24 px).
+
+**Typographie.** Bebas Neue (grands titres, jamais sous 32 px) · Geist Sans (interface et corps) · Geist Mono (tags et slugs) · Caveat (annotations manuscrites, jamais pour du contenu important).
+
+**Verre givré.**
 
 ```css
 .glass {
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255,255,255,.55);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255,255,255,.7);
   border-radius: 20px;
-  box-shadow:
-    0 8px 32px rgba(15, 23, 42, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 32px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.8);
 }
-
-/* Fallback : navigateur sans backdrop-filter ou transparence réduite */
-@supports not (backdrop-filter: blur(1px)) {
-  .glass { background: #fff; }
-}
-@media (prefers-reduced-transparency: reduce) {
-  .glass { background: #fff; backdrop-filter: none; }
-}
+@supports not (backdrop-filter: blur(1px)) { .glass { background:#fff; } }
+@media (prefers-reduced-transparency: reduce) { .glass { background:#fff; backdrop-filter:none; } }
 ```
 
-**Où l'utiliser :** cartes projets, cartes bento du Hero, carte de stats, formulaire de contact, en-tête flottant. **Pas ailleurs.** Du verre partout = plus de verre.
+Utilisé pour : cartes projets, cartes du Hero, formulaire, header compacté. Pas ailleurs. Orbes de couleur : 2 à 3 par écran, en `radial-gradient` (pas de `filter: blur()` sur de grands éléments). Mobile : `blur(10px)`, 3 surfaces givrées visibles au maximum.
 
-**Orbes d'ambiance :** 2 à 3 maximum par écran, en `radial-gradient` (pas de `filter: blur()` sur de grands éléments, trop coûteux sur mobile). Bleu en haut à gauche, orange en bas à droite, légèrement décalés d'une page à l'autre. Statiques par défaut.
+**Hero (le moment spectaculaire).** Portrait détouré de Sylla (contour blanc type sticker), 2 ou 3 polaroids inclinés, 1 ou 2 stickers au maximum, une fenêtre de code translucide, une pastille d'outil, 2 ou 3 doodles SVG. Titre XXL en Bebas Neue. Textes, boutons et chiffres viennent du profil. **Sans portrait fourni :** placeholders de verre légendés « à remplacer » ; aucune fausse photo.
 
-**Variation de rayon :** 20 px pour les cartes, 12 px pour les badges et inputs, 999 px pour les boutons. Pas un seul rayon partout.
+**Projets.** Cartes 16:9 en verre, grande image, badges d'outils, liens directs (GitHub, démo, Figma), note manuscrite optionnelle. Survol : zoom de l'image ≤ 1,04, bordure lumineuse bleue ou orange.
 
----
+**Parcours.** Timeline avec points bleus, un point orange pour l'étape en cours, une phrase personnelle par étape. Contenu statique dans `content/experience.ts` en V0.
 
-## 5. Composants
+**Contrat de mouvement (doit être vérifiable à l'œil) :**
+1. Entrée du Hero orchestrée en ressort (`back.out` / `elastic`), 1,2 s au maximum, une fois.
+2. Les doodles se **tracent** (DrawSVG) quand ils entrent à l'écran.
+3. Parallaxe de souris sur les calques du Hero (≤ 12 px, désactivée au tactile), plus parallaxe au **défilement** à vitesses différentes.
+4. Cartes projets : apparition échelonnée (stagger 60 à 90 ms) puis léger basculement 3D (tilt) au survol.
+5. Filtres de projets : réorganisation animée avec **GSAP Flip**.
+6. Bande de texte défilant dont la vitesse suit la vitesse de défilement.
+7. Header qui se compacte et se masque au défilement.
 
-### A. Hero — « la scène vivante » (l'unique moment spectaculaire)
-- **Visuel central :** vraie photo détourée de Sylla, avec un fin contour blanc façon sticker.
-- **Autour :** 2 ou 3 photos « polaroid » légèrement inclinées, 1 ou 2 stickers (pas plus), une fenêtre de code translucide, une pastille d'outil (Figma, Canva, Next.js).
-- **Doodles :** 2 ou 3 flèches ou boucles tracées à la main, en SVG, orange ou encre.
-- **Titre :** « SYLLA » en Bebas Neue XXL, partiellement chevauché par la photo. Sous-titre : deux badges (`Engineer` bleu, `Design` orange) + « Portfolio ».
-- **Chiffres :** uniquement des chiffres **réels** (nombre de projets publiés, nombre de domaines), lus depuis la base. Jamais de chiffres inventés.
-- **CTA :** « Voir les réalisations » (orange, défilement doux) et « Me contacter » (verre, WhatsApp direct ou formulaire de contact).
+## 6. Template `developpeur` — bleu nuit, précision
 
-### B. Cartes projets — « écrans givrés »
-- Format 16:9, image de couverture (Cloudinary, `next/image`), badges d'outils discrets, liens directs (GitHub, Live demo, Figma, Canva, Drive) sans quitter la grille.
-- Survol : micro-zoom de l'image (≤ 1,04), bordure qui s'illumine en bleu ou orange, ombre légèrement plus marquée. C'est tout.
-- Chaque carte peut porter une courte note manuscrite (« Note de dev », « Idée créative ») issue d'un champ optionnel du projet.
+Base : la version actuelle (à documenter depuis le code), corrigée et animée.
 
-### C. Sous-portfolios `/[profil]`
-- En-tête contextuel (ex. « Sélection : design graphique et identités visuelles »), même niveau de finition que l'accueil, uniquement les projets cochés. Le Hero y est allégé (pas de polaroids multiples).
+**Tokens (propositions, à confirmer en lisant le code).** Fond `#F6F7FB`, bleu nuit `#0B1B3A` (titres, navigation, panneaux sombres), accent bleu `#2F5BFF` (liens, boutons, états actifs), accent secondaire ambre `#F5B83D` **réservé aux surbrillances ponctuelles**, gris `#475569` pour le texte secondaire.
 
-### D. Compétences (Les 6 domaines PRD)
-- 6 cartes représentatives des 6 casquettes du PRD :
-  1. *Design Graphique* (Canva, Drive, Figma, affiches, identités)
-  2. *Branding & Stratégie Com* (Guidelines, case studies, plans com)
-  3. *Cadrage & Montage Vidéo* (Lecteurs vidéo, YouTube/Vimeo, thumbnails)
-  4. *Design UI/UX & Motion* (Maquettes interactives Figma, prototypes)
-  5. *IA Product Creator* (Prompts, outils et résultats documentés)
-  6. *Développement Web* (Sites en prod, repos GitHub, démos live)
-- Icônes vectorielles + liste d'outils maîtrisés. **Aucun pourcentage arbitraire.**
+**Corrections obligatoires.** Retirer « Code certifié & déployé », « Profil vérifié » et toute promesse non renseignée. Cartes projets : varier les formats (une grande carte « à la une » + une grille) au lieu de six cartes identiques ; image de couverture grande ; état vide propre quand il n'y en a pas.
 
-### E. Parcours — « fil naturel »
-- Timeline horizontale ou verticale avec points bleus et un point orange pour l'étape en cours, et une courte phrase personnelle par étape (« ce que j'y ai appris »).
-- **V0 : contenu statique** dans `content/experience.ts` (pas de table Prisma). À passer en base en V1 si besoin.
+**Contrat de mouvement :**
+1. Titre du Hero révélé mot à mot (SplitText), masque qui monte.
+2. Le polyèdre 3D filaire autour du portrait réagit à la souris et tourne avec le défilement (React Three Fiber, chargé à la demande).
+3. Section Projets : un projet « à la une » **épinglé** (ScrollTrigger pin) pendant que ses détails défilent.
+4. Compétences : groupes qui s'activent un par un au défilement, sans barre de pourcentage.
+5. Boutons : légère attraction magnétique au survol (≤ 8 px).
+6. Header qui se compacte au défilement ; lien actif suivi.
 
-### F. Galerie détail projet
-- Grille d'images avec **lightbox au clic** (accessible au clavier, touche `Échap` pour fermer). Voir décision ouverte en section 10.
+## 7. Template `immersif` — sombre, 3D au centre
 
-### G. Contact et footer
-- Formulaire 3 champs sur carte de verre, messages d'erreur explicites (« Entre une adresse e-mail valide »), état de succès clair.
-- Footer persistant affiché partout : réseaux sociaux, lien direct WhatsApp, e-mail.
+Nouveau. Pour les profils qui doivent marquer : vidéo, motion, IA, création numérique.
 
----
+**Tokens (propositions).** Fond `#07080D`, texte `#EDEFF5`, texte secondaire `#A3A8B8`, accent violet `#7C5CFF`, contraste magenta `#FF4D9D`. Contrastes à vérifier à l'implémentation (4,5:1 minimum). Aplats et lumière diffuse limitée ; pas d'empilement de dégradés.
 
-## 6. Animations (bibliothèque : Motion)
+**Typographie (proposition).** Syne (titres larges) + Geist Sans (corps) + Geist Mono (technique).
 
-Utiliser **une seule** bibliothèque d'animation : `motion` (ex-Framer Motion). GSAP et Lenis ne sont pas utilisés en V0. Choix justifié : `layoutId` (réorganisation des filtres) et les ressorts sont natifs à Motion.
+**Hero.** Un **objet 3D unique** (forme géométrique, composition abstraite ou objet numérique) qui suit le pointeur et dont la caméra progresse avec le défilement. Poids du modèle ≤ 1,5 Mo, compression Draco ou meshopt. Concept de l'objet : **à valider** avec Sylla.
 
-- **Entrée du Hero (le seul moment orchestré) :** les éléments arrivent en ressort (`type: "spring"`, `stiffness: 100`, `damping: 15`), échelonnés sur environ 700 ms. Une seule fois.
-- **Doodles :** tracé du trait (`pathLength` de 0 à 1) quand ils entrent dans le viewport, une seule fois.
-- **Filtres de projets :** réorganisation animée des cartes avec `layout` / `layoutId`.
-- **Parallaxe souris :** uniquement sur les calques du Hero, amplitude ≤ 12 px, **désactivée** sur écran tactile.
-- **Interactions :** `whileTap={{ scale: 0.98 }}` sur boutons et éléments cliquables, focus clavier visible.
-- **Sections suivantes :** pas de fondu-glissement systématique. Apparition simple (opacité, 150 ms) ou aucune animation.
-- **`prefers-reduced-motion` respecté partout :** pas de ressort, pas de parallaxe, pas de tracé animé (les doodles s'affichent directement).
+**Contrat de mouvement :**
+1. Caméra 3D pilotée par la progression du défilement (ScrollTrigger).
+2. Objet 3D qui réagit au pointeur (inertie, amplitude limitée).
+3. Images de projets avec **distorsion shader** au survol (une seule technique, pas de pile d'effets).
+4. Titres en défilement horizontal lié à la vitesse de scroll.
+5. Transitions de sections par masques et décalages (transform et opacity uniquement).
+6. Curseur personnalisé discret, **limité** à ce template, désactivé au tactile et en mouvement réduit.
 
----
+## 8. Mouvement : règles communes
 
-## 7. Accessibilité et performance (plancher de qualité)
+- **Bibliothèques :** GSAP + ScrollTrigger (+ SplitText, Flip, DrawSVG), Lenis. Aucune autre bibliothèque d'animation.
+- **React :** `useGSAP()` pour tout, un seul `registerPlugin` global, `gsap.matchMedia()` pour séparer desktop, mobile et mouvement réduit. Nettoyage complet au démontage. `ScrollTrigger.refresh()` après le chargement des images et des polices.
+- **Durées :** micro-interactions 150 à 250 ms · révélations 500 à 900 ms · séquence du Hero 1,2 s au maximum · décalage 60 à 90 ms.
+- **Propriétés animées :** `transform` et `opacity` en priorité. Pas d'animation de `width`, `height`, `top`, `left`. **Aucun décalage de mise en page** (CLS < 0,1).
+- **Pas de fondu-glissement systématique** sur chaque section : réserver le mouvement aux éléments qui portent le message.
+- **`prefers-reduced-motion` respecté partout :** contenu visible immédiatement, pas de parallaxe, pas de tracé, 3D figée ou remplacée par une image.
+- **Ne jamais bloquer** le défilement naturel, le clavier ou le tactile.
+- **Chaque template vérifie son « contrat de mouvement »** (sections 5 à 7) avant la fin de l'étape ; le rapport d'étape liste ce qui est réellement observé.
 
-- Contraste conforme (section 2), focus visible sur tout élément interactif, navigation clavier complète.
-- `alt` utile sur chaque image ; les doodles et orbes sont décoratifs (`aria-hidden`).
-- Mobile d'abord : le verre y est allégé (`blur(10px)`), le Hero passe en une colonne, la parallaxe est coupée.
-- Images : `next/image`, formats WebP/AVIF, `priority` uniquement sur l'image du Hero. Cible Lighthouse : Performance ≥ 90, Accessibilité ≥ 95.
-- Pas plus de 3 surfaces en `backdrop-filter` visibles simultanément sur mobile.
+## 9. 3D : règles communes
 
----
+- Un seul `<Canvas>` par page, chargé avec `next/dynamic` (`ssr: false`) seulement quand il est utile (visible ou proche de l'être).
+- `dpr` limité à 1,5 (1 sur mobile). `frameloop="demand"` ou pause hors écran. Pas de post-traitement sur mobile.
+- **Le Hero ne dépend jamais de la 3D** : le texte et les boutons s'affichent d'abord, la 3D se superpose ensuite.
+- Image de remplacement si WebGL est absent, si l'appareil est limité, ou si le mouvement est réduit.
+- Modèles `.glb` optimisés, poids total des assets 3D documenté dans le rapport.
 
-## 8. Assets à fournir par Sylla
+## 10. Médias
 
-- `public/hero/sylla-cutout.webp` : portrait détouré (fond transparent), idéalement 2 poses.
-- 2 à 3 photos « candid » pour les polaroids (autorisation de publication des personnes visibles).
-- Logos ou captures d'outils pour les pastilles (Figma, Canva, Next.js).
-- Texte du parcours (4 à 6 étapes, une phrase d'apprentissage chacune).
-- Une couverture par projet (16:9).
+- **Images téléversées uniquement** (Cloudinary), jamais d'URL d'image externe arbitraire. Les liens servent aux ressources (Canva, Figma, Drive, GitHub, YouTube, Vimeo).
+- `next/image` avec largeurs adaptées, `f_auto` et `q_auto`, dimensions connues, `sizes` renseigné. `priority` seulement pour l'image du Hero. Flou d'attente léger (placeholder) sur les grandes couvertures.
+- **Texte alternatif obligatoire** à l'envoi. Images purement décoratives : `alt=""` et `aria-hidden`.
+- Ratios : couverture de carte 16:9, galerie au ratio d'origine, visuel du Hero selon le template.
+- **Sans image :** composition graphique générée à partir des tokens (aplat, motif, initiales du projet), jamais une fausse photo.
+- **Vidéo :** YouTube (`youtube-nocookie`) ou Vimeo en iframe, chargée au clic (vignette d'abord).
+- **Lightbox :** navigation clavier, `Échap` pour fermer, focus restitué, légende lisible.
+- **Icônes :** une seule bibliothèque (Lucide si déjà présente). Pas d'emojis comme icônes permanentes.
 
-Tant qu'ils ne sont pas fournis, l'agent utilise des **placeholders neutres** (rectangles de verre avec légende « à remplacer ») et ne génère aucune fausse photo.
+## 11. Composants communs
 
----
+- **Boutons :** principal (couleur d'accent du template), secondaire (contour ou verre), lien. Libellé = ce qui se passe (« Voir mes projets », « Me contacter »). Hauteur tactile ≥ 44 px, focus visible, retour au clic (`scale: 0.98`).
+- **Filtres :** puces avec état actif clair, réorganisation animée (Flip), URL mise à jour (`?domaine=`) pour le partage.
+- **Formulaire de contact :** trois champs, messages d'erreur explicites (« Entre une adresse e-mail valide »), état d'envoi et de succès, champ anti-spam invisible, aucun libellé promettant un délai de réponse.
+- **États vides :** une phrase claire et une action (« Aucun projet publié pour l'instant »).
 
-## 9. À ne pas faire
+## 12. Accessibilité et performance
 
-La maquette de référence (image générée par IA) sert de **ambiance**, pas de spécification. Ne pas reproduire :
-- les textes illisibles ou inventés qu'elle contient (« Developpment », « Nextiat Creative », « 710 Ste. »…) ;
-- ses statistiques fictives (710, 500+, 413+) ;
-- l'accumulation de stickers (papillon, smiley, « Y2K », appareil photo) : en garder deux au plus ;
-- le verre sur toutes les surfaces ;
-- des animations de défilement sur chaque section.
+- Contraste conforme, focus visible partout, navigation clavier complète, repères sémantiques (`header`, `nav`, `main`, `footer`), un seul `h1` par page.
+- **Cibles Lighthouse (mobile) :** Performance ≥ 90, Accessibilité ≥ 95, SEO ≥ 95. **LCP < 2,5 s**, **CLS < 0,1**.
+- JavaScript initial de la page d'accueil **hors 3D** : à mesurer et documenter ; la 3D et GSAP lourd sont chargés à la demande.
+- Mobile : verre allégé, parallaxe coupée, 3D remplacée ou allégée, aucune animation permanente.
 
----
+## 13. Textes
 
-## 10. Décisions
+Français, phrases courtes, verbes d'action, aucun jargon de vendeur. Les textes de l'interface décrivent ce qui est ; les textes des profils sont saisis dans le dashboard. Les valeurs de départ du profil par défaut sont des **placeholders** marqués « à remplacer ».
 
-| Sujet | État | Choix |
-|---|---|---|
-| Couleur d'accent | **Tranché** | Option D : bleu `#2563EB` + orange `#F97316`, fond clair `#F9FAFB` |
-| Visuel du Hero | **Tranché** | Portrait détouré + éléments flottants (photo à fournir) |
-| Format des galeries détail | **Ouvert (défaut proposé)** | Grille + lightbox. Le carrousel est réservé à la bande « Projets à la une » de l'accueil |
-| Police manuscrite | **Ouvert** | Caveat par défaut, à valider visuellement |
-| Bibliothèque d'animation | **Tranché** | Motion uniquement (remplace « GSAP uniquement » du journal précédent) |
-| Mode sombre | **Hors périmètre V0** | Thème clair unique en V0 |
+## 14. À confirmer avec Sylla
+
+| Sujet | État |
+|---|---|
+| Portrait détouré, 2 poses, et photos « candid » | À fournir |
+| Concept de l'objet 3D du template `immersif` | Ouvert |
+| Polices du template `immersif` (Syne proposée) | Proposition |
+| Palettes `developpeur` et `immersif` | Propositions |
+| Variantes `accent` par template | À définir après les tokens |
+| Textes du Hero par profil | À saisir dans le dashboard |

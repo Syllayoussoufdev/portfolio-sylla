@@ -1,129 +1,184 @@
-# PRD — Portfolio Dynamique Multi-casquettes
+# PRD — Portfolio Dynamique Multi-profils (v3)
 
-**Auteur :** Sylla Youssouf  
-**Version :** V0 — MVP  
-**Stack de référence :** Next.js 14+ (App Router, TypeScript) — *Environnement actuel : Next.js 16 / React 19*  
-**Date :** Octobre 2026  
+**Auteur :** Sylla Youssouf · **Version :** V0 étendue · **Date :** 18 octobre 2026
+**Remplace :** PRD v2 (« Portfolio Dynamique Multi-casquettes »).
 
----
-
-## 1. Vision & Positionnement
-
-### Positionnement clé
-La double compétence **créative (design, vidéo, IA) + technique (développement web)** constitue l'avantage différenciateur majeur de Sylla Youssouf. Le portfolio ne doit pas se limiter à une liste statique de réalisations : il doit incarner et prouver visuellement et techniquement cette maîtrise hybride.
-
-### Domaines de compétences couverts (6 casquettes)
-1. **Design Graphique** : Affiches, logos, identités visuelles — liens Canva, Google Drive, Figma ou fichiers directs.
-2. **Branding & Stratégie Com** : Études de cas documentées, guidelines de marque, plans de communication (PDF, case studies).
-3. **Cadrage & Montage Vidéo** : Lecteurs vidéo embarqués ou liens YouTube/Vimeo, vignettes dynamiques cliquables.
-4. **Design UI/UX & Motion** : Maquettes interactives Figma, prototypes, micro-animations, prévisualisations embarquées.
-5. **IA Product Creator** : Projets générés ou automatisés par IA, documentation des prompts, outils et résultats concrets.
-6. **Développement Web** : Applications et sites clients en production, projets personnels, liens GitHub et démonstrations interactives en direct.
-
-### Utilisateurs cibles
-* **Recruteur / DRH** : Parcours ultra-rapide ; accède directement à une sélection de réalisations filtrées selon le poste convoité via un sous-lien dédié.
-* **Agence / Client freelance** : Consultation ciblée des projets pertinents pour leur secteur avec prise de contact directe et simplifiée.
-* **Sylla Youssouf (Admin)** : Back-office centralisé pour piloter les projets, configurer des sous-portfolios sur-mesure et suivre la fréquentation.
+> **Pour l'agent de code.** Ce document décrit le produit. `DESIGN.md` décrit le rendu. `ROADMAP.md` décrit l'ordre de travail et les règles d'exécution. En cas de conflit : le PRD gagne sur le périmètre fonctionnel, `DESIGN.md` sur le visuel, `ROADMAP.md` sur la méthode.
+> **Avant toute modification :** inspecte le code réel (schéma Prisma, routes, composants, `package.json`). Ce PRD indique l'intention ; les noms exacts de modèles et de champs existants sont à vérifier dans le projet, jamais à supposer.
 
 ---
 
-## 2. Fonctionnalités V0 (Périmètre MVP)
+## 1. Vision et positionnement
 
-### A. Front-end public (Portfolio visible)
-1. **Accueil impactant (`/`) :**
-   * Hero header avec proposition de valeur forte.
-   * Résumé du profil assimilable en 5 secondes.
-   * Animation fluide et subtile au scroll / survol.
-   * Call To Action (CTA) de contact visible dès le premier écran.
-2. **Grille de projets filtrable (`/projets`) :**
-   * Présentation de tous les projets avec tags de compétences.
-   * Filtrage fluide côté client par domaine ou technologie.
-   * Carte projet : miniature/cover, titre, catégorie, résumé, liens directs.
-3. **Page détail projet (`/projets/[slug]`) :**
-   * Fiche détaillée : contexte, problématique, solution apportée, galerie médias, technologies/outils utilisés.
-   * Liens externes intégrés (Canva, Figma, Drive, GitHub, Live demo, Vidéo).
-4. **Sous-portfolios dynamiques (`/[profil]`) — *Killer Feature* :**
-   * Route personnalisée (ex. `/design`, `/dev`, `/video`).
-   * Vue filtrée sur une sélection précise de projets configurée depuis l'admin.
-   * Permet d'envoyer un lien sur-mesure à un prospect ou recruteur précis.
-5. **Section Compétences :**
-   * Visualisation claire des 6 domaines avec icônes représentatives et niveau d'expertise (sans barres de pourcentage arbitraires).
-6. **Formulaire de contact épuré (`/contact`) :**
-   * 3 champs essentiels : Nom, Email, Message.
-   * Traitement et envoi par email via l'API Resend.
-7. **Footer persistant :**
-   * Liens vers les réseaux sociaux, email direct et lien WhatsApp direct.
+- **Identité principale :** expert en communication digitale et graphiste créatif.
+- **Identité complémentaire :** développeur web et mobile, présenté comme *concepteur de solutions numériques* : la personne qui sait imaginer et aussi livrer.
+- **Le site est lui-même une preuve :** il doit montrer de la créativité visuelle et de la rigueur technique.
+- **Un seul site, plusieurs lectures.** Chaque public (recruteur design, agence, client, recruteur tech) voit un portfolio adapté : message, ordre des sections, projets visibles et habillage visuel.
 
-### B. Dashboard back-office (Accès Admin sécurisé)
-1. **Gestion des projets (`/admin/projets`) :**
-   * CRUD complet (Créer, Lire, Mettre à jour, Supprimer, Masquer/Afficher).
-   * Gestion de l'ordre d'affichage, assignation des tags, saisie des liens JSON et URL d'image de couverture.
-2. **Générateur de sous-portfolios (`/admin/portfolios`) :**
-   * Création d'un slug dédié (ex. `design`, `dev`, `motion`).
-   * Sélection par cases à cocher des projets associés (relation `SubPortfolioProject`).
-   * Activation / désactivation du lien en un clic.
-3. **Analytics légères & respectueuses (`/admin/analytics`) :**
-   * Compteur de visites global et ventilation par sous-portfolio / page.
-   * Solution 100% sans cookies tiers, respectueuse de la vie privée.
-   * Règle de confidentialité : aucune adresse IP stockée en clair (hachage anonymisé).
+**Règle d'honnêteté (non négociable).** Aucun chiffre, badge, certification, promesse de délai, nom de client ou résultat n'est inventé. Tout élément affiché vient de la base de données ou d'un champ renseigné par l'administrateur. Un contenu manquant donne un état vide propre, jamais un faux contenu.
 
----
+## 2. Utilisateurs
 
-## 3. Architecture des routes
+| Utilisateur | Besoin | Ce qu'il reçoit |
+|---|---|---|
+| Recruteur / RH | Comprendre le profil en quelques secondes | Un lien dédié (`/design`, `/dev`…) avec uniquement les projets pertinents |
+| Agence / client | Voir des réalisations dans son domaine et contacter | Un portfolio ciblé et un formulaire simple |
+| Administrateur (Sylla) | Tout gérer sans toucher au code | Un dashboard : projets, médias, profils, messages, statistiques |
 
-| Route | Description | Visibilité |
-| :--- | :--- | :--- |
-| `/` | Portfolio complet — accueil avec tous les domaines | Public |
-| `/projets` | Grille complète des projets avec filtres | Public |
-| `/projets/[slug]` | Page de détail d'un projet spécifique | Public |
-| `/[profil]` | Sous-portfolio filtré dynamique (ex: `/design`, `/dev`) | Public |
+## 3. Concept central : Profil + Template
+
+- **Profil** = un jeu de contenus lié à une URL : textes du Hero, boutons, visuel, sections visibles et leur ordre, projets affichés, variables, SEO. Entièrement modifiable depuis le dashboard.
+- **Template** = un habillage : composition, couleurs, typographie, animations, 3D. Le code en fournit trois ; la base ne stocke que leur clé.
+- **Un profil utilise un template.** Changer de template ne change aucun contenu.
+
+| Clé | Nom | Rôle |
+|---|---|---|
+| `creatif` | Créatif (verre givré bleu/orange) | Template par défaut de `/`. Communication digitale et graphisme en premier |
+| `developpeur` | Développeur | Version actuelle conservée et enrichie. Pour `/dev` |
+| `immersif` | Immersif | Nouveau. Plus sombre, avec la 3D comme élément central |
+
+Exemples : `/` → profil par défaut (`creatif`) · `/dev` → `developpeur` · `/design` → `creatif` avec Hero « design graphique » · `/video` → `immersif` ou `creatif`, au choix.
+
+## 4. Fonctionnalités
+
+### 4.1 Front-end public
+- **Header** : navigation Accueil · Projets · Compétences · À propos · Contact, bouton d'action orienté conversion, menu mobile accessible. Réagit au défilement (voir `DESIGN.md`).
+- **Hero piloté par le profil** : titre, sous-titre, accroche, deux boutons, visuel. Un appel à l'action visible sans défiler sur desktop.
+- **Projets sélectionnés** puis page `/projets` : grille filtrable par domaine, cartes avec grande image de couverture.
+- **Page projet** `/projets/[slug]` : étude de cas, liens (Canva, Figma, Drive, GitHub, démo), technologies, galerie avec lightbox, vidéo YouTube/Vimeo intégrée.
+- **Compétences** : groupes d'outils et de domaines, sans pourcentage.
+- **À propos et méthode de travail** : concis, factuel.
+- **Contact** : formulaire 3 champs (nom, e-mail, message), validation, anti-spam, envoi par e-mail et enregistrement en base.
+- **Footer persistant** : réseaux, WhatsApp, e-mail, liens légaux.
+- **Sous-portfolios** `/[profil]` : même qualité que l'accueil, projets filtrés.
+- **Mouvement** : animations au défilement et au survol, effets 3D réactifs, par template (voir `DESIGN.md`).
+
+### 4.2 Back-office (existant, étendu par ajout uniquement)
+- Projets : créer, modifier, masquer, supprimer, ordonner ; **téléverser** couverture et galerie.
+- **Médiathèque** (nouveau) : voir, réutiliser, supprimer les images téléversées.
+- **Profils** (nouveau) : formulaire du Hero, choix du template avec aperçu, sections (visibilité, ordre), projets affichés, variables, SEO, activation.
+- Sous-portfolios : liste, URL, statut actif/inactif (existant).
+- Messages reçus et statistiques de visites (existant).
+- L'authentification et les routes d'administration existantes ne sont pas réécrites.
+
+### 4.3 Variables d'offre (optionnel, fin de phase 2bis)
+Un lien peut personnaliser le Hero : `/design?pour=Acme` remplace `{entreprise}` dans les textes du profil. La valeur est nettoyée (lettres, chiffres, espaces, tirets, 40 caractères maximum), affichée comme texte brut, jamais comme HTML.
+
+## 5. Gestion des médias (images téléversées)
+
+**Principe :** les **images se téléversent** depuis le dashboard ; les **liens** servent aux ressources externes (Canva, Figma, Drive, GitHub, YouTube, Vimeo). Un lien Drive ou Canva n'est pas une image affichable : l'image doit être téléversée.
+
+- **Flux :** le navigateur demande une signature à une route admin protégée → l'image part **directement vers Cloudinary** (pas via le serveur Next.js : les fonctions Vercel ont une limite de corps de requête) → le navigateur renvoie à l'application l'identifiant public et les métadonnées → l'application les enregistre.
+- **Le secret Cloudinary reste côté serveur.** Aucun preset « unsigned ».
+- **Contrôles :** formats acceptés (JPEG, PNG, WebP, AVIF), taille maximale vérifiée côté client et côté serveur, **texte alternatif obligatoire**, dimensions enregistrées pour éviter les décalages de mise en page.
+- **Livraison :** `next/image` avec transformations automatiques (`f_auto`, `q_auto`, largeurs adaptées). Aucune URL d'image externe arbitraire.
+- **Vidéos :** jamais téléversées ; intégration YouTube (domaine `youtube-nocookie`) ou Vimeo par lien.
+- **Compatibilité :** l'ancien champ d'URL d'image continue de s'afficher tant qu'un projet n'a pas de média téléversé. Un script de migration à sec (dry-run) peut ensuite récupérer les anciennes images dans Cloudinary.
+- **Quota :** l'offre gratuite Cloudinary fonctionne en crédits mensuels, pas en Go séparés. Les images sont donc optimisées à l'envoi et à l'affichage.
+
+## 6. Routes
+
+| Route | Description | Accès |
+|---|---|---|
+| `/` | Profil par défaut, rendu avec son template | Public |
+| `/projets` | Grille complète filtrable | Public |
+| `/projets/[slug]` | Page projet | Public |
 | `/contact` | Formulaire de contact | Public |
-| `/admin` | Redirection vers le tableau de bord | Authentification requise |
-| `/admin/projets` | CRUD et organisation des projets | Authentification requise |
-| `/admin/portfolios` | Création et paramétrage des sous-portfolios | Authentification requise |
-| `/admin/analytics` | Consultation des statistiques de visite | Authentification requise |
+| `/[profil]` | Sous-portfolio dynamique, rendu avec son template | Public |
+| `/mentions-legales`, `/confidentialite` | Pages légales | Public |
+| `/admin/...` | Dashboard (projets, médias, profils, portfolios, messages, analytics) | Authentifié |
+| `/api/admin/media/*` | Signature et suppression de médias | Authentifié |
 
----
+**Slugs réservés** (refusés à la création d'un profil, pour éviter les conflits avec `/[profil]`) : `admin`, `api`, `projets`, `contact`, `competences`, `a-propos`, `login`, `connexion`, `mentions-legales`, `confidentialite`, `sitemap.xml`, `robots.txt`, `_next`, `favicon.ico`.
+Un profil inconnu ou inactif renvoie une page 404.
 
-## 4. Stack technique & Hébergement
+## 7. Modèle de données
 
-* **Framework :** Next.js (App Router) + TypeScript
-* **UI / Styling :** Tailwind CSS + composants shadcn/ui
-* **Animations :** Framer Motion
-* **Base de données :** PostgreSQL Serverless (Neon.tech)
-* **ORM :** Prisma ORM 7 (`@prisma/adapter-neon` via WebSockets / connection pooler)
-* **Authentification Dashboard :** NextAuth.js / Auth.js (Credentials sécurisés solo admin)
-* **Envoi d'emails :** Resend API (quota gratuit de 3 000 emails/mois)
-* **Stockage médias :** Cloudinary Free Tier (25 Go de stockage et bande passante)
-* **Hébergement :** Vercel (Hobby plan gratuit)
-* **Nom de domaine :** `syllayoussouf.com` (~10 $/an)
+**Existant (à lire dans `schema.prisma`, ne pas supposer) :** `Project`, `SubPortfolio`, `Visit`, `ContactMessage`, tables d'authentification.
 
----
+**Ajouts (migrations additives uniquement, testées sur une branche Neon) :**
 
-## 5. Roadmap de construction
+```prisma
+// Indicatif : adapter aux conventions et au Prisma 7 déjà en place.
+model Media {
+  id        String   @id @default(cuid())
+  publicId  String   @unique
+  url       String
+  width     Int
+  height    Int
+  format    String
+  bytes     Int
+  alt       String
+  createdAt DateTime @default(now())
+}
 
-* **Phase 0 — Setup & Structure :** Initialisation du repo, intégration Tailwind/shadcn, configuration de Prisma 7 avec Neon (connexions poolée/unpooled), schémas et typages.
-* **Phase 1 — Dashboard Admin :** Authentification, CRUD projets, gestion des liaisons de sous-portfolios.
-* **Phase 2 — Front-end public :** Hero section, grille filtrable, détail projet, route dynamique `/[profil]`.
-* **Phase 3 — Analytics & Contenu réel :** Tracking anonymisé sans cookies, intégration Resend, saisie des projets réels de Sylla.
-* **Phase 4 — Évolutions futures (V1) :** Améliorations progressives post-lancement.
+model ProjectMedia {            // galerie ordonnée
+  projectId String
+  mediaId   String
+  position  Int
+  @@id([projectId, mediaId])
+}
 
----
+model Profile {
+  id             String   @id @default(cuid())
+  slug           String   @unique        // "default" pour la page /
+  label          String
+  template       String   @default("creatif")   // creatif | developpeur | immersif
+  accent         String   @default("default")   // variante prévalidée du template
+  hero           Json                           // validé par Zod
+  sections       Json                           // [{ key, visible, order }]
+  variables      Json?
+  seoTitle       String?
+  seoDescription String?
+  heroMediaId    String?
+  isDefault      Boolean  @default(false)
+  active         Boolean  @default(true)
+  subPortfolioId String?  @unique                // liaison avec le sous-portfolio existant
+  updatedAt      DateTime @updatedAt
+}
+```
 
-## 6. Hors périmètre V0 (Exclusions explicites)
+Le champ `Project` reçoit en plus un `coverMediaId` optionnel ; l'ancien champ d'image reste en place.
 
-* Multi-utilisateurs / gestion de rôles complexes (uniquement Sylla en administrateur unique).
-* Paiement en ligne ou boutique e-commerce.
-* Sous-domaines DNS personnalisés (ex: `design.syllayoussouf.com` remplacé par les sous-dossiers natifs `/[profil]`).
-* Intégration Google Analytics tierce lourde (remplacée par le compteur interne respectueux).
-* Blog complet avec CMS éditorial.
-* Mode sombre/clair commutable par le visiteur (Dark theme par défaut en V0).
-* Notifications push et flux automatisés complexes.
+**Forme du JSON `hero` (validée par Zod) :** `headline`, `subline`, `tagline?`, `ctaPrimary { label, href }`, `ctaSecondary { label, href }`, `media { kind: "image" | "abstract", alt }`. Les statistiques éventuelles du Hero sont **calculées** depuis la base (nombre de projets publiés), jamais saisies à la main.
 
----
+**Couleurs :** jamais de code hexadécimal libre. Le champ `accent` désigne une variante prévalidée (contraste vérifié) du template.
 
-## 7. Informations restant à préciser / Clarifications attendues
+## 8. Stack et règles de versions
 
-* **Gestion du compte Admin en BDD :** Le PRD mentionne NextAuth Credentials avec mot de passe hashé, mais le schéma Prisma convenu pour V0 exclut le modèle `User` en attendant la décision d'architecture (variables d'environnement pures vs table dédiée).
-* **Format des galeries médias :** Préciser si les galeries de la page projet gèrent des vidéos natives hébergées sur Cloudinary ou uniquement des embeds (YouTube / Vimeo / Figma iframe).
-* **Gestion du taux de rafraîchissement des analytics :** Intervalle d'agrégation souhaité (compteur temps réel brut ou rollup journalier).
+- **Conservé :** Next.js (App Router) + TypeScript, Tailwind CSS, Prisma 7 + Neon, NextAuth (credentials), Resend, Cloudinary, Vercel.
+- **Animation :** GSAP + ScrollTrigger (+ SplitText, Flip), Lenis pour le défilement fluide. GSAP est désormais gratuit, plugins compris. **Une seule bibliothèque d'animation** : pas de nouvelle utilisation de Framer Motion ; la retirer si elle n'est plus utilisée.
+- **3D :** Three.js via React Three Fiber v9 et drei v10, qui requièrent React 19. Si le projet est sur React 18, utiliser R3F v8 et drei v9, ou migrer proprement. L'agent **vérifie les versions installées avant d'ajouter** toute dépendance.
+- Aucune dépendance ajoutée « pour décorer ». Chaque ajout est justifié dans le rapport d'étape.
+
+## 9. Services, limites et coûts (vérifiés en octobre 2026)
+
+| Service | Offre gratuite | À retenir |
+|---|---|---|
+| Neon | 1 Go par projet | Mise en veille après 5 min d'inactivité : première requête plus lente. Utiliser une **branche** pour le développement |
+| Cloudinary | 25 crédits par mois | 1 crédit = 1 Go de stockage, ou 1 Go de bande passante, ou 1 000 transformations |
+| Resend | 3 000 e-mails par mois, 100 par jour | Sans domaine vérifié : envoi depuis `onboarding@resend.dev` vers l'adresse du compte uniquement |
+| Vercel Hobby | Gratuit | **Usage personnel non commercial.** Un portfolio qui sert à obtenir des missions payantes est en zone grise : trancher avant la mise en production (voir `ROADMAP.md`, étape 14) |
+| Domaine | ~10 $/an | `syllayoussouf.com` (Namecheap ou Porkbun) |
+
+## 10. Hors périmètre (V0)
+
+Multi-utilisateurs, paiement, blog avec CMS, mode sombre/clair choisi par le visiteur, sous-domaines (`design.syllayoussouf.com`), Google Analytics, notifications push, téléversement de vidéos, éditeur de template visuel (glisser-déposer).
+
+**Backlog V1 :** variables d'offre avancées, mode sombre, sous-domaines, statistiques enrichies, passage de la timeline Parcours en base de données.
+
+## 11. Journal des changements (v2 → v3)
+
+| Sujet | v2 | v3 |
+|---|---|---|
+| Positionnement | Développeur multi-casquettes | Communication digitale et graphisme d'abord, développeur concepteur de solutions ensuite |
+| Contenu du Hero | Fixe dans le code | Piloté par la table `Profile`, modifiable dans le dashboard |
+| Habillage | Un seul | Trois templates au choix par profil |
+| Images | Liens saisis à la main | Téléversement direct vers Cloudinary, médiathèque, texte alternatif obligatoire |
+| Animation | Framer Motion (PRD) puis GSAP | GSAP + Lenis uniquement, 3D en R3F |
+| Mode sombre/clair | Hors périmètre | Hors périmètre (un thème par template) |
+| Chiffres et badges | Parfois inventés par l'agent | Interdits sauf données réelles |
+| Cloudinary | « 25 Go + 25 Go » | 25 crédits par mois |
+| Neon | 512 Mo | 1 Go, mise en veille après 5 min |
+| Resend | 3 000 par mois | Plafond de 100 par jour, restriction du domaine d'envoi |
+| Vercel | « gratuit » | Non commercial : décision à prendre avant la production |

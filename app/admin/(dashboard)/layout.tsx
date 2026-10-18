@@ -9,6 +9,8 @@ import {
   Layers,
   BarChart3,
   MessageSquare,
+  Compass,
+  Settings,
   ExternalLink,
   LogOut,
   Sparkles,
@@ -73,6 +75,14 @@ export default async function AdminDashboardLayout({
             </Link>
 
             <Link
+              href="/admin/profils"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-[#475569] hover:bg-slate-100/80 hover:text-[#2563EB] transition-colors"
+            >
+              <Compass className="w-4 h-4" />
+              <span>Profils (Templates)</span>
+            </Link>
+
+            <Link
               href="/admin/portfolios"
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-[#475569] hover:bg-slate-100/80 hover:text-[#2563EB] transition-colors"
             >
@@ -94,6 +104,14 @@ export default async function AdminDashboardLayout({
             >
               <MessageSquare className="w-4 h-4" />
               <span>Messages contact</span>
+            </Link>
+
+            <Link
+              href="/admin/reglages"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-[#475569] hover:bg-slate-100/80 hover:text-[#2563EB] transition-colors"
+            >
+              <Settings className="w-4 h-4" />
+              <span>Réglages du site</span>
             </Link>
           </nav>
         </div>

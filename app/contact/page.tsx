@@ -1,7 +1,10 @@
 import { Metadata } from "next";
+import { getSiteSettings } from "@/lib/profiles";
 import { Navbar } from "@/components/Navbar";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Contact — Sylla Youssouf | Développeur Web & Mobile",
@@ -9,14 +12,16 @@ export const metadata: Metadata = {
     "Discutons de votre projet d'application web ou mobile, d'une opportunité d'équipe ou d'une collaboration.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await getSiteSettings();
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0B132B] flex flex-col">
-      <Navbar />
-      <main className="flex-1 pt-16">
-        <ContactSection />
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col">
+      <Navbar settings={settings} />
+      <main className="flex-1 pt-24">
+        <ContactSection settings={settings} />
       </main>
-      <Footer />
+      <Footer settings={settings} />
     </div>
   );
 }

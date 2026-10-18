@@ -18,6 +18,7 @@ export interface ProjectData {
   description: string;
   contenu: string | null;
   coverImage: string | null;
+  coverMedia?: { url: string; alt?: string | null } | null;
   tags: string[];
   links: unknown;
   ordre: number;
@@ -26,16 +27,18 @@ export interface ProjectData {
 
 export function ProjectCard({ project }: { project: ProjectData }) {
   const links = (project.links || {}) as Record<string, string>;
+  const imageSrc = project.coverMedia?.url || project.coverImage;
+  const imageAlt = project.coverMedia?.alt || project.titre;
 
   return (
     <div className="group editorial-card relative overflow-hidden flex flex-col justify-between h-full bg-white border border-slate-200/90 rounded-2xl transition-all duration-300 hover:border-[#2563EB]/40 hover:shadow-xl hover:shadow-slate-900/5">
       {/* 1. Zone Image / Cover (Ratio 16:9 strict) */}
       <div className="relative aspect-video w-full overflow-hidden bg-slate-100 border-b border-slate-200/70">
-        {project.coverImage ? (
+        {imageSrc ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
-            src={project.coverImage}
-            alt={project.titre}
+            src={imageSrc}
+            alt={imageAlt}
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-103"
           />
         ) : (

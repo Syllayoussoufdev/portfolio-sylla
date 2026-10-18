@@ -5,10 +5,57 @@
   --surface: #FFFFFF;
   --ink: #0B132B;
   --accent: #2563EB;
+  --accent-2: #F5B83D;
   --muted: #475569;
   --subtle: #64748B;
   --border: #E2E8F0;
   --glass: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(226, 232, 240, 0.8);
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-pill: 999px;
+}
+
+/* Template Développeur : bleu nuit, précision (aspect sobre et rigoureux) */
+[data-template="developpeur"] {
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --ink: #0B132B;
+  --accent: #2563EB;
+  --accent-2: #F5B83D;
+  --muted: #475569;
+  --subtle: #64748B;
+  --border: #E2E8F0;
+  --glass: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(226, 232, 240, 0.8);
+}
+
+/* Template Créatif : verre givré bleu/orange (DESIGN.md section 5) */
+[data-template="creatif"] {
+  --bg: #F9FAFB;
+  --surface: #FFFFFF;
+  --ink: #0F172A;
+  --accent: #2563EB;
+  --accent-2: #F97316;
+  --muted: #475569;
+  --subtle: #64748B;
+  --border: rgba(226, 232, 240, 0.85);
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.7);
+}
+
+/* Template Immersif : sombre, 3D au centre (DESIGN.md section 7) */
+[data-template="immersif"] {
+  --bg: #07080D;
+  --surface: #0E1017;
+  --ink: #EDEFF5;
+  --accent: #7C5CFF;
+  --accent-2: #FF4D9D;
+  --muted: #A3A8B8;
+  --subtle: #64748B;
+  --border: #1E2235;
+  --glass: rgba(14, 16, 23, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
@@ -16,6 +63,7 @@
   --color-surface: var(--surface);
   --color-ink: var(--ink);
   --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
   --color-muted: var(--muted);
   --color-subtle: var(--subtle);
   --color-border: var(--border);
@@ -34,33 +82,40 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Verre contemporain épuré */
+/* Verre givré multi-templates */
 .glass {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px -2px rgba(11, 19, 43, 0.04);
+  background: var(--glass);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 /* Carte éditoriale sobre */
 .editorial-card {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .editorial-card:hover {
-  border-color: rgba(37, 99, 235, 0.3);
+  border-color: var(--accent);
   box-shadow: 0 12px 30px -4px rgba(11, 19, 43, 0.08);
   transform: translateY(-2px);
 }
 
 @supports not (backdrop-filter: blur(1px)) {
   .glass {
-    background: #ffffff;
+    background: var(--surface);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--surface);
+    backdrop-filter: none;
   }
 }
 

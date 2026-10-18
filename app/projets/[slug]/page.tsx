@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
+import { getSiteSettings } from "@/lib/profiles";
 import { trackVisit } from "@/lib/analytics";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -74,8 +75,8 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   // Enregistrement anonymisé de la visite (sans cookie)
   await trackVisit(`/projets/${slug}`, { projectId: project.id });
 
-  // Navigation vers projet précédent et suivant
-  const [prevProject, nextProject] = await Promise.all([
+  // Navigation vers projet précédent et suivant et réglages du site
+  const [prevProject, nextProject, settings] = await Promise.all([
     prisma.project.findFirst({
       where: { visible: true, ordre: { lt: project.ordre } },
       orderBy: { ordre: "desc" },
@@ -86,6 +87,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
       orderBy: { ordre: "asc" },
       select: { slug: true, titre: true },
     }),
+    getSiteSettings(),
   ]);
 
   // Extraction typée des liens externes
@@ -128,8 +130,8 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
   }).format(project.createdAt);
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] text-[#0F172A] flex flex-col">
-      <Navbar />
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col">
+      <Navbar settings={settings} />
 
       <main className="flex-1 pt-28 pb-20 px-4 sm:px-6 max-w-5xl mx-auto w-full">
         {/* 1. Fil d'Ariane & Bouton retour */}
@@ -548,7 +550,7 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
           )}
         </div>
       </main>
-      <Footer />
+      <Footer settings={settings} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { getSiteSettings } from "@/lib/profiles";
 import { Navbar } from "@/components/Navbar";
 import { ProjectsGrid } from "@/components/ProjectsGrid";
 import { Footer } from "@/components/Footer";
@@ -13,18 +14,22 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjetsPage() {
-  const visibleProjects = await prisma.project.findMany({
-    where: { visible: true },
-    orderBy: [{ ordre: "asc" }, { createdAt: "desc" }],
-  });
+  const [visibleProjects, settings] = await Promise.all([
+    prisma.project.findMany({
+      where: { visible: true },
+      include: { coverMedia: true },
+      orderBy: [{ ordre: "asc" }, { createdAt: "desc" }],
+    }),
+    getSiteSettings(),
+  ]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0B132B] flex flex-col">
-      <Navbar />
-      <main className="flex-1 pt-16">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col">
+      <Navbar settings={settings} />
+      <main className="flex-1 pt-24">
         <ProjectsGrid projects={visibleProjects} />
       </main>
-      <Footer />
+      <Footer settings={settings} />
     </div>
   );
 }

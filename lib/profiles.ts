@@ -49,11 +49,34 @@ export const FALLBACK_DEFAULT_PROFILE = {
   updatedAt: new Date(),
 };
 
+export interface SiteSettingsData {
+  id: string;
+  nom: string;
+  metier: string | null;
+  emailPublic: string | null;
+  whatsapp: string | null;
+  github: string | null;
+  linkedin: string | null;
+  twitter: string | null;
+  instagram: string | null;
+  updatedAt: Date;
+}
+
+export interface MediaData {
+  id?: string;
+  url: string;
+  alt: string;
+  largeur?: number | null;
+  hauteur?: number | null;
+  poids?: number | null;
+  format?: string | null;
+}
+
 /**
  * Réglages du site de secours (fallback)
  * Note : aucun faux e-mail ni faux numéro WhatsApp n'est inventé.
  */
-export const FALLBACK_SITE_SETTINGS = {
+export const FALLBACK_SITE_SETTINGS: SiteSettingsData = {
   id: "fallback-settings",
   nom: "Sylla Youssouf",
   metier: "Expert Communication & Développeur",

@@ -3,72 +3,87 @@
 import { useActionState } from "react";
 import { sendContactMessage, type ContactActionState } from "@/app/actions/contact";
 import { Mail, MessageCircle, Send, CheckCircle2, AlertCircle, ArrowUpRight } from "lucide-react";
+import type { SiteSettingsData } from "@/lib/profiles";
 
-export function ContactSection() {
+interface ContactSectionProps {
+  settings?: SiteSettingsData | null;
+}
+
+export function ContactSection({ settings }: ContactSectionProps) {
   const [state, formAction, isPending] = useActionState<ContactActionState, FormData>(
     sendContactMessage,
     {}
   );
 
+  const email = settings?.emailPublic;
+  const whatsapp = settings?.whatsapp;
+  const cleanWhatsapp = whatsapp ? whatsapp.replace(/\D/g, "") : null;
+
   return (
     <section id="contact" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        {/* Colonne Gauche : Discours & Liens Directs */}
+        {/* Colonne Gauche : Discours & Liens Directs Réels */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200/80 text-[#0B132B] text-xs font-medium">
-            <Mail className="w-3.5 h-3.5 text-[#2563EB]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100/80 border border-slate-200/80 text-[var(--ink)] text-xs font-medium">
+            <Mail className="w-3.5 h-3.5 text-[var(--accent)]" />
             <span>Prise de contact</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0B132B]">
-            Discutons de votre prochain projet.
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--ink)]">
+            Discutons de votre projet.
           </h2>
 
-          <p className="text-sm sm:text-base text-[#475569] leading-relaxed">
-            Vous recherchez un développeur pour concevoir une application, renforcer votre équipe
-            technique ou moderniser votre produit ? Je réponds généralement sous 24 heures.
+          <p className="text-sm sm:text-base text-[var(--muted)] leading-relaxed">
+            Vous recherchez une collaboration pour concevoir une application, renforcer votre équipe
+            ou concrétiser une idée numérique ? Transmettez-moi les détails de votre besoin.
           </p>
 
-          {/* Cartes de contact rapide */}
-          <div className="space-y-3 pt-2">
-            <a
-              href="mailto:contact@syllayoussouf.com"
-              className="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[#2563EB]/40 hover:shadow-md transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-xs font-mono text-[#64748B] block">Email direct</span>
-                  <span className="text-sm font-semibold text-[#0B132B] group-hover:text-[#2563EB] transition-colors">
-                    contact@syllayoussouf.com
-                  </span>
-                </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-[#2563EB] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-            </a>
+          {/* Cartes de contact rapide (affichées uniquement si configurées) */}
+          {(email || cleanWhatsapp) && (
+            <div className="space-y-3 pt-2">
+              {email && (
+                <a
+                  href={`mailto:${email}`}
+                  className="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-[var(--accent)]/40 hover:shadow-md transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-[var(--accent)] flex items-center justify-center">
+                      <Mail className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-mono text-[var(--subtle)] block">Email direct</span>
+                      <span className="text-sm font-semibold text-[var(--ink)] group-hover:text-[var(--accent)] transition-colors">
+                        {email}
+                      </span>
+                    </div>
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-[var(--accent)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                </a>
+              )}
 
-            <a
-              href="https://wa.me/33600000000"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-emerald-500/40 hover:shadow-md transition-all group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                  <MessageCircle className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-xs font-mono text-[#64748B] block">WhatsApp</span>
-                  <span className="text-sm font-semibold text-[#0B132B] group-hover:text-emerald-600 transition-colors">
-                    Échange direct par messagerie
-                  </span>
-                </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-            </a>
-          </div>
+              {cleanWhatsapp && (
+                <a
+                  href={`https://wa.me/${cleanWhatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-emerald-500/40 hover:shadow-md transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                      <MessageCircle className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-mono text-[var(--subtle)] block">WhatsApp</span>
+                      <span className="text-sm font-semibold text-[var(--ink)] group-hover:text-emerald-600 transition-colors">
+                        Échange direct par messagerie
+                      </span>
+                    </div>
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Colonne Droite : Formulaire épuré 3 champs */}
@@ -79,8 +94,8 @@ export function ContactSection() {
                 <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-7 h-7" />
                 </div>
-                <h3 className="text-xl font-bold text-[#0B132B]">Message bien reçu !</h3>
-                <p className="text-sm text-[#475569] max-w-md mx-auto leading-relaxed">
+                <h3 className="text-xl font-bold text-[var(--ink)]">Message bien reçu !</h3>
+                <p className="text-sm text-[var(--muted)] max-w-md mx-auto leading-relaxed">
                   Merci pour votre message. Je vous répondrai dans les plus brefs délais sur votre adresse email.
                 </p>
               </div>
@@ -95,7 +110,7 @@ export function ContactSection() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
-                    <label htmlFor="nom" className="block text-xs font-semibold text-[#0B132B]">
+                    <label htmlFor="nom" className="block text-xs font-semibold text-[var(--ink)]">
                       Votre nom ou entreprise <span className="text-blue-600">*</span>
                     </label>
                     <input
@@ -104,12 +119,12 @@ export function ContactSection() {
                       name="nom"
                       required
                       placeholder="Ex: Alexandre Martin"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 outline-hidden text-sm transition-all bg-slate-50/50"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] transition-all bg-slate-50/50"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label htmlFor="email" className="block text-xs font-semibold text-[#0B132B]">
+                    <label htmlFor="email" className="block text-xs font-semibold text-[var(--ink)]">
                       Votre adresse email <span className="text-blue-600">*</span>
                     </label>
                     <input
@@ -117,39 +132,33 @@ export function ContactSection() {
                       id="email"
                       name="email"
                       required
-                      placeholder="alexandre@entreprise.com"
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 outline-hidden text-sm transition-all bg-slate-50/50"
+                      placeholder="alexandre@domaine.com"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] transition-all bg-slate-50/50"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="message" className="block text-xs font-semibold text-[#0B132B]">
-                    Votre message ou brief de projet <span className="text-blue-600">*</span>
+                  <label htmlFor="message" className="block text-xs font-semibold text-[var(--ink)]">
+                    Votre message ou brief <span className="text-blue-600">*</span>
                   </label>
                   <textarea
                     id="message"
                     name="message"
-                    required
                     rows={5}
-                    placeholder="Présentez brièvement vos besoins, délais ou questions..."
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 outline-hidden text-sm transition-all bg-slate-50/50 resize-y"
+                    required
+                    placeholder="Décrivez votre projet, vos objectifs, ou vos délais envisagés..."
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30 focus:border-[var(--accent)] transition-all bg-slate-50/50 resize-y"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full py-3.5 px-6 rounded-xl bg-[#0B132B] hover:bg-[#1E293B] active:scale-[0.99] text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-md shadow-slate-900/10 transition-all cursor-pointer disabled:opacity-70"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-[var(--ink)] hover:opacity-90 active:scale-[0.98] text-white text-sm font-semibold shadow-md shadow-slate-900/10 transition-all cursor-pointer disabled:opacity-50"
                 >
-                  {isPending ? (
-                    <span>Envoi en cours...</span>
-                  ) : (
-                    <>
-                      <span>Envoyer mon message</span>
-                      <Send className="w-4 h-4 text-blue-400" />
-                    </>
-                  )}
+                  <Send className="w-4 h-4 text-[var(--accent)]" />
+                  <span>{isPending ? "Envoi en cours..." : "Envoyer le message"}</span>
                 </button>
               </form>
             )}

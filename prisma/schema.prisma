@@ -1,0 +1,103 @@
+// Prisma schema file for Portfolio Sylla
+// Documentation: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ----------------------------------------------------
+// 1. Projets
+// ----------------------------------------------------
+model Project {
+  id          String                @id @default(cuid())
+  titre       String
+  slug        String                @unique
+  description String                @db.Text
+  contenu     String?               @db.Text
+  coverImage  String?
+  links       Json                  @default("{}")
+  tags        String[]
+  ordre       Int                   @default(0)
+  visible     Boolean               @default(true)
+  featured    Boolean               @default(false)
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+
+  subPortfolios SubPortfolioProject[]
+  visits        Visit[]
+
+  @@index([slug])
+  @@index([visible])
+}
+
+// ----------------------------------------------------
+// 2. Sous-Portfolios ciblés (/[profil])
+// ----------------------------------------------------
+model SubPortfolio {
+  id          String                @id @default(cuid())
+  slug        String                @unique
+  label       String
+  description String?               @db.Text
+  actif       Boolean               @default(true)
+  createdAt   DateTime              @default(now())
+
+  projects    SubPortfolioProject[]
+  visits      Visit[]
+
+  @@index([slug])
+}
+
+// ----------------------------------------------------
+// 3. Table de jointure plusieurs-à-plusieurs (SubPortfolio <-> Project)
+// ----------------------------------------------------
+model SubPortfolioProject {
+  subPortfolioId String
+  projectId      String
+  ordre          Int          @default(0)
+
+  subPortfolio   SubPortfolio @relation(fields: [subPortfolioId], references: [id], onDelete: Cascade)
+  project        Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([subPortfolioId, projectId])
+  @@index([subPortfolioId])
+  @@index([projectId])
+}
+
+// ----------------------------------------------------
+// 4. Analytics et Visites
+// Note : l'IP ne doit jamais être enregistrée en clair (hash anonymisé SHA-256)
+// ----------------------------------------------------
+model Visit {
+  id             String        @id @default(cuid())
+  path           String
+  projectId      String?
+  subPortfolioId String?
+  ip             String?
+  userAgent      String?       @db.Text
+  createdAt      DateTime      @default(now())
+
+  project        Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  subPortfolio   SubPortfolio? @relation(fields: [subPortfolioId], references: [id], onDelete: SetNull)
+
+  @@index([path])
+  @@index([projectId])
+  @@index([subPortfolioId])
+  @@index([createdAt])
+}
+
+// ----------------------------------------------------
+// 5. Messages de contact reçus
+// ----------------------------------------------------
+model ContactMessage {
+  id        String   @id @default(cuid())
+  nom       String
+  email     String
+  message   String   @db.Text
+  lu        Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

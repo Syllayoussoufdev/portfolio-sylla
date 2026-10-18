@@ -53,6 +53,7 @@ model SubPortfolio {
 
   projects    SubPortfolioProject[]
   visits      Visit[]
+  profile     Profile?
 
   @@index([slug])
 }
@@ -123,6 +124,7 @@ model Media {
 
   coverForProjects Project[]      @relation("ProjectCoverMedia")
   projectGalleries ProjectMedia[]
+  heroForProfiles  Profile[]      @relation("ProfileHeroMedia")
 
   @@index([publicId])
   @@index([createdAt])
@@ -140,5 +142,50 @@ model ProjectMedia {
   @@index([projectId])
   @@index([mediaId])
   @@index([position])
+}
+
+// ----------------------------------------------------
+// 7. Profils & Configuration des Templates (Étape 2)
+// ----------------------------------------------------
+model Profile {
+  id             String        @id @default(cuid())
+  slug           String        @unique               // "default" pour la racine /, ou slug ciblé (ex: "creatif")
+  label          String                              // Nom affiché dans le dashboard (ex: "Profil Principal")
+  template       String        @default("creatif")   // creatif | developpeur | immersif
+  accent         String        @default("default")   // variante de palette prévalidée
+  hero           Json                                // Structuré et validé par Zod
+  sections       Json                                // Ordre et visibilité : [{ key, visible, order }]
+  variables      Json?         @default("{}")        // Variables additionnelles
+  seoTitle       String?
+  seoDescription String?       @db.Text
+  heroMediaId    String?
+  heroMedia      Media?        @relation("ProfileHeroMedia", fields: [heroMediaId], references: [id], onDelete: SetNull)
+  isDefault      Boolean       @default(false)       // true pour le profil chargé sur "/"
+  actif          Boolean       @default(true)        // convention existante (SubPortfolio.actif)
+  subPortfolioId String?       @unique               // liaison 1-to-1 optionnelle avec un sous-portfolio
+  subPortfolio   SubPortfolio? @relation(fields: [subPortfolioId], references: [id], onDelete: SetNull)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([isDefault])
+  @@index([actif])
+  @@index([heroMediaId])
+}
+
+// ----------------------------------------------------
+// 8. Réglages globaux du site (Singleton)
+// ----------------------------------------------------
+model SiteSettings {
+  id          String   @id @default(cuid())
+  nom         String   @default("Sylla Youssouf")
+  metier      String?                           // Ligne de métier sous le logo
+  emailPublic String?                           // Optionnel (rien n'est affiché si non renseigné)
+  whatsapp    String?                           // Optionnel
+  github      String?
+  linkedin    String?
+  twitter     String?
+  instagram   String?
+  updatedAt   DateTime @updatedAt
 }
 

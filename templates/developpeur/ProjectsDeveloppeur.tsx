@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ProjectCard, type ProjectData } from "@/components/ProjectCard";
 import { FolderGit2, Code2, Layers, Sparkles } from "lucide-react";
 
@@ -13,6 +15,9 @@ const CATEGORIES = [
 
 export function ProjectsDeveloppeur({ projects }: { projects: ProjectData[] }) {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const filteredProjects = useMemo(() => {
     if (selectedCategory === "all") return projects;
@@ -34,10 +39,66 @@ export function ProjectsDeveloppeur({ projects }: { projects: ProjectData[] }) {
     });
   }, [projects, selectedCategory]);
 
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isReduced) return;
+
+    const ctx = gsap.context(() => {
+      // 1. En-tête
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current.children,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+
+      // 2. Grille de cartes
+      if (gridRef.current && gridRef.current.children.length > 0) {
+        gsap.fromTo(
+          gridRef.current.children,
+          { opacity: 0, y: 40, scale: 0.96 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.7,
+            stagger: 0.08,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: "top 82%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [selectedCategory]);
+
   return (
-    <section id="projets" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24 text-[#0B132B]">
+    <section
+      ref={sectionRef}
+      id="projets"
+      className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24 text-[#0B132B]"
+    >
       {/* En-tête de section (Style Image 1) */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+      <div ref={headerRef} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
         <div className="space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/70 text-[#2563EB] text-xs font-semibold">
             <FolderGit2 className="w-3.5 h-3.5" />
@@ -94,7 +155,7 @@ export function ProjectsDeveloppeur({ projects }: { projects: ProjectData[] }) {
           <p className="text-xs text-[#64748B] mt-1">Consultez l&apos;ensemble des réalisations disponibles.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}

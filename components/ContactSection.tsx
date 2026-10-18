@@ -1,6 +1,9 @@
 "use client";
 
+import React, { useRef, useEffect } from "react";
 import { useActionState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { sendContactMessage, type ContactActionState } from "@/app/actions/contact";
 import { Mail, MessageCircle, Send, CheckCircle2, AlertCircle, ArrowUpRight } from "lucide-react";
 import type { SiteSettingsData } from "@/lib/profiles";
@@ -10,6 +13,10 @@ interface ContactSectionProps {
 }
 
 export function ContactSection({ settings }: ContactSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const formCardRef = useRef<HTMLDivElement>(null);
+
   const [state, formAction, isPending] = useActionState<ContactActionState, FormData>(
     sendContactMessage,
     {}
@@ -19,11 +26,66 @@ export function ContactSection({ settings }: ContactSectionProps) {
   const whatsapp = settings?.whatsapp;
   const cleanWhatsapp = whatsapp ? whatsapp.replace(/\D/g, "") : null;
 
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isReduced) return;
+
+    const ctx = gsap.context(() => {
+      // 1. Révélation échelonnée de la colonne de contact gauche
+      if (leftColRef.current) {
+        gsap.fromTo(
+          leftColRef.current.children,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: leftColRef.current,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+
+      // 2. Émergence fluide de la carte formulaire avec élévation
+      if (formCardRef.current) {
+        gsap.fromTo(
+          formCardRef.current,
+          { opacity: 0, y: 50, scale: 0.97 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: formCardRef.current,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="contact" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24">
+    <section
+      ref={sectionRef}
+      id="contact"
+      className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24 relative"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Colonne Gauche : Discours & Liens Directs Réels */}
-        <div className="lg:col-span-5 space-y-6">
+        <div ref={leftColRef} className="lg:col-span-5 space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100/80 border border-slate-200/80 text-[var(--ink)] text-xs font-medium">
             <Mail className="w-3.5 h-3.5 text-[var(--accent)]" />
             <span>Prise de contact</span>
@@ -44,10 +106,10 @@ export function ContactSection({ settings }: ContactSectionProps) {
               {email && (
                 <a
                   href={`mailto:${email}`}
-                  className="flex items-center justify-between p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)]/50 hover:shadow-md transition-all group"
+                  className="flex items-center justify-between p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--accent)]/50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center group-hover:scale-110 transition-transform">
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
@@ -66,10 +128,10 @@ export function ContactSection({ settings }: ContactSectionProps) {
                   href={`https://wa.me/${cleanWhatsapp}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)] hover:border-emerald-500/50 hover:shadow-md transition-all group"
+                  className="flex items-center justify-between p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)] hover:border-emerald-500/50 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform">
                       <MessageCircle className="w-5 h-5" />
                     </div>
                     <div>
@@ -88,7 +150,10 @@ export function ContactSection({ settings }: ContactSectionProps) {
 
         {/* Colonne Droite : Formulaire épuré 3 champs */}
         <div className="lg:col-span-7">
-          <div className="editorial-card p-6 sm:p-10 bg-[var(--surface)] border border-[var(--border)] rounded-3xl shadow-xl shadow-black/5">
+          <div
+            ref={formCardRef}
+            className="editorial-card p-6 sm:p-10 bg-[var(--surface)] border border-[var(--border)] rounded-3xl shadow-xl shadow-black/5"
+          >
             {state.success ? (
               <div className="p-8 text-center space-y-4">
                 <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto">

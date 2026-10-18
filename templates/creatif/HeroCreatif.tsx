@@ -177,11 +177,10 @@ export function HeroCreatif({
           end: "bottom top",
           onUpdate: (self) => {
             const velocity = Math.abs(self.getVelocity() / 300);
-            gsap.to(marqueeTrackRef.current, {
-              timeScale: 1 + Math.min(velocity, 4),
-              duration: 0.2,
-              overwrite: "auto",
-            });
+            if (marqueeTrackRef.current) {
+              const speedFactor = 1 + Math.min(velocity, 3);
+              marqueeTrackRef.current.style.animationDuration = `${25 / speedFactor}s`;
+            }
           },
         });
       }

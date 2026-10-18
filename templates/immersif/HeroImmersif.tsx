@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import gsap from "gsap";
 import { ArrowRight, Play, Film, Sparkles, Video, Layers, MonitorPlay } from "lucide-react";
 import type { HeroData } from "@/lib/validations/profile";
 import type { MediaData, SiteSettingsData } from "@/lib/profiles";
@@ -20,6 +21,14 @@ export function HeroImmersif({
   projectsCount = 35,
   settings,
 }: HeroImmersifProps) {
+  const containerRef = useRef<HTMLElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const sublineRef = useRef<HTMLParagraphElement>(null);
+  const showreelRef = useRef<HTMLDivElement>(null);
+  const metricsRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
   const headline =
     hero?.headline || "Turning Ideas Into Beautiful Digital Experiences.";
   const subline =
@@ -38,8 +47,65 @@ export function HeroImmersif({
   const imageSrc = heroMedia?.url || "/sylla.jpg";
   const imageAlt = heroMedia?.alt || `Direction créative de ${displayName}`;
 
+  useEffect(() => {
+    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isReduced) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      tl.fromTo(
+        badgeRef.current,
+        { opacity: 0, y: -20 },
+        { opacity: 1, y: 0, duration: 0.6 }
+      );
+
+      tl.fromTo(
+        titleRef.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8 },
+        "-=0.3"
+      );
+
+      tl.fromTo(
+        sublineRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6 },
+        "-=0.4"
+      );
+
+      tl.fromTo(
+        showreelRef.current,
+        { opacity: 0, scale: 0.94, y: 30 },
+        { opacity: 1, scale: 1, y: 0, duration: 1, ease: "back.out(1.2)" },
+        "-=0.3"
+      );
+
+      if (metricsRef.current) {
+        tl.fromTo(
+          metricsRef.current.children,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 },
+          "-=0.4"
+        );
+      }
+
+      if (ctaRef.current) {
+        tl.fromTo(
+          ctaRef.current.children,
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 },
+          "-=0.2"
+        );
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
+      ref={containerRef}
       id="hero"
       className="relative min-h-[95vh] flex flex-col justify-center pt-32 pb-20 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden text-slate-100"
     >
@@ -48,24 +114,36 @@ export function HeroImmersif({
 
       <div className="max-w-5xl mx-auto w-full space-y-10 text-center">
         {/* Pastille Studio de Création Numérique */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-mono font-medium mx-auto shadow-sm">
+        <div
+          ref={badgeRef}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-mono font-medium mx-auto shadow-sm"
+        >
           <Film className="w-3.5 h-3.5 text-pink-400" />
           <span>STUDIO DE DIRECTION CRÉATIVE &amp; MOTION 3D</span>
         </div>
 
         {/* Titre Éditorial Épuré en Police Syne (Style Image 3) */}
         <div className="space-y-6">
-          <h1 className="font-syne text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] max-w-4xl mx-auto">
+          <h1
+            ref={titleRef}
+            className="font-syne text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] max-w-4xl mx-auto"
+          >
             {headline}
           </h1>
 
-          <p className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-light">
+          <p
+            ref={sublineRef}
+            className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-light"
+          >
             {subline}
           </p>
         </div>
 
         {/* Grand Écran Vidéo / Showreel Central Widescreen (Style Image 3) */}
-        <div className="relative aspect-21/9 sm:aspect-16/7 w-full rounded-3xl overflow-hidden border border-purple-500/25 shadow-2xl shadow-purple-950/40 bg-gradient-to-br from-slate-900 to-purple-950/50 group">
+        <div
+          ref={showreelRef}
+          className="relative aspect-21/9 sm:aspect-16/7 w-full rounded-3xl overflow-hidden border border-purple-500/25 shadow-2xl shadow-purple-950/40 bg-gradient-to-br from-slate-900 to-purple-950/50 group"
+        >
           <Image
             src={imageSrc}
             alt={imageAlt}
@@ -107,7 +185,7 @@ export function HeroImmersif({
         </div>
 
         {/* Métriques Studio (Style Image 3 : 40+ Projects, 15+ Motion, 98% Impact) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-2">
+        <div ref={metricsRef} className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-2">
           {[
             { num: `${projectsCount}+`, label: "Projets Déployés" },
             { num: "15+", label: "Pièces Motion & Vidéo" },
@@ -125,7 +203,7 @@ export function HeroImmersif({
         </div>
 
         {/* Boutons d'Action Immersifs */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+        <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
           <Link
             href={primaryCta.href}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 active:scale-98 text-white font-bold text-xs tracking-wider uppercase shadow-xl shadow-purple-600/25 transition-all cursor-pointer"

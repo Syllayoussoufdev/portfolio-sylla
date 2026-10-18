@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Bebas_Neue, Caveat } from "next/font/google";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -39,7 +40,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${caveat.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-[#F9FAFB] text-[#0F172A]">
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );

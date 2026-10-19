@@ -60,6 +60,8 @@ export function HeroImmersif({
     const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (isReduced) return;
 
+    gsap.registerPlugin(ScrollTrigger);
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
@@ -83,13 +85,32 @@ export function HeroImmersif({
         "-=0.4"
       );
 
-      // Animation GSAP du ruban défilant en français
+      // Contrat de mouvement immersif #4 : Titres horizontaux liés à la vitesse de défilement
       if (tickerRef.current) {
-        gsap.to(tickerRef.current, {
+        const tickerAnim = gsap.to(tickerRef.current, {
           xPercent: -50,
           repeat: -1,
           duration: 25,
           ease: "none",
+        });
+
+        ScrollTrigger.create({
+          onUpdate: (self) => {
+            const velocity = Math.abs(self.getVelocity());
+            const boost = 1 + Math.min(velocity / 200, 3.5);
+            gsap.to(tickerAnim, {
+              timeScale: boost,
+              duration: 0.2,
+              overwrite: "auto",
+              onComplete: () => {
+                gsap.to(tickerAnim, {
+                  timeScale: 1,
+                  duration: 0.8,
+                  ease: "power2.out",
+                });
+              },
+            });
+          },
         });
       }
     }, containerRef);

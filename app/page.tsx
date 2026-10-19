@@ -6,6 +6,7 @@ import { getParcours } from "@/lib/parcours";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SectionRenderer } from "@/components/SectionRenderer";
+import { ImmersiveCursor } from "@/components/motion/ImmersiveCursor";
 import type { HeroData, SectionItem } from "@/lib/validations/profile";
 
 export const dynamic = "force-dynamic";
@@ -71,6 +72,7 @@ export default async function HomePage() {
       data-accent={profile.accent}
       className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col selection:bg-blue-100 selection:text-blue-900 transition-colors duration-300"
     >
+      {profile.template === "immersif" && <ImmersiveCursor />}
       <Navbar
         settings={settings}
         sections={sortedSections}

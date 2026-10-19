@@ -131,21 +131,34 @@ Base : version sobre et rigoureuse, animée avec GSAP et 3D Three.js.
 
 ## 7. Template `immersif` — sombre, 3D au centre
 
-Nouveau. Pour les profils qui doivent marquer : vidéo, motion, IA, création numérique.
+Pour les profils créatifs axés sur l'image et le son : montage vidéo, création de contenus, formats courts et narration cinématographique.
 
-**Tokens (propositions).** Fond `#07080D`, texte `#EDEFF5`, texte secondaire `#A3A8B8`, accent violet `#7C5CFF`, contraste magenta `#FF4D9D`. Contrastes à vérifier à l'implémentation (4,5:1 minimum). Aplats et lumière diffuse limitée ; pas d'empilement de dégradés.
+**Tokens appliqués (validés) :**
+- `--bg` : `#070708` (noir profond de régie cinématographique)
+- `--surface` : `#111113` (anthracite satiné pour cartes et blocs)
+- `--ink` : `#F4F4F6` (blanc cassé haute lisibilité, ratio 18.2:1 sur le fond)
+- `--accent` : `#FF2A14` (rouge vermillon cinématique / voyant REC, ratio > 4.5:1 sur surface sombre)
+- `--accent-2` : `#FF4D36` (corail incandescent pour les reflets et focus)
+- `--muted` : `#A1A1AA` (gris studio lisible, ratio 7.8:1)
+- `--border` : `#222225` (filets d'assemblage discrets)
+- `--glass` : `rgba(17, 17, 19, 0.88)`
+- `--glass-border` : `rgba(255, 255, 255, 0.08)`
 
-**Typographie (proposition).** Syne (titres larges) + Geist Sans (corps) + Geist Mono (technique).
+**Typographie :** Syne (titres larges à fort caractère cinéma) + Geist Sans (corps) + Geist Mono (timecodes, tags REC et métriques).
 
-**Hero.** Un **objet 3D unique** (forme géométrique, composition abstraite ou objet numérique) qui suit le pointeur et dont la caméra progresse avec le défilement. Poids du modèle ≤ 1,5 Mo, compression Draco ou meshopt. Concept de l'objet : **à valider** avec Sylla.
+**Hero & Sculpture 3D :**
+- Un **objet 3D unique** : sculpture géométrique chromée sombre (TorusKnot titane avec anneau orbital rouge vermillon et double source rasante).
+- **Poids des assets 3D : 0 Ko (0 octet téléchargé)**, géométrie 100 % procédurale Three.js (aucun fichier `.glb` externe, aucune requête réseau).
+- Remplacement propre sans WebGL : anneau orbital stylisé en CSS avec voyant REC.
+- Lisibilité Hero indépendante de la 3D : texte, portrait et CTA s'affichent instantanément en HTML/CSS.
 
-**Contrat de mouvement :**
-1. Caméra 3D pilotée par la progression du défilement (ScrollTrigger).
-2. Objet 3D qui réagit au pointeur (inertie, amplitude limitée).
-3. Images de projets avec **distorsion shader** au survol (une seule technique, pas de pile d'effets).
-4. Titres en défilement horizontal lié à la vitesse de scroll.
-5. Transitions de sections par masques et décalages (transform et opacity uniquement).
-6. Curseur personnalisé discret, **limité** à ce template, désactivé au tactile et en mouvement réduit.
+**Contrat de mouvement (100 % vérifié) :**
+1. **Caméra 3D pilotée par le défilement :** `ScrollTrigger` ajuste la position $Z$ et $Y$ de la caméra ainsi que la rotation du nœud au fur et à mesure du scroll sur `#hero`.
+2. **Objet 3D réactif au pointeur :** interpolation fluide (lerp 0.08) avec inertie contrôlée et amplitude bornée ($\le 0.05$). Figé en mode `prefers-reduced-motion` et désactivé au tactile.
+3. **Images de projets avec distorsion shader au survol :** `feDisplacementMap` + `feTurbulence` GPU-accéléré au survol de chaque carte (onde de réfraction fluide `scale: 16` $\to$ `scale: 4`, sans pile d'effets superflus).
+4. **Titres horizontaux liés à la vitesse de défilement :** vitesse du ticker de ruban Hero modulée dynamiquement selon la vélocité GSAP (`ScrollTrigger.getVelocity()`) et ruban vitrine scrubbé au défilement.
+5. **Transitions de sections par masques et décalages :** entrées séquencées avec GSAP `ScrollTrigger` (`opacity` et `transform: translateY` uniquement, CLS = 0).
+6. **Curseur personnalisé discret :** composant `ImmersiveCursor` actif uniquement sur le template `immersif`, avec point central précis `#FF2A14` et anneau suiveur avec amortissement, expansion fluide sur éléments interactifs, strictement désactivé au tactile (`hover: none`) et en mouvement réduit (`prefers-reduced-motion`).
 
 ## 8. Mouvement : règles communes
 

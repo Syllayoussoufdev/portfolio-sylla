@@ -34,15 +34,37 @@ function CinematicProjectVisual({
   title: string;
   index: number;
 }) {
-  if (imageSrc) {
-    return (
-      <img
-        src={imageSrc}
-        alt={imageAlt}
-        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-      />
-    );
-  }
+  const filterId = `disp-filter-${index}`;
+  const mapId = `disp-map-${index}`;
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseEnter = () => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+    const map = document.getElementById(mapId);
+    if (map) {
+      gsap.fromTo(
+        map,
+        { attr: { scale: 0 } },
+        {
+          attr: { scale: 16 },
+          duration: 0.25,
+          ease: "power2.out",
+          onComplete: () => {
+            gsap.to(map, { attr: { scale: 4 }, duration: 0.4, ease: "power1.inOut" });
+          },
+        }
+      );
+    }
+  };
+
+  const handleMouseLeave = () => {
+    const map = document.getElementById(mapId);
+    if (map) {
+      gsap.to(map, { attr: { scale: 0 }, duration: 0.35, ease: "power2.in" });
+    }
+  };
 
   const timecodes = [
     "00:01:24:18",
@@ -55,40 +77,82 @@ function CinematicProjectVisual({
   const tc = timecodes[index % timecodes.length];
 
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-[#141418] via-[#0A0A0D] to-black flex flex-col justify-between p-5 overflow-hidden select-none">
-      {/* Grille et viseur caméra cinéma */}
-      <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
-      <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF2A14]/15 rounded-full blur-2xl pointer-events-none" />
+    <div
+      ref={containerRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="relative w-full h-full overflow-hidden"
+    >
+      {/* Contrat de mouvement immersif #3 : Distorsion shader au survol (feDisplacementMap) */}
+      <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
+        <defs>
+          <filter id={filterId} x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.035 0.05"
+              numOctaves="2"
+              result="noise"
+            />
+            <feDisplacementMap
+              id={mapId}
+              in="SourceGraphic"
+              in2="noise"
+              scale="0"
+              xChannelSelector="R"
+              yChannelSelector="G"
+            />
+          </filter>
+        </defs>
+      </svg>
 
-      {/* Barre d'état Viewfinder */}
-      <div className="relative z-10 flex items-center justify-between text-[10px] font-mono tracking-widest text-zinc-400">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#FF2A14] animate-pulse" />
-          <span className="text-white font-semibold">REC ● 4K UHD</span>
-        </div>
-        <span className="text-zinc-500 font-mono">{tc}</span>
-      </div>
+      <div
+        className="w-full h-full relative transition-transform duration-700 ease-out group-hover:scale-105"
+        style={{ filter: `url(#${filterId})`, willChange: "filter, transform" }}
+      >
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="relative w-full h-full bg-gradient-to-br from-[#141418] via-[#0A0A0D] to-black flex flex-col justify-between p-5 overflow-hidden select-none">
+            {/* Grille et viseur caméra cinéma */}
+            <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF2A14]/15 rounded-full blur-2xl pointer-events-none" />
 
-      {/* Centre : Titre percutant & Play badge */}
-      <div className="relative z-10 text-center my-auto py-2 space-y-2">
-        <div className="w-12 h-12 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-[#FF2A14] mx-auto group-hover:scale-110 group-hover:bg-[#FF2A14] group-hover:text-white transition-all duration-300 shadow-lg">
-          <Play className="w-5 h-5 fill-current ml-0.5" />
-        </div>
-        <div className="font-syne font-bold text-sm sm:text-base text-white truncate max-w-xs mx-auto">
-          {title}
-        </div>
-      </div>
+            {/* Barre d'état Viewfinder */}
+            <div className="relative z-10 flex items-center justify-between text-[10px] font-mono tracking-widest text-zinc-400">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#FF2A14] animate-pulse" />
+                <span className="text-white font-semibold">REC ● 4K UHD</span>
+              </div>
+              <span className="text-zinc-500 font-mono">{tc}</span>
+            </div>
 
-      {/* Bas : Timeline & Audio Waveform stylisée */}
-      <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-2 text-[9px] font-mono text-zinc-500">
-        <div className="flex items-center gap-1">
-          <span className="w-1 h-3 bg-[#FF2A14] rounded-full" />
-          <span className="w-1 h-4 bg-[#FF2A14]/80 rounded-full" />
-          <span className="w-1 h-2 bg-zinc-600 rounded-full" />
-          <span className="w-1 h-5 bg-[#FF2A14] rounded-full" />
-          <span className="w-1 h-3 bg-zinc-600 rounded-full" />
-        </div>
-        <span>60 FPS · MONTAGE VIDÉO</span>
+            {/* Centre : Titre percutant & Play badge */}
+            <div className="relative z-10 text-center my-auto py-2 space-y-2">
+              <div className="w-12 h-12 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-[#FF2A14] mx-auto group-hover:scale-110 group-hover:bg-[#FF2A14] group-hover:text-white transition-all duration-300 shadow-lg">
+                <Play className="w-5 h-5 fill-current ml-0.5" />
+              </div>
+              <div className="font-syne font-bold text-sm sm:text-base text-white truncate max-w-xs mx-auto">
+                {title}
+              </div>
+            </div>
+
+            {/* Bas : Timeline & Audio Waveform stylisée */}
+            <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-2 text-[9px] font-mono text-zinc-500">
+              <div className="flex items-center gap-1">
+                <span className="w-1 h-3 bg-[#FF2A14] rounded-full" />
+                <span className="w-1 h-4 bg-[#FF2A14]/80 rounded-full" />
+                <span className="w-1 h-2 bg-zinc-600 rounded-full" />
+                <span className="w-1 h-5 bg-[#FF2A14] rounded-full" />
+                <span className="w-1 h-3 bg-zinc-600 rounded-full" />
+              </div>
+              <span>60 FPS · MONTAGE VIDÉO</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

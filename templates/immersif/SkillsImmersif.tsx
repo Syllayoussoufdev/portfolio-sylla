@@ -140,13 +140,13 @@ export function SkillsImmersif({ categories = [] }: SkillsImmersifProps) {
             num: "01",
             title: "Montage & Découpe Vidéo",
             desc: "Assemblage chronologique, coupes franches, dynamique de scènes et sélection minutieuse des prises.",
-            tools: ["Premiere Pro", "DaVinci Resolve", "CapCut Pro"],
+            tools: ["CapCut", "Premiere Pro", "Formats Courts"],
           },
           {
             num: "02",
             title: "Animation & Titrages",
-            desc: "Création de textes animés, sous-titres dynamiques, transitions personnalisées et initiation à la 3D.",
-            tools: ["After Effects", "Blender", "Canva"],
+            desc: "Création de textes animés, sous-titres dynamiques, transitions personnalisées et habillage visuel.",
+            tools: ["After Effects", "Canva", "Titrages"],
           },
           {
             num: "03",
@@ -156,9 +156,9 @@ export function SkillsImmersif({ categories = [] }: SkillsImmersifProps) {
           },
           {
             num: "04",
-            title: "Outils IA & Productivité",
-            desc: "Accompagnement créatif par l'IA pour l'inspiration visuelle, la génération de plans et les scripts.",
-            tools: ["ChatGPT", "Midjourney", "Claude"],
+            title: "Outils IA & Voix Off",
+            desc: "Accompagnement créatif par l'IA pour la génération vocale, la structuration de scripts et l'inspiration.",
+            tools: ["ElevenLabs", "Claude", "ChatGPT"],
           },
         ].map((item) => (
           <div

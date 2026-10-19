@@ -204,7 +204,7 @@ export function AboutImmersif({ settings }: AboutImmersifProps) {
           <div className="space-y-1.5">
             <h4 className="font-syne text-base font-bold text-white">En formation permanente</h4>
             <p className="text-xs font-mono text-zinc-400 leading-relaxed">
-              Pratique régulière sur Premiere Pro, DaVinci Resolve et CapCut pour monter en niveau.
+              Pratique régulière sur CapCut, Premiere Pro et After Effects pour progresser à chaque projet.
             </p>
           </div>
         </div>

@@ -115,7 +115,12 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
       data-accent={profile.accent}
       className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col selection:bg-blue-100 selection:text-blue-900 transition-colors duration-300"
     >
-      <Navbar settings={settings} />
+      <Navbar
+        settings={settings}
+        sections={sortedSections}
+        slug={slug}
+        template={profile.template}
+      />
       <main className="flex-1">
         {sortedSections.map((sec) => (
           <SectionRenderer

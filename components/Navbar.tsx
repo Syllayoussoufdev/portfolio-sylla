@@ -1,23 +1,36 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, Menu, X, FileText, Sparkles } from "lucide-react";
 import { useMotion } from "@/components/motion/MotionProvider";
+import type { SectionItem } from "@/lib/validations/profile";
 
 export interface NavbarSettings {
   nom?: string | null;
   metier?: string | null;
   emailPublic?: string | null;
   whatsapp?: string | null;
+  cvUrl?: string | null;
 }
 
 interface NavbarProps {
-  settings?: NavbarSettings;
+  settings?: NavbarSettings | null;
+  sections?: SectionItem[];
+  template?: string;
+  slug?: string;
 }
 
-export function Navbar({ settings }: NavbarProps) {
+const SECTION_CONFIG: Record<string, { label: string; id: string }> = {
+  hero: { label: "Accueil", id: "hero" },
+  apropos: { label: "À propos", id: "a-propos" },
+  projets: { label: "Projets", id: "projets" },
+  competences: { label: "Compétences", id: "competences" },
+  parcours: { label: "Parcours", id: "parcours" },
+};
+
+export function Navbar({ settings, sections, slug }: NavbarProps) {
   const pathname = usePathname() || "";
   const { lenis } = useMotion();
 
@@ -30,7 +43,7 @@ export function Navbar({ settings }: NavbarProps) {
   const displayName = settings?.nom || "Sylla Youssouf";
   const displayMetier = settings?.metier ?? "Développeur Web & Mobile";
 
-  // Déterminer le préfixe selon qu'on est sur l'accueil ou un sous-portfolio (ex: /dev)
+  // Déterminer le préfixe selon qu'on est sur l'accueil ou un sous-portfolio (ex: /dev, /design, /video)
   const isSubPortfolio =
     pathname !== "/" &&
     !pathname.startsWith("/admin") &&
@@ -38,14 +51,59 @@ export function Navbar({ settings }: NavbarProps) {
 
   const basePath = isSubPortfolio ? pathname : "";
 
-  const navLinks = [
-    { id: "hero", href: `${basePath}#hero`, label: "Accueil" },
-    { id: "a-propos", href: `${basePath}#a-propos`, label: "À propos" },
-    { id: "projets", href: `${basePath}#projets`, label: "Projets" },
-    { id: "competences", href: `${basePath}#competences`, label: "Compétences" },
-    { id: "parcours", href: `${basePath}#parcours`, label: "Parcours" },
-    { id: "contact", href: `${basePath}#contact`, label: "Contact" },
-  ];
+  // Liens de navigation dynamiques selon les sections réellement actives (sans doubler "Contact")
+  const navLinks = useMemo(() => {
+    if (sections && sections.length > 0) {
+      return sections
+        .filter((s) => s.visible && s.key !== "contact" && SECTION_CONFIG[s.key])
+        .sort((a, b) => a.order - b.order)
+        .map((s) => {
+          const cfg = SECTION_CONFIG[s.key];
+          return {
+            id: cfg.id,
+            href: `${basePath}#${cfg.id}`,
+            label: cfg.label,
+          };
+        });
+    }
+
+    // Repli par défaut propre
+    return [
+      { id: "hero", href: `${basePath}#hero`, label: "Accueil" },
+      { id: "a-propos", href: `${basePath}#a-propos`, label: "À propos" },
+      { id: "projets", href: `${basePath}#projets`, label: "Projets" },
+      { id: "competences", href: `${basePath}#competences`, label: "Compétences" },
+      { id: "parcours", href: `${basePath}#parcours`, label: "Parcours" },
+    ];
+  }, [sections, basePath]);
+
+  // Call To Action bien ciblé à droite
+  const ctaConfig = useMemo(() => {
+    if (settings?.cvUrl) {
+      return {
+        label: "Mon CV (PDF)",
+        href: settings.cvUrl,
+        isExternal: true,
+        icon: FileText,
+      };
+    }
+
+    if (slug === "video") {
+      return {
+        label: "Proposer un projet",
+        href: `${basePath}#contact`,
+        isExternal: false,
+        icon: Sparkles,
+      };
+    }
+
+    return {
+      label: "Collaborer avec moi",
+      href: `${basePath}#contact`,
+      isExternal: false,
+      icon: ArrowRight,
+    };
+  }, [settings?.cvUrl, slug, basePath]);
 
   // Gestion du défilement & ScrollSpy robuste jusqu'au Contact et Footer
   useEffect(() => {
@@ -73,13 +131,11 @@ export function Navbar({ settings }: NavbarProps) {
       const scrollPosition = window.scrollY + window.innerHeight;
       const pageHeight = document.documentElement.scrollHeight;
 
-      // Si l'utilisateur a atteint le bas de page (Contact et Footer)
       if (pageHeight - scrollPosition < 150) {
         setActiveSection("contact");
         return;
       }
 
-      // Parcourir de bas en haut pour trouver la section actuellement traversée
       const triggerY = window.scrollY + 200;
       for (let i = sectionIds.length - 1; i >= 0; i--) {
         const id = sectionIds[i];
@@ -99,7 +155,7 @@ export function Navbar({ settings }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [pathname]);
 
-  // Clic sur un lien de navigation : défilement fluide sans rechargement ni saut vers l'accueil
+  // Clic sur un lien de navigation : défilement fluide sans rechargement
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     targetId: string
@@ -145,6 +201,8 @@ export function Navbar({ settings }: NavbarProps) {
     .slice(0, 2)
     .join("")
     .toUpperCase() || "SY";
+
+  const CtaIcon = ctaConfig.icon;
 
   return (
     <header
@@ -207,14 +265,26 @@ export function Navbar({ settings }: NavbarProps) {
 
         {/* CTA & Burger Mobile */}
         <div className="flex items-center gap-3">
-          <Link
-            href={`${basePath}#contact`}
-            onClick={(e) => handleNavClick(e, "contact")}
-            className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--ink)] hover:opacity-90 text-[var(--bg)] text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
-          >
-            <span>Me contacter</span>
-            <ArrowRight className="w-3.5 h-3.5 text-[var(--accent)]" />
-          </Link>
+          {ctaConfig.isExternal ? (
+            <a
+              href={ctaConfig.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--ink)] hover:opacity-90 text-[var(--bg)] text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
+            >
+              <span>{ctaConfig.label}</span>
+              <CtaIcon className="w-3.5 h-3.5 text-[var(--accent)]" />
+            </a>
+          ) : (
+            <Link
+              href={ctaConfig.href}
+              onClick={(e) => handleNavClick(e, "contact")}
+              className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--ink)] hover:opacity-90 text-[var(--bg)] text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
+            >
+              <span>{ctaConfig.label}</span>
+              <CtaIcon className="w-3.5 h-3.5 text-[var(--accent)]" />
+            </Link>
+          )}
 
           {/* Bouton Menu Mobile */}
           <button
@@ -273,14 +343,26 @@ export function Navbar({ settings }: NavbarProps) {
               })}
 
               <div className="pt-4 mt-2 border-t border-slate-100">
-                <Link
-                  href={`${basePath}#contact`}
-                  onClick={(e) => handleNavClick(e, "contact")}
-                  className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[var(--ink)] text-white text-sm font-semibold shadow-md active:scale-[0.98] transition-all"
-                >
-                  <span>Me contacter</span>
-                  <ArrowRight className="w-4 h-4 text-[var(--accent)]" />
-                </Link>
+                {ctaConfig.isExternal ? (
+                  <a
+                    href={ctaConfig.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[var(--ink)] text-white text-sm font-semibold shadow-md active:scale-[0.98] transition-all"
+                  >
+                    <span>{ctaConfig.label}</span>
+                    <CtaIcon className="w-4 h-4 text-[var(--accent)]" />
+                  </a>
+                ) : (
+                  <Link
+                    href={ctaConfig.href}
+                    onClick={(e) => handleNavClick(e, "contact")}
+                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[var(--ink)] text-white text-sm font-semibold shadow-md active:scale-[0.98] transition-all"
+                  >
+                    <span>{ctaConfig.label}</span>
+                    <CtaIcon className="w-4 h-4 text-[var(--accent)]" />
+                  </Link>
+                )}
               </div>
             </nav>
           </div>

@@ -28,17 +28,22 @@ export default async function ProfilesAdminPage() {
     redirect("/admin/login");
   }
 
-  const profiles = await prisma.profile.findMany({
-    orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
-    include: {
-      subPortfolio: {
-        select: {
-          label: true,
-          slug: true,
+  let profiles: any[] = [];
+  try {
+    profiles = await prisma.profile.findMany({
+      orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
+      include: {
+        subPortfolio: {
+          select: {
+            label: true,
+            slug: true,
+          },
         },
       },
-    },
-  });
+    });
+  } catch (err) {
+    console.warn("Erreur récupération profils admin (repli vide) :", err);
+  }
 
   return (
     <div className="space-y-6">

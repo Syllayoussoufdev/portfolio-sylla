@@ -11,13 +11,16 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminCompetencesPage() {
-  const [categories, subPortfolios] = await Promise.all([
-    getAllSkillCategories(),
-    prisma.subPortfolio.findMany({
+  const categories = await getAllSkillCategories();
+  let subPortfolios: Array<{ id: string; label: string; slug: string }> = [];
+  try {
+    subPortfolios = await prisma.subPortfolio.findMany({
       select: { id: true, label: true, slug: true },
       orderBy: { label: "asc" },
-    }),
-  ]);
+    });
+  } catch (err) {
+    console.warn("Erreur chargement sous-portfolios compétences admin:", err);
+  }
 
   return (
     <CompetencesClient

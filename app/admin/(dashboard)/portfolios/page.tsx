@@ -17,22 +17,27 @@ import {
 } from "lucide-react";
 
 export default async function AdminSubPortfoliosListPage() {
-  const subPortfolios = await prisma.subPortfolio.findMany({
-    include: {
-      projects: {
-        include: {
-          project: {
-            select: {
-              id: true,
-              titre: true,
+  let subPortfolios: any[] = [];
+  try {
+    subPortfolios = await prisma.subPortfolio.findMany({
+      include: {
+        projects: {
+          include: {
+            project: {
+              select: {
+                id: true,
+                titre: true,
+              },
             },
           },
         },
+        visits: true,
       },
-      visits: true,
-    },
-    orderBy: { createdAt: "desc" },
-  });
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (err) {
+    console.warn("Erreur récupération sous-portfolios admin (repli vide) :", err);
+  }
 
   return (
     <div className="space-y-6">

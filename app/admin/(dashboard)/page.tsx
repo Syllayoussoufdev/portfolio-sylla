@@ -10,36 +10,87 @@ import {
   Eye,
   CheckCircle2,
   Clock,
+  AlertTriangle,
 } from "lucide-react";
 
 export default async function AdminDashboardOverviewPage() {
-  // Récupération des données 100% réelles depuis Prisma & Neon
-  const [
-    totalProjects,
-    totalVisibleProjects,
-    totalSubPortfolios,
-    totalVisits,
-    unreadMessages,
-    recentProjects,
-    subPortfoliosList,
-  ] = await Promise.all([
-    prisma.project.count(),
-    prisma.project.count({ where: { visible: true } }),
-    prisma.subPortfolio.count({ where: { actif: true } }),
-    prisma.visit.count(),
-    prisma.contactMessage.count({ where: { lu: false } }),
-    prisma.project.findMany({
-      take: 5,
-      orderBy: { createdAt: "desc" },
-    }),
-    prisma.subPortfolio.findMany({
-      take: 4,
-      orderBy: { createdAt: "desc" },
-    }),
-  ]);
+  let totalProjects = 0;
+  let totalVisibleProjects = 0;
+  let totalSubPortfolios = 0;
+  let totalVisits = 0;
+  let unreadMessages = 0;
+  let recentProjects: Array<{
+    id: string;
+    titre: string;
+    slug: string;
+    visible: boolean;
+  }> = [];
+  let subPortfoliosList: Array<{
+    id: string;
+    label: string;
+    slug: string;
+    createdAt: Date;
+  }> = [];
+  let dbError = false;
+
+  try {
+    const [
+      tp,
+      tvp,
+      tsp,
+      tv,
+      um,
+      rp,
+      spl,
+    ] = await Promise.all([
+      prisma.project.count(),
+      prisma.project.count({ where: { visible: true } }),
+      prisma.subPortfolio.count({ where: { actif: true } }),
+      prisma.visit.count(),
+      prisma.contactMessage.count({ where: { lu: false } }),
+      prisma.project.findMany({
+        take: 5,
+        orderBy: { createdAt: "desc" },
+        select: { id: true, titre: true, slug: true, visible: true },
+      }),
+      prisma.subPortfolio.findMany({
+        take: 4,
+        orderBy: { createdAt: "desc" },
+        select: { id: true, label: true, slug: true, createdAt: true },
+      }),
+    ]);
+    totalProjects = tp;
+    totalVisibleProjects = tvp;
+    totalSubPortfolios = tsp;
+    totalVisits = tv;
+    unreadMessages = um;
+    recentProjects = rp;
+    subPortfoliosList = spl;
+  } catch (err) {
+    console.warn("Tableau de bord admin : connexion base de données interrompue (repli actif)", err);
+    dbError = true;
+  }
 
   return (
     <div className="space-y-8 select-none">
+      {/* Alerte si la base de données est inaccessible */}
+      {dbError && (
+        <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/80 shadow-xs flex items-start gap-3.5 text-amber-900">
+          <div className="p-2 rounded-xl bg-amber-100 text-amber-700 shrink-0">
+            <AlertTriangle className="w-5 h-5" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-sm font-semibold text-amber-900">
+              Connexion à la base de données Neon interrompue (Erreur P1000 / 28P01)
+            </h3>
+            <p className="text-xs text-amber-800 leading-relaxed">
+              Le mot de passe de l&apos;utilisateur <code>neondb_owner</code> configuré dans <code>.env</code> a été modifié ou réinitialisé dans la console Neon.
+              Pour synchroniser les métriques et éditer vos données, mettez à jour votre variable <code>DATABASE_URL</code> avec le nouveau mot de passe fourni par Neon.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* En-tête de bienvenue */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

@@ -15,10 +15,17 @@ import {
 } from "lucide-react";
 import { GithubIcon, FigmaIcon } from "@/components/icons";
 
+type ProjectItem = Awaited<ReturnType<typeof prisma.project.findMany>>[number];
+
 export default async function AdminProjectsListPage() {
-  const projects = await prisma.project.findMany({
-    orderBy: [{ ordre: "asc" }, { createdAt: "desc" }],
-  });
+  let projects: ProjectItem[] = [];
+  try {
+    projects = await prisma.project.findMany({
+      orderBy: [{ ordre: "asc" }, { createdAt: "desc" }],
+    });
+  } catch (err) {
+    console.warn("Erreur récupération projets admin (repli vide) :", err);
+  }
 
   return (
     <div className="space-y-6">

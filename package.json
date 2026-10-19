@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test tests/**/*.test.ts"
+    "test": "tsx --test tests/**/*.test.ts",
+    "seed:demo": "tsx scripts/seed-demo.ts",
+    "seed:demo:remove": "tsx scripts/seed-demo-remove.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

@@ -13,6 +13,9 @@ import {
   Layers,
   Sparkles,
   Loader2,
+  Link2,
+  Plus,
+  X,
 } from "lucide-react";
 import { MediaUploader, type UploadedMedia } from "@/components/admin/MediaUploader";
 
@@ -39,10 +42,50 @@ interface MediasClientProps {
 export function MediasClient({ initialMedias }: MediasClientProps) {
   const [medias, setMedias] = useState<MediaWithUsage[]>(initialMedias);
   const [showUploader, setShowUploader] = useState(false);
+  const [showUrlAdder, setShowUrlAdder] = useState(false);
+  const [urlInput, setUrlInput] = useState("");
+  const [urlAltInput, setUrlAltInput] = useState("");
+  const [urlSubmitting, setUrlSubmitting] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [errorNotice, setErrorNotice] = useState<string | null>(null);
   const [successNotice, setSuccessNotice] = useState<string | null>(null);
+
+  const handleUrlAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!urlInput.trim() || !urlAltInput.trim()) return;
+    setUrlSubmitting(true);
+    setErrorNotice(null);
+    try {
+      const res = await fetch("/api/admin/media", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: urlInput.trim(),
+          alt: urlAltInput.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Impossible d'ajouter l'image");
+      }
+      const formatted: MediaWithUsage = {
+        ...data.media,
+        coverForProjects: [],
+        projectGalleries: [],
+      };
+      setMedias((prev) => [formatted, ...prev]);
+      setUrlInput("");
+      setUrlAltInput("");
+      setShowUrlAdder(false);
+      setSuccessNotice("Image enregistrée avec succès dans la base et la médiathèque.");
+      setTimeout(() => setSuccessNotice(null), 3000);
+    } catch (err) {
+      setErrorNotice(err instanceof Error ? err.message : "Erreur inattendue");
+    } finally {
+      setUrlSubmitting(false);
+    }
+  };
 
   const handleCopyUrl = (id: string, url: string) => {
     navigator.clipboard.writeText(url);
@@ -114,14 +157,31 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setShowUploader(!showUploader)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold shadow-sm shadow-blue-500/20 transition-all cursor-pointer"
-        >
-          <Upload className="w-4 h-4" />
-          <span>{showUploader ? "Fermer l'envoi" : "Téléverser une image"}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setShowUrlAdder(!showUrlAdder);
+              if (showUploader) setShowUploader(false);
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-[#0F172A] text-xs font-semibold shadow-sm transition-all cursor-pointer"
+          >
+            <Link2 className="w-4 h-4 text-[#2563EB]" />
+            <span>{showUrlAdder ? "Fermer URL" : "Ajouter par lien URL"}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setShowUploader(!showUploader);
+              if (showUrlAdder) setShowUrlAdder(false);
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold shadow-sm shadow-blue-500/20 transition-all cursor-pointer"
+          >
+            <Upload className="w-4 h-4" />
+            <span>{showUploader ? "Fermer l'envoi" : "Téléverser direct"}</span>
+          </button>
+        </div>
       </div>
 
       {/* Notifications */}
@@ -148,6 +208,105 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
         </div>
       )}
 
+      {/* Formulaire d'ajout rapide par URL */}
+      {showUrlAdder && (
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div className="flex items-center gap-2">
+              <Link2 className="w-4 h-4 text-[#2563EB]" />
+              <h3 className="text-sm font-semibold text-[#0F172A]">
+                Ajouter une image par lien URL direct
+              </h3>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowUrlAdder(false)}
+              className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
+                  URL directe de l&apos;image *
+                </label>
+                <input
+                  type="url"
+                  value={urlInput}
+                  onChange={(e) => setUrlInput(e.target.value)}
+                  placeholder="https://images.unsplash.com/... ou URL d'image"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
+                  Texte alternatif descriptif (alt) *
+                </label>
+                <input
+                  type="text"
+                  value={urlAltInput}
+                  onChange={(e) => setUrlAltInput(e.target.value)}
+                  placeholder="Ex : Identité visuelle marque de café"
+                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowUrlAdder(false)}
+                  className="px-3.5 py-2 rounded-xl border border-slate-200 text-xs text-slate-600 hover:bg-slate-50"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="button"
+                  onClick={handleUrlAdd}
+                  disabled={urlSubmitting || !urlInput.trim() || !urlAltInput.trim()}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                >
+                  {urlSubmitting ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Enregistrement...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Enregistrer dans la base</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Aperçu */}
+            <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-3 bg-slate-50/50 aspect-video max-h-48 overflow-hidden">
+              {urlInput.trim() ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={urlInput.trim()}
+                  alt={urlAltInput || "Aperçu"}
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = "none";
+                  }}
+                />
+              ) : (
+                <div className="text-center text-slate-400 text-xs">
+                  <ImageIcon className="w-6 h-6 mx-auto mb-1 opacity-50" />
+                  <span>Saisissez une URL pour voir l&apos;aperçu</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Uploader dépliable */}
       {showUploader && (
         <MediaUploader
@@ -167,17 +326,26 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
             Aucune image dans la médiathèque
           </h3>
           <p className="text-xs text-[#64748B] max-w-md mx-auto mb-6">
-            Téléversez vos visuels de réalisations directement vers Cloudinary avec texte alternatif
-            obligatoire pour alimenter les couvertures et galeries.
+            Ajoutez vos visuels de réalisations par lien URL direct ou téléversez-les vers Cloudinary.
           </p>
-          <button
-            type="button"
-            onClick={() => setShowUploader(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition-all"
-          >
-            <Upload className="w-4 h-4" />
-            <span>Ajouter ma première image</span>
-          </button>
+          <div className="flex items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => setShowUrlAdder(true)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-[#0F172A] text-xs font-semibold shadow-sm transition-all cursor-pointer"
+            >
+              <Link2 className="w-4 h-4 text-[#2563EB]" />
+              <span>Ajouter par lien URL</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowUploader(true)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
+            >
+              <Upload className="w-4 h-4" />
+              <span>Téléverser direct</span>
+            </button>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">

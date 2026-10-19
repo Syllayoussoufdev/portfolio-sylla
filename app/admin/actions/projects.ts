@@ -14,7 +14,7 @@ const ProjectSchema = z.object({
     .regex(/^[a-z0-9-]+$/, "Le slug ne peut contenir que des lettres minuscules, chiffres et tirets"),
   description: z.string().min(5, "La description est obligatoire"),
   contenu: z.string().optional(),
-  coverImage: z.string().url("URL de couverture invalide").optional().or(z.literal("")),
+  coverImage: z.string().optional().or(z.literal("")),
   tags: z.array(z.string()).default([]),
   links: z.record(z.string(), z.string()).default({}),
   ordre: z.number().int().default(0),
@@ -94,12 +94,38 @@ export async function createProjectAction(
     return { error: `Le slug "/${data.slug}" est déjà utilisé par un autre projet.` };
   }
 
-  // Rétrocompatibilité : si coverMediaId est défini mais coverImage est vide, synchroniser l'URL
-  let resolvedCoverImage = data.coverImage || null;
-  if (coverMediaId) {
-    const media = await prisma.media.findUnique({ where: { id: coverMediaId } });
+  // Résolution et enregistrement automatique du média de couverture dans la Médiathèque
+  let resolvedCoverImage = data.coverImage ? data.coverImage.trim() : null;
+  let resolvedCoverMediaId = coverMediaId;
+
+  if (resolvedCoverMediaId) {
+    const media = await prisma.media.findUnique({ where: { id: resolvedCoverMediaId } });
     if (media) {
       resolvedCoverImage = media.url;
+    }
+  } else if (resolvedCoverImage) {
+    // Si une URL a été saisie directement, la synchroniser avec la table Media (Médiathèque)
+    let media = await prisma.media.findFirst({
+      where: { url: resolvedCoverImage },
+    });
+
+    if (!media) {
+      const publicId = "url_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
+      media = await prisma.media.create({
+        data: {
+          publicId,
+          url: resolvedCoverImage,
+          alt: data.titre,
+          format: "web",
+          width: 1200,
+          height: 800,
+          bytes: 0,
+        },
+      });
+    }
+
+    if (media) {
+      resolvedCoverMediaId = media.id;
     }
   }
 
@@ -121,7 +147,7 @@ export async function createProjectAction(
         description: data.description,
         contenu: data.contenu || null,
         coverImage: resolvedCoverImage,
-        coverMediaId: coverMediaId || null,
+        coverMediaId: resolvedCoverMediaId || null,
         tags: data.tags,
         links: data.links,
         ordre: data.ordre,
@@ -222,13 +248,40 @@ export async function updateProjectAction(
     return { error: `Le slug "/${data.slug}" est déjà utilisé par un autre projet.` };
   }
 
-  // Rétrocompatibilité : synchroniser coverImage avec coverMedia si disponible
-  let resolvedCoverImage = data.coverImage || null;
-  if (coverMediaId) {
-    const media = await prisma.media.findUnique({ where: { id: coverMediaId } });
+  // Résolution et enregistrement automatique du média de couverture dans la Médiathèque
+  let resolvedCoverImage = data.coverImage ? data.coverImage.trim() : null;
+  let resolvedCoverMediaId = coverMediaId;
+
+  if (resolvedCoverMediaId) {
+    const media = await prisma.media.findUnique({ where: { id: resolvedCoverMediaId } });
     if (media) {
       resolvedCoverImage = media.url;
     }
+  } else if (resolvedCoverImage) {
+    let media = await prisma.media.findFirst({
+      where: { url: resolvedCoverImage },
+    });
+
+    if (!media) {
+      const publicId = "url_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
+      media = await prisma.media.create({
+        data: {
+          publicId,
+          url: resolvedCoverImage,
+          alt: data.titre,
+          format: "web",
+          width: 1200,
+          height: 800,
+          bytes: 0,
+        },
+      });
+    }
+
+    if (media) {
+      resolvedCoverMediaId = media.id;
+    }
+  } else {
+    resolvedCoverMediaId = null;
   }
 
   // Mettre à jour links.gallery pour rétrocompatibilité
@@ -253,7 +306,7 @@ export async function updateProjectAction(
         description: data.description,
         contenu: data.contenu || null,
         coverImage: resolvedCoverImage,
-        coverMediaId: coverMediaId || null,
+        coverMediaId: resolvedCoverMediaId || null,
         tags: data.tags,
         links: data.links,
         ordre: data.ordre,

@@ -1,7 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Search, Image as ImageIcon, Upload, Check, Loader2 } from "lucide-react";
+import {
+  X,
+  Search,
+  Image as ImageIcon,
+  Upload,
+  Check,
+  Loader2,
+  Link2,
+  AlertCircle,
+  Plus,
+} from "lucide-react";
 import { MediaUploader, type UploadedMedia } from "./MediaUploader";
 
 interface MediaPickerModalProps {
@@ -17,11 +27,17 @@ export function MediaPickerModal({
   onSelect,
   title = "Sélectionner une image",
 }: MediaPickerModalProps) {
-  const [activeTab, setActiveTab] = useState<"library" | "upload">("library");
+  const [activeTab, setActiveTab] = useState<"library" | "upload" | "url">("library");
   const [medias, setMedias] = useState<UploadedMedia[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  // États pour l'onglet "Ajouter par lien URL"
+  const [urlInput, setUrlInput] = useState("");
+  const [urlAltInput, setUrlAltInput] = useState("");
+  const [urlSubmitting, setUrlSubmitting] = useState(false);
+  const [urlError, setUrlError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -63,9 +79,53 @@ export function MediaPickerModal({
     onClose();
   };
 
+  // Enregistrement direct d'une URL dans la base Neon / Médiathèque
+  const handleUrlSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!urlInput.trim()) {
+      setUrlError("Veuillez renseigner une URL valide");
+      return;
+    }
+    if (!urlAltInput.trim()) {
+      setUrlError("Veuillez renseigner un texte descriptif (alt)");
+      return;
+    }
+
+    setUrlSubmitting(true);
+    setUrlError(null);
+
+    try {
+      const res = await fetch("/api/admin/media", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: urlInput.trim(),
+          alt: urlAltInput.trim(),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Impossible d'enregistrer l'image");
+      }
+
+      const createdMedia = data.media;
+      setMedias((prev) => [createdMedia, ...prev]);
+      onSelect(createdMedia);
+      setUrlInput("");
+      setUrlAltInput("");
+      onClose();
+    } catch (err: unknown) {
+      setUrlError(err instanceof Error ? err.message : "Erreur inattendue");
+    } finally {
+      setUrlSubmitting(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl border border-slate-200 max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200 max-w-3xl w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden">
         {/* En-tête */}
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -97,6 +157,18 @@ export function MediaPickerModal({
           </button>
           <button
             type="button"
+            onClick={() => setActiveTab("url")}
+            className={`py-3 px-4 text-xs font-semibold border-b-2 transition-all flex items-center gap-1.5 ${
+              activeTab === "url"
+                ? "border-[#2563EB] text-[#2563EB]"
+                : "border-transparent text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <Link2 className="w-4 h-4" />
+            <span>Ajouter par lien URL</span>
+          </button>
+          <button
+            type="button"
             onClick={() => setActiveTab("upload")}
             className={`py-3 px-4 text-xs font-semibold border-b-2 transition-all flex items-center gap-1.5 ${
               activeTab === "upload"
@@ -105,7 +177,7 @@ export function MediaPickerModal({
             }`}
           >
             <Upload className="w-4 h-4" />
-            <span>Téléverser direct</span>
+            <span>Téléverser direct (Cloudinary)</span>
           </button>
         </div>
 
@@ -137,14 +209,25 @@ export function MediaPickerModal({
                       ? "Aucune image ne correspond à votre recherche."
                       : "La médiathèque est vide pour le moment."}
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("upload")}
-                    className="inline-flex items-center gap-1.5 text-xs text-[#2563EB] font-medium hover:underline"
-                  >
-                    <Upload className="w-3.5 h-3.5" />
-                    Téléverser une image maintenant
-                  </button>
+                  <div className="flex items-center justify-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("url")}
+                      className="inline-flex items-center gap-1.5 text-xs text-[#2563EB] font-medium hover:underline cursor-pointer"
+                    >
+                      <Link2 className="w-3.5 h-3.5" />
+                      Ajouter par lien URL
+                    </button>
+                    <span className="text-slate-300">•</span>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("upload")}
+                      className="inline-flex items-center gap-1.5 text-xs text-[#2563EB] font-medium hover:underline cursor-pointer"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      Téléverser direct
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -173,7 +256,8 @@ export function MediaPickerModal({
                             {media.alt}
                           </p>
                           <span className="text-[9px] font-mono opacity-70">
-                            {media.width}×{media.height} • {media.format}
+                            {media.width && media.height ? `${media.width}×${media.height} • ` : ""}
+                            {media.format}
                           </span>
                         </div>
                         {isSelected && (
@@ -186,6 +270,95 @@ export function MediaPickerModal({
                   })}
                 </div>
               )}
+            </div>
+          ) : activeTab === "url" ? (
+            <div className="max-w-lg mx-auto py-2 space-y-4">
+              <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-xs text-blue-800">
+                <span className="font-semibold">Ajout instantané par lien URL :</span> collez le lien d&apos;une image externe (ex. Unsplash, Cloudinary, Imgur, site web) ou un chemin relatif. Elle sera enregistrée dans votre base de données Neon et réutilisable dans toute la médiathèque.
+              </div>
+
+              {urlError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2 text-xs text-red-700">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-600" />
+                  <span>{urlError}</span>
+                </div>
+              )}
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
+                    URL directe de l&apos;image *
+                  </label>
+                  <input
+                    type="url"
+                    value={urlInput}
+                    onChange={(e) => setUrlInput(e.target.value)}
+                    placeholder="https://images.unsplash.com/... ou URL directe"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
+                    Texte alternatif descriptif (alt) *
+                  </label>
+                  <input
+                    type="text"
+                    value={urlAltInput}
+                    onChange={(e) => setUrlAltInput(e.target.value)}
+                    placeholder="Ex : Capture de l'application SaaS en mode sombre"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                  />
+                </div>
+
+                {/* Prévisualisation dynamique */}
+                {urlInput.trim() && (
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                      Aperçu
+                    </span>
+                    <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video max-h-48 flex items-center justify-center">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={urlInput.trim()}
+                        alt={urlAltInput || "Prévisualisation"}
+                        onError={(e) => {
+                          (e.target as HTMLElement).style.display = "none";
+                        }}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleUrlSubmit}
+                    disabled={urlSubmitting || !urlInput.trim() || !urlAltInput.trim()}
+                    className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold transition-all shadow-sm shadow-blue-500/20 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                  >
+                    {urlSubmitting ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Enregistrement en base...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Enregistrer et sélectionner</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           ) : (
             <MediaUploader

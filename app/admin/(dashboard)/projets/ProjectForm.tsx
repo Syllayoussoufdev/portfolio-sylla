@@ -186,7 +186,8 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
   };
 
   return (
-    <form action={formAction} className="space-y-8 max-w-4xl">
+    <>
+      <form action={formAction} className="space-y-8 max-w-4xl">
       {/* En-tête */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -320,15 +321,15 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
           />
         </div>
 
-        {/* Image de couverture principale (Cloudinary / Rétrocompatible) */}
+        {/* Image de couverture principale (Cloudinary / Médiathèque / URL directe) */}
         <div className="pt-2 border-t border-slate-100 space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider">
                 Image de couverture principale *
               </label>
               <p className="text-[11px] text-slate-500">
-                Format 16:9 recommandé • Téléversement direct Cloudinary avec texte alternatif
+                Format 16:9 recommandé • Médiathèque, téléversement direct ou lien URL
               </p>
             </div>
             <button
@@ -337,7 +338,7 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 text-[#2563EB] hover:bg-blue-100 text-xs font-semibold transition-colors cursor-pointer"
             >
               <ImageIcon className="w-3.5 h-3.5" />
-              <span>{coverMedia || coverImageUrl ? "Modifier l'image" : "Choisir une image"}</span>
+              <span>{coverMedia || coverImageUrl ? "Ouvrir la médiathèque" : "Choisir une image"}</span>
             </button>
           </div>
 
@@ -351,7 +352,14 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 p-4 flex flex-col justify-between">
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={openPickerForCover}
+                    className="px-2.5 py-1 rounded-lg bg-black/60 hover:bg-black/90 text-white text-xs font-medium transition-colors cursor-pointer"
+                  >
+                    Remplacer
+                  </button>
                   <button
                     type="button"
                     onClick={removeCover}
@@ -363,7 +371,7 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
                 </div>
                 <div className="text-white space-y-0.5">
                   <div className="text-xs font-semibold truncate">
-                    {coverMedia?.alt || "Image saisie manuellement"}
+                    {coverMedia?.alt || "Image liée par URL"}
                   </div>
                   <div className="text-[10px] font-mono text-slate-300 truncate">
                     {coverMedia?.url || coverImageUrl}
@@ -381,33 +389,45 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
                 Aucune image de couverture sélectionnée
               </p>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Cliquez pour choisir dans la médiathèque ou téléverser
+                Cliquez pour choisir dans la médiathèque, téléverser ou coller une URL
               </p>
             </div>
           )}
 
-          {/* Champs masqués transmis au serveur */}
-          <input type="hidden" name="coverMediaId" value={coverMedia?.id || ""} />
-          <input type="hidden" name="coverImage" value={coverMedia?.url || coverImageUrl} />
-
-          {/* Option repliable : saisie manuelle d'URL (compatibilité) */}
-          <details className="text-[11px] text-slate-500 pt-1">
-            <summary className="cursor-pointer hover:text-slate-800 font-medium">
-              Options avancées (URL directe / fallback externe)
-            </summary>
-            <div className="mt-2">
+          {/* Saisie rapide d'URL directe */}
+          <div className="space-y-1.5 pt-1">
+            <label className="block text-[11px] font-medium text-slate-600">
+              Ou collez directement une URL d&apos;image :
+            </label>
+            <div className="flex gap-2">
               <input
-                type="url"
+                type="text"
                 value={coverImageUrl}
                 onChange={(e) => {
                   setCoverImageUrl(e.target.value);
                   setCoverMedia(null);
                 }}
-                placeholder="https://... URL directe de secours"
-                className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs text-[#0F172A] focus:outline-none focus:ring-1 focus:ring-[#2563EB]"
+                placeholder="https://images.unsplash.com/... ou URL d'image"
+                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
               />
+              {coverImageUrl && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCoverImageUrl("");
+                    setCoverMedia(null);
+                  }}
+                  className="px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-500 hover:bg-slate-50 cursor-pointer"
+                >
+                  Effacer
+                </button>
+              )}
             </div>
-          </details>
+          </div>
+
+          {/* Champs masqués transmis au serveur */}
+          <input type="hidden" name="coverMediaId" value={coverMedia?.id || ""} />
+          <input type="hidden" name="coverImage" value={coverMedia?.url || coverImageUrl} />
         </div>
 
         {/* Galerie d'images ordonnée (ProjectMedia) */}
@@ -686,18 +706,19 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
           </div>
         </div>
       </div>
-
-      {/* Modal sélecteur de média */}
-      <MediaPickerModal
-        isOpen={pickerOpen}
-        onClose={() => setPickerOpen(false)}
-        onSelect={handleMediaSelected}
-        title={
-          pickerTarget === "cover"
-            ? "Choisir ou téléverser l'image de couverture"
-            : "Ajouter un visuel à la galerie ordonnée"
-        }
-      />
     </form>
+
+    {/* Modal sélecteur de média hors du form HTML */}
+    <MediaPickerModal
+      isOpen={pickerOpen}
+      onClose={() => setPickerOpen(false)}
+      onSelect={handleMediaSelected}
+      title={
+        pickerTarget === "cover"
+          ? "Choisir ou téléverser l'image de couverture"
+          : "Ajouter un visuel à la galerie ordonnée"
+      }
+    />
+  </>
   );
 }

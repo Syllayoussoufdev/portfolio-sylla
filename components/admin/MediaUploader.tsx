@@ -235,7 +235,7 @@ export function MediaUploader({
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-4">
         {/* Zone de sélection / Drag and drop */}
         {!previewUrl ? (
           <div
@@ -343,7 +343,8 @@ export function MediaUploader({
               Annuler
             </button>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={uploading || !alt.trim()}
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-medium transition-all shadow-sm shadow-blue-500/20 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
             >
@@ -361,7 +362,7 @@ export function MediaUploader({
             </button>
           </div>
         )}
-      </form>
+      </div>
     </div>
   );
 }

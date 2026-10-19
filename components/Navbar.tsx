@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowRight, Menu, X } from "lucide-react";
 
 export interface NavbarSettings {
@@ -16,9 +17,11 @@ interface NavbarProps {
 }
 
 export function Navbar({ settings }: NavbarProps) {
+  const pathname = usePathname() || "";
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("hero");
   const lastScrollY = useRef(0);
 
   const displayName = settings?.nom || "Sylla Youssouf";
@@ -53,6 +56,38 @@ export function Navbar({ settings }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Détection dynamique de la section active (ScrollSpy)
+  useEffect(() => {
+    const sectionIds = ["hero", "a-propos", "projets", "competences", "parcours", "contact"];
+    const elements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if (elements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Détecter l'élément ayant la plus grande visibilité
+        const intersecting = entries.filter((e) => e.isIntersecting);
+        if (intersecting.length > 0) {
+          // Trier par position pour prendre la section courante
+          const sorted = intersecting.sort(
+            (a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top)
+          );
+          setActiveSection(sorted[0].target.id);
+        }
+      },
+      {
+        rootMargin: "-15% 0px -40% 0px",
+        threshold: [0, 0.25, 0.5, 0.75],
+      }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [pathname]);
+
   // Fermer le menu mobile lors d'un appui sur Échap et verrouiller le scroll
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -72,12 +107,21 @@ export function Navbar({ settings }: NavbarProps) {
     };
   }, [mobileMenuOpen]);
 
+  // Déterminer le préfixe selon qu'on est sur l'accueil ou un sous-portfolio (ex: /dev)
+  const isSubPortfolio =
+    pathname !== "/" &&
+    !pathname.startsWith("/admin") &&
+    !pathname.startsWith("/projets/");
+
+  const basePath = isSubPortfolio ? pathname : "";
+
   const navLinks = [
-    { href: "/#hero", label: "Accueil" },
-    { href: "/#a-propos", label: "À propos" },
-    { href: "/#projets", label: "Projets" },
-    { href: "/#competences", label: "Compétences" },
-    { href: "/#contact", label: "Contact" },
+    { id: "hero", href: `${basePath}#hero`, label: "Accueil" },
+    { id: "a-propos", href: `${basePath}#a-propos`, label: "À propos" },
+    { id: "projets", href: `${basePath}#projets`, label: "Projets" },
+    { id: "competences", href: `${basePath}#competences`, label: "Compétences" },
+    { id: "parcours", href: `${basePath}#parcours`, label: "Parcours" },
+    { id: "contact", href: `${basePath}#contact`, label: "Contact" },
   ];
 
   // Initiales pour le monogramme
@@ -104,7 +148,7 @@ export function Navbar({ settings }: NavbarProps) {
         }`}
       >
         {/* Logo & Identité issue de SiteSettings */}
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href={basePath || "/"} className="flex items-center gap-3 group">
           <div className="w-8 h-8 rounded-xl bg-[var(--ink)] text-[var(--bg)] flex items-center justify-center font-bebas text-lg shadow-xs transition-transform group-hover:scale-105">
             {initials}
           </div>
@@ -120,23 +164,33 @@ export function Navbar({ settings }: NavbarProps) {
           </div>
         </Link>
 
-        {/* Liens de navigation Desktop avec marges généreuses (>= 32px) */}
-        <div className="hidden md:flex items-center gap-8 text-xs font-medium text-[var(--muted)]">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="hover:text-[var(--accent)] transition-colors py-1"
-            >
-              {link.label}
-            </Link>
-          ))}
+        {/* Liens de navigation Desktop avec ScrollSpy */}
+        <div className="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-medium text-[var(--muted)]">
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.id;
+            return (
+              <Link
+                key={link.id}
+                href={link.href}
+                className={`transition-all py-1 relative ${
+                  isActive
+                    ? "text-[var(--ink)] font-semibold"
+                    : "hover:text-[var(--accent)]"
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[var(--accent)] rounded-full animate-in fade-in duration-200" />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
         {/* CTA & Burger Mobile */}
         <div className="flex items-center gap-3">
           <Link
-            href="/#contact"
+            href={`${basePath}#contact`}
             className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--ink)] hover:opacity-90 text-[var(--bg)] text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
           >
             <span>Me contacter</span>
@@ -177,21 +231,31 @@ export function Navbar({ settings }: NavbarProps) {
               </button>
             </div>
 
-            <nav className="flex flex-col gap-4 text-base font-medium text-[var(--ink)]">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="py-2 px-3 rounded-xl hover:bg-slate-50 hover:text-[var(--accent)] transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <nav className="flex flex-col gap-2 text-base font-medium text-[var(--ink)]">
+              {navLinks.map((link) => {
+                const isActive = activeSection === link.id;
+                return (
+                  <Link
+                    key={link.id}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`py-2 px-3 rounded-xl transition-colors flex items-center justify-between ${
+                      isActive
+                        ? "bg-blue-50 text-[var(--accent)] font-semibold"
+                        : "hover:bg-slate-50 hover:text-[var(--accent)]"
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                    {isActive && (
+                      <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
+                    )}
+                  </Link>
+                );
+              })}
 
               <div className="pt-4 mt-2 border-t border-slate-100">
                 <Link
-                  href="/#contact"
+                  href={`${basePath}#contact`}
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[var(--ink)] text-white text-sm font-semibold shadow-md active:scale-[0.98] transition-all"
                 >

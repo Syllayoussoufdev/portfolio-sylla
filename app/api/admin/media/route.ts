@@ -69,16 +69,9 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { publicId, url, width, height, format, bytes, alt } = body;
 
-    if (!publicId || typeof publicId !== "string") {
+    if (!url || typeof url !== "string" || !url.trim()) {
       return NextResponse.json(
-        { error: "Le publicId Cloudinary est obligatoire" },
-        { status: 400 }
-      );
-    }
-
-    if (!url || typeof url !== "string") {
-      return NextResponse.json(
-        { error: "L'URL Cloudinary est obligatoire" },
+        { error: "L'URL de l'image est obligatoire" },
         { status: 400 }
       );
     }
@@ -90,22 +83,39 @@ export async function POST(request: Request) {
       );
     }
 
-    // Vérifier si le média existe déjà
-    const existing = await prisma.media.findUnique({
-      where: { publicId },
+    const cleanUrl = url.trim();
+    const finalPublicId =
+      publicId && typeof publicId === "string" && publicId.trim()
+        ? publicId.trim()
+        : "url_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
+
+    // Vérifier si le média existe déjà (par publicId ou par URL)
+    const existing = await prisma.media.findFirst({
+      where: {
+        OR: [{ publicId: finalPublicId }, { url: cleanUrl }],
+      },
     });
 
     if (existing) {
       return NextResponse.json({ media: existing });
     }
 
+    // Détection basique du format depuis l'URL si non fourni
+    let detectedFormat = (format && String(format)) || "jpg";
+    if (!format && cleanUrl.includes(".")) {
+      const ext = cleanUrl.split(".").pop()?.split("?")[0]?.toLowerCase();
+      if (ext && ["png", "jpg", "jpeg", "webp", "avif", "gif", "svg"].includes(ext)) {
+        detectedFormat = ext;
+      }
+    }
+
     const media = await prisma.media.create({
       data: {
-        publicId,
-        url,
-        width: Number(width) || 0,
-        height: Number(height) || 0,
-        format: String(format || "jpg"),
+        publicId: finalPublicId,
+        url: cleanUrl,
+        width: Number(width) || 1200,
+        height: Number(height) || 800,
+        format: detectedFormat,
         bytes: Number(bytes) || 0,
         alt: alt.trim(),
       },

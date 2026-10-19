@@ -188,7 +188,8 @@ export function ProfileForm({
   };
 
   return (
-    <form action={formAction} className="space-y-8 max-w-4xl">
+    <>
+      <form action={formAction} className="space-y-8 max-w-4xl">
       {/* Alerte d'erreur */}
       {state?.error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3 text-red-700 text-xs">
@@ -881,23 +882,24 @@ export function ProfileForm({
           </div>
         </div>
       </div>
-
-      {/* Modal Médiathèque pour choisir le Hero Media */}
-      <MediaPickerModal
-        isOpen={pickerOpen}
-        onClose={() => setPickerOpen(false)}
-        onSelect={(media: UploadedMedia) => {
-          setHeroMedia({
-            id: media.id,
-            url: media.url,
-            alt: media.alt,
-          });
-          if (!mediaAlt) {
-            setMediaAlt(media.alt);
-          }
-        }}
-        title="Sélectionner le visuel principal du Hero"
-      />
     </form>
+
+    {/* Modal Médiathèque pour choisir le Hero Media hors du form HTML */}
+    <MediaPickerModal
+      isOpen={pickerOpen}
+      onClose={() => setPickerOpen(false)}
+      onSelect={(media: UploadedMedia) => {
+        setHeroMedia({
+          id: media.id,
+          url: media.url,
+          alt: media.alt,
+        });
+        if (!mediaAlt) {
+          setMediaAlt(media.alt);
+        }
+      }}
+      title="Sélectionner le visuel principal du Hero"
+    />
+  </>
   );
 }

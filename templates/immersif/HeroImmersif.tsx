@@ -4,7 +4,7 @@ import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
-import { ArrowRight, Play, Film, Sparkles, Video, Layers, MonitorPlay } from "lucide-react";
+import { ArrowRight, Play, Film, Sparkles, Video, ArrowUpRight, MonitorPlay } from "lucide-react";
 import { MotionShowreel3D } from "@/components/3d/MotionShowreel3D";
 import type { HeroData } from "@/lib/validations/profile";
 import type { MediaData, SiteSettingsData } from "@/lib/profiles";
@@ -16,6 +16,17 @@ interface HeroImmersifProps {
   settings?: SiteSettingsData | null;
 }
 
+const TICKER_ITEMS = [
+  { en: "EVOLVE", jp: "進化" },
+  { en: "IMAGINE", jp: "想像" },
+  { en: "SHAPE", jp: "創造" },
+  { en: "DIRECT", jp: "監督" },
+  { en: "CRAFT", jp: "技" },
+  { en: "MOTION", jp: "動画" },
+  { en: "IMPACT", jp: "衝撃" },
+  { en: "ELEVATE", jp: "高揚" },
+];
+
 export function HeroImmersif({
   hero,
   heroMedia,
@@ -23,81 +34,70 @@ export function HeroImmersif({
   settings,
 }: HeroImmersifProps) {
   const containerRef = useRef<HTMLElement>(null);
-  const badgeRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const sublineRef = useRef<HTMLParagraphElement>(null);
-  const showreelRef = useRef<HTMLDivElement>(null);
-  const metricsRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const metaRef = useRef<HTMLDivElement>(null);
+  const statementRef = useRef<HTMLDivElement>(null);
+  const tickerRef = useRef<HTMLDivElement>(null);
 
   const headline =
-    hero?.headline || "Turning Ideas Into Beautiful Digital Experiences.";
+    hero?.headline &&
+    hero.headline !== "Turning Ideas Into Beautiful Digital Experiences." &&
+    hero.headline !== "DES IMAGES QUI BOUGENT, UN RÉCIT QUI TIENT."
+      ? hero.headline
+      : "Ideas made\nunforgettable.";
   const subline =
-    hero?.subline ||
-    "Direction créative, motion design, univers 3D immersifs et production visuelle d'impact pour marques audacieuses.";
+    hero?.subline &&
+    hero.subline !== "Montage vidéo, motion et direction visuelle."
+      ? hero.subline
+      : "We build films, motion systems and visual identities that turn a clear idea into a distinctive experience.";
   const primaryCta = hero?.ctaPrimary || {
-    label: "Explorer le Showreel & Réalisations",
+    label: "Explorer le Showreel",
     href: "#projets",
   };
   const secondaryCta = hero?.ctaSecondary || {
-    label: "Lancer un projet créatif",
+    label: "Démarrer un projet",
     href: "#contact",
   };
 
   const displayName = settings?.nom || "Sylla Youssouf";
-  const imageSrc = heroMedia?.url || "/sylla.jpg";
-  const imageAlt = heroMedia?.alt || `Direction créative de ${displayName}`;
 
   useEffect(() => {
     const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (isReduced) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      // 1. Entrée cinématique du Hero
+      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
       tl.fromTo(
-        badgeRef.current,
-        { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 0.6 }
+        metaRef.current,
+        { opacity: 0, y: -15 },
+        { opacity: 1, y: 0, duration: 0.7 }
       );
 
       tl.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8 },
-        "-=0.3"
-      );
-
-      tl.fromTo(
-        sublineRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6 },
+        headlineRef.current,
+        { opacity: 0, y: 40, skewY: 1.5 },
+        { opacity: 1, y: 0, skewY: 0, duration: 1 },
         "-=0.4"
       );
 
       tl.fromTo(
-        showreelRef.current,
-        { opacity: 0, scale: 0.94, y: 30 },
-        { opacity: 1, scale: 1, y: 0, duration: 1, ease: "back.out(1.2)" },
-        "-=0.3"
+        statementRef.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8 },
+        "-=0.5"
       );
 
-      if (metricsRef.current) {
-        tl.fromTo(
-          metricsRef.current.children,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 },
-          "-=0.4"
-        );
-      }
-
-      if (ctaRef.current) {
-        tl.fromTo(
-          ctaRef.current.children,
-          { opacity: 0, y: 15 },
-          { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 },
-          "-=0.2"
-        );
+      // 2. Animation GSAP Marquee Ticker ultra fluide
+      if (tickerRef.current) {
+        const row = tickerRef.current;
+        gsap.to(row, {
+          xPercent: -50,
+          repeat: -1,
+          duration: 22,
+          ease: "none",
+        });
       }
     }, containerRef);
 
@@ -108,123 +108,113 @@ export function HeroImmersif({
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-[95vh] flex flex-col justify-center pt-32 pb-20 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden text-slate-100"
+      className="relative min-h-screen bg-[#070708] text-white pt-28 pb-16 overflow-hidden flex flex-col justify-between"
     >
-      {/* Halo lumineux violet & magenta (Style Image 3 ELAM) */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[350px] rounded-full bg-gradient-to-r from-purple-600/25 to-pink-600/20 blur-[140px] pointer-events-none -z-10" />
+      {/* Grille structurelle subtile d'arrière-plan */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
 
-      {/* Particules 3D & Nébuleuse Cinématique en arrière-plan */}
-      <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none opacity-50 scale-125">
-        <MotionShowreel3D />
+      {/* Lueur cinématique rouge vermillon très rasante */}
+      <div className="absolute top-1/4 right-0 w-[420px] h-[420px] bg-[#FF2A14]/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 w-full relative z-10 flex-1 flex flex-col justify-center">
+        {/* Barre méta technique */}
+        <div
+          ref={metaRef}
+          className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5 mb-12 text-[11px] font-mono text-zinc-400 uppercase tracking-widest"
+        >
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#FF2A14] animate-pulse" />
+            <span className="text-white font-semibold">{displayName} · STUDIO</span>
+          </div>
+          <div className="hidden sm:block">DIRECTION CRÉATIVE &amp; MONTAGE VIDÉO</div>
+          <div className="text-zinc-500">PARIS / ABIDJAN / WORLDWIDE</div>
+        </div>
+
+        {/* Bloc Principal Asymétrique (Inspiration "Ideas made unforgettable.") */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-16">
+          <div className="lg:col-span-7 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#FF2A14] text-[11px] font-mono font-medium tracking-wider uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A14]" />
+              EST. 2026 · EDITION IMMERSIVE
+            </div>
+
+            <h1
+              ref={headlineRef}
+              className="font-syne text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight text-white leading-[0.98] uppercase"
+            >
+              Ideas made<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-[#FF2A14]">
+                unforgettable.
+              </span>
+            </h1>
+
+            <p className="text-sm sm:text-base text-zinc-400 max-w-xl leading-relaxed font-light font-mono">
+              Montage haute cadence, motion design 3D et récits cinématographiques pour marques, créateurs et plateformes exigeantes.
+            </p>
+
+            {/* Actions rapides */}
+            <div className="flex flex-wrap items-center gap-4 pt-4">
+              <Link
+                href={primaryCta.href}
+                className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#FF2A14] hover:bg-[#E0240F] active:scale-95 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-red-950/50 cursor-pointer"
+              >
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>{primaryCta.label}</span>
+              </Link>
+
+              <Link
+                href={secondaryCta.href}
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-zinc-900/80 hover:bg-zinc-800 active:scale-95 text-zinc-300 hover:text-white border border-white/15 text-xs font-mono transition-all cursor-pointer"
+              >
+                <span>{secondaryCta.label}</span>
+                <ArrowUpRight className="w-4 h-4 text-[#FF2A14]" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Sculpture 3D Chrome sombre avec reflets rouge vermillon */}
+          <div className="lg:col-span-5 relative aspect-square max-w-md mx-auto w-full flex items-center justify-center">
+            <div className="absolute inset-0 -z-10 bg-radial from-[#FF2A14]/15 via-transparent to-transparent rounded-full blur-2xl" />
+            <MotionShowreel3D />
+          </div>
+        </div>
+
+        {/* Second volet éditorial : "We build brands and websites..." */}
+        <div
+          ref={statementRef}
+          className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-10 border-t border-white/10 items-baseline"
+        >
+          <div className="md:col-span-8">
+            <h2 className="font-syne text-2xl sm:text-4xl font-bold tracking-tight text-white leading-snug">
+              {subline}
+            </h2>
+          </div>
+          <div className="md:col-span-4 space-y-3 font-mono text-xs text-zinc-400">
+            <p className="leading-relaxed">
+              De la découpe au millième de seconde au sound design immersif, chaque seconde est pensée pour retenir l&apos;attention et imprimer une émotion durable.
+            </p>
+            <div className="flex items-center gap-3 text-white font-semibold">
+              <span className="text-[#FF2A14] font-bold">[{projectsCount}+]</span>
+              <span>RÉALISATIONS AU CATALOGUE</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="max-w-5xl mx-auto w-full space-y-10 text-center">
-        {/* Pastille Studio de Création Numérique */}
-        <div
-          ref={badgeRef}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-mono font-medium mx-auto shadow-sm"
-        >
-          <Film className="w-3.5 h-3.5 text-pink-400" />
-          <span>STUDIO DE DIRECTION CRÉATIVE &amp; MOTION 3D</span>
-        </div>
-
-        {/* Titre Éditorial Épuré en Police Syne (Style Image 3) */}
-        <div className="space-y-6">
-          <h1
-            ref={titleRef}
-            className="font-syne text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] max-w-4xl mx-auto"
-          >
-            {headline}
-          </h1>
-
-          <p
-            ref={sublineRef}
-            className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-light"
-          >
-            {subline}
-          </p>
-        </div>
-
-        {/* Grand Écran Vidéo / Showreel Central Widescreen (Style Image 3) */}
-        <div
-          ref={showreelRef}
-          className="relative aspect-21/9 sm:aspect-16/7 w-full rounded-3xl overflow-hidden border border-purple-500/25 shadow-2xl shadow-purple-950/40 bg-gradient-to-br from-slate-900 to-purple-950/50 group"
-        >
-          <Image
-            src={imageSrc}
-            alt={imageAlt}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center group-hover:scale-102 transition-transform duration-700 opacity-80"
-          />
-
-          {/* Dégradé cinématique sombre */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
-
-          {/* Bouton Showreel Central Flottant (Style Vidéo) */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <a
-              href="#projets"
-              className="group/btn relative flex items-center gap-3 px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/30 text-white shadow-2xl transition-all transform hover:scale-105 active:scale-95"
-            >
-              <span className="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-lg group-hover/btn:bg-pink-600 transition-colors">
-                <Play className="w-4 h-4 fill-current ml-0.5" />
+      {/* Marquee Ticker GSAP : EVOLVE 進化 • IMAGINE 想像 • SHAPE 創造 */}
+      <div className="mt-14 border-y border-white/10 py-4 bg-zinc-950/80 overflow-hidden whitespace-nowrap relative select-none">
+        <div ref={tickerRef} className="inline-flex items-center gap-10">
+          {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
+            <div key={idx} className="inline-flex items-center gap-4">
+              <span className="font-syne text-2xl sm:text-3xl font-extrabold tracking-wider text-white">
+                {item.en}
               </span>
-              <span className="text-xs font-mono font-bold tracking-wider uppercase">
-                Découvrir les vidéos &amp; 3D
+              <span className="text-xl sm:text-2xl text-zinc-500 font-bold">
+                {item.jp}
               </span>
-            </a>
-          </div>
-
-          {/* Badge coin inférieur gauche : Direction Artistique */}
-          <div className="absolute bottom-5 left-5 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-xs text-slate-300 font-mono">
-            <Video className="w-3.5 h-3.5 text-purple-400" />
-            <span>Showreel 2026 · 4K / 60FPS</span>
-          </div>
-
-          {/* Badge coin inférieur droit : 2D & 3D */}
-          <div className="absolute bottom-5 right-5 hidden sm:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-xs text-pink-300 font-mono">
-            <Sparkles className="w-3.5 h-3.5 text-pink-400" />
-            <span>Illustrations 2D / 3D WebGL</span>
-          </div>
-        </div>
-
-        {/* Métriques Studio (Style Image 3 : 40+ Projects, 15+ Motion, 98% Impact) */}
-        <div ref={metricsRef} className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-2">
-          {[
-            { num: `${projectsCount}+`, label: "Projets Déployés" },
-            { num: "15+", label: "Pièces Motion & Vidéo" },
-            { num: "3D", label: "WebGL & Shaders" },
-            { num: "98%", label: "Impact Visuel" },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="p-4 rounded-2xl bg-purple-950/20 border border-purple-500/20 backdrop-blur-md"
-            >
-              <div className="font-syne text-2xl font-bold text-white">{item.num}</div>
-              <div className="text-xs text-slate-400 font-mono mt-0.5">{item.label}</div>
+              <span className="w-2 h-2 rounded-full bg-[#FF2A14] mx-2" />
             </div>
           ))}
-        </div>
-
-        {/* Boutons d'Action Immersifs */}
-        <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-          <Link
-            href={primaryCta.href}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 active:scale-98 text-white font-bold text-xs tracking-wider uppercase shadow-xl shadow-purple-600/25 transition-all cursor-pointer"
-          >
-            <span>{primaryCta.label}</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-
-          <Link
-            href={secondaryCta.href}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white/5 hover:bg-white/10 active:scale-98 text-white border border-white/20 text-xs font-mono transition-all cursor-pointer"
-          >
-            <MonitorPlay className="w-4 h-4 text-purple-400" />
-            <span>{secondaryCta.label}</span>
-          </Link>
         </div>
       </div>
     </section>

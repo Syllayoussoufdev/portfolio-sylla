@@ -164,15 +164,15 @@ export const FALLBACK_PROFILES_BY_SLUG: Record<string, typeof FALLBACK_DEFAULT_P
     label: "Production Audiovisuelle & Motion",
     template: "immersif",
     hero: {
-      headline: "Turning Ideas Into Beautiful Digital Experiences.",
-      subline: "Direction créative, motion design, univers 3D immersifs et production visuelle d'impact.",
-      tagline: "Studio Showcase · Direction Artistique & Motion",
-      ctaPrimary: { label: "Explorer le Showreel & Réalisations", href: "#projets" },
-      ctaSecondary: { label: "Lancer un projet créatif", href: "#contact" },
-      media: { kind: "image", alt: "Sylla Youssouf - Motion" },
+      headline: "Ideas made\nunforgettable.",
+      subline: "We build films, motion systems and visual identities that turn a clear idea into a distinctive experience.",
+      tagline: "Studio Showcase · Direction Artistique & Montage Vidéo",
+      ctaPrimary: { label: "Explorer le Showreel", href: "#projets" },
+      ctaSecondary: { label: "Démarrer un projet", href: "#contact" },
+      media: { kind: "image", alt: "Sylla Youssouf - Montage & Motion" },
     } as HeroData,
-    seoTitle: "Production Vidéo & Motion 3D — Sylla Youssouf",
-    seoDescription: "Showreel, vidéos et univers 3D immersifs de Sylla Youssouf.",
+    seoTitle: "Montage Vidéo & Motion Studio — Sylla Youssouf",
+    seoDescription: "Films, showreels et univers motion 3D immersifs créés par Sylla Youssouf.",
   },
 };
 

@@ -6,24 +6,23 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Film,
-  Sparkles,
-  Layers,
   Play,
   ArrowUpRight,
+  Globe,
+  Layers,
+  Sparkles,
+  Video,
   MonitorPlay,
   ExternalLink,
-  Globe,
 } from "lucide-react";
 import { GithubIcon, FigmaIcon } from "@/components/icons";
-import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import type { ProjectData } from "@/components/ProjectCard";
 
 const CATEGORIES = [
-  { id: "all", label: "Toutes les créations" },
-  { id: "Motion", label: "Motion Design & 3D" },
-  { id: "Video", label: "Vidéo & Showreel" },
-  { id: "Design", label: "Branding & DA" },
-  { id: "Web", label: "Expériences Web & SaaS" },
+  { id: "all", label: "Toutes les pièces" },
+  { id: "Motion", label: "Motion 3D & WebGL" },
+  { id: "Video", label: "Montage & Showreel" },
+  { id: "Design", label: "Direction Artistique" },
 ];
 
 export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
@@ -31,6 +30,7 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const ribbonRef = useRef<HTMLDivElement>(null);
 
   const filteredProjects = useMemo(() => {
     if (selectedCategory === "all") return projects;
@@ -53,7 +53,8 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
             tagsStr.includes("vidéo") ||
             tagsStr.includes("video") ||
             tagsStr.includes("montage") ||
-            tagsStr.includes("reel")
+            tagsStr.includes("reel") ||
+            titleDesc.includes("montage")
           );
         case "Design":
           return (
@@ -61,14 +62,6 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
             tagsStr.includes("graphique") ||
             tagsStr.includes("design") ||
             tagsStr.includes("figma")
-          );
-        case "Web":
-          return (
-            tagsStr.includes("web") ||
-            tagsStr.includes("next") ||
-            tagsStr.includes("react") ||
-            tagsStr.includes("saas") ||
-            tagsStr.includes("app")
           );
         default:
           return (
@@ -106,11 +99,11 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
         );
       }
 
-      // 2. Grille
+      // 2. Grille de projets
       if (gridRef.current && gridRef.current.children.length > 0) {
         gsap.fromTo(
           gridRef.current.children,
-          { opacity: 0, y: 45, scale: 0.95 },
+          { opacity: 0, y: 40, scale: 0.98 },
           {
             opacity: 1,
             y: 0,
@@ -126,6 +119,20 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
           }
         );
       }
+
+      // 3. Ruban cinématique Filmstrip
+      if (ribbonRef.current) {
+        gsap.to(ribbonRef.current, {
+          xPercent: -35,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ribbonRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.5,
+          },
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -135,41 +142,36 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
     <section
       ref={sectionRef}
       id="projets"
-      className="py-28 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24 relative text-slate-100"
+      className="py-28 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-24 text-white relative"
     >
-      {/* Halo lumineux d'ambiance violette & rose */}
-      <div className="absolute top-1/4 right-0 w-[500px] h-[350px] rounded-full bg-gradient-to-l from-pink-600/15 via-purple-600/15 to-transparent blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 left-0 w-[450px] h-[300px] rounded-full bg-gradient-to-r from-purple-700/15 to-transparent blur-[130px] pointer-events-none -z-10" />
-
-      {/* En-tête de section Immersif / Motion Studio */}
-      <div ref={headerRef} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
+      {/* En-tête de section (Inspiration "Ideas out in the world.") */}
+      <div ref={headerRef} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 border-b border-white/10 pb-6">
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-mono font-medium">
-            <Film className="w-3.5 h-3.5 text-pink-400" />
-            <span>STUDIO SHOWCASE · DIRECTION ARTISTIQUE &amp; MOTION</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#FF2A14] text-xs font-mono font-medium tracking-wider uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A14]" />
+            <span>[ 02 · SÉLECTION DE TRAVAUX ]</span>
           </div>
 
-          <h2 className="font-syne text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
-            Réalisations &amp; Expériences
+          <h2 className="font-syne text-4xl sm:text-6xl font-extrabold tracking-tight text-white uppercase leading-tight">
+            Ideas out in the world.
           </h2>
 
-          <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
-            Explorations cinématographiques, univers 3D interactifs, plateformes
-            digitales et productions audiovisuelles d&apos;impact.
+          <p className="text-xs sm:text-sm font-mono text-zinc-400 max-w-2xl leading-relaxed">
+            Films publicitaires, vidéos courtes à haute rétention, identités visuelles et modélisations 3D.
           </p>
         </div>
 
-        {/* Compteur studio de réalisations */}
-        <div className="flex items-center gap-2 font-mono text-xs text-purple-200 bg-purple-950/40 px-4 py-2 rounded-full border border-purple-500/30 shadow-sm backdrop-blur-md">
-          <MonitorPlay className="w-3.5 h-3.5 text-pink-400" />
+        {/* Compteur d'éléments */}
+        <div className="flex items-center gap-3 font-mono text-xs text-zinc-300 bg-zinc-950 px-4 py-2 rounded-full border border-white/10">
+          <span className="w-2 h-2 rounded-full bg-[#FF2A14]" />
           <span>
             {filteredProjects.length} pièce{filteredProjects.length > 1 ? "s" : ""} au catalogue
           </span>
         </div>
       </div>
 
-      {/* Filtres de catégorie éditoriale */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-12 -mx-4 px-4 sm:mx-0 sm:px-0">
+      {/* Filtres de catégorie en pilules sobres */}
+      <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-3 mb-14 -mx-4 px-4 sm:mx-0 sm:px-0">
         {CATEGORIES.map((cat) => {
           const isActive = selectedCategory === cat.id;
 
@@ -178,10 +180,10 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
               type="button"
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-4 py-2 rounded-full text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-5 py-2.5 rounded-full text-xs font-mono tracking-wider uppercase transition-all cursor-pointer whitespace-nowrap ${
                 isActive
-                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/30 border border-pink-400/30"
-                  : "bg-purple-950/30 text-slate-300 hover:text-white hover:bg-purple-900/40 border border-purple-800/40"
+                  ? "bg-[#FF2A14] text-white font-bold shadow-lg shadow-red-950/50 border border-[#FF2A14]"
+                  : "bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-white/10"
               }`}
             >
               {cat.label}
@@ -190,69 +192,72 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
         })}
       </div>
 
-      {/* Grille de projets format Studio Cinéma */}
+      {/* Grille de projets format Éditorial Sombre & Cadence */}
       {filteredProjects.length === 0 ? (
-        <div className="p-14 text-center rounded-3xl bg-purple-950/20 border border-purple-800/30 max-w-md mx-auto">
-          <div className="w-12 h-12 rounded-2xl bg-purple-900/40 text-pink-400 flex items-center justify-center mx-auto mb-3 border border-purple-500/30">
+        <div className="p-16 text-center rounded-3xl bg-[#111113] border border-white/10 max-w-md mx-auto">
+          <div className="w-12 h-12 rounded-2xl bg-zinc-800 text-[#FF2A14] flex items-center justify-center mx-auto mb-3">
             <Layers className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-semibold text-white font-syne">
+          <h3 className="text-base font-bold text-white font-syne">
             Aucun projet dans cette catégorie
           </h3>
-          <p className="text-xs text-slate-400 mt-1">
-            Découvrez nos autres catégories ou explorez l&apos;ensemble du catalogue.
+          <p className="text-xs font-mono text-zinc-400 mt-1">
+            Explorez nos autres catégories ou sélectionnez l&apos;ensemble du catalogue.
           </p>
         </div>
       ) : (
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-          {filteredProjects.map((project) => {
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-28">
+          {filteredProjects.map((project, idx) => {
             const links = (project.links || {}) as Record<string, string>;
             const imageSrc = project.coverMedia?.url || project.coverImage;
             const imageAlt = project.coverMedia?.alt || project.titre;
 
             return (
-              <SpotlightCard
+              <div
                 key={project.id}
-                spotlightColor="rgba(236, 72, 153, 0.16)"
-                className="rounded-3xl h-full border border-purple-800/30 bg-[#120B22]/80 backdrop-blur-md shadow-xl hover:shadow-2xl hover:shadow-purple-900/30"
+                className="group relative flex flex-col justify-between rounded-3xl bg-[#111113] border border-white/10 hover:border-[#FF2A14]/70 transition-all duration-500 overflow-hidden"
               >
-                <div
-                  className="group relative flex flex-col justify-between rounded-3xl h-full overflow-hidden"
-                >
-                {/* 1. Zone d'aperçu cinématographique */}
-                <div className="relative aspect-video w-full overflow-hidden bg-purple-950/50 border-b border-purple-900/30">
+                {/* 1. Zone visuelle cinématique */}
+                <div className="relative aspect-16/10 w-full overflow-hidden bg-zinc-950 border-b border-white/10">
                   {imageSrc ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
                       src={imageSrc}
                       alt={imageAlt}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-br from-purple-950/80 to-slate-950 text-purple-300">
-                      <div className="w-12 h-12 rounded-2xl bg-purple-800/30 border border-purple-500/30 flex items-center justify-center text-pink-400 mb-2 group-hover:scale-110 transition-transform">
-                        <Play className="w-5 h-5 fill-pink-400 ml-0.5" />
+                    <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-br from-zinc-900 to-black text-zinc-400">
+                      <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#FF2A14] mb-2 group-hover:scale-110 transition-transform">
+                        <Play className="w-5 h-5 fill-current ml-0.5" />
                       </div>
-                      <span className="font-syne text-base text-white tracking-wide">
+                      <span className="font-syne text-sm text-white tracking-wide">
                         {project.titre}
                       </span>
-                      <span className="text-[10px] font-mono text-purple-300/70">
-                        Aperçu Showreel
+                      <span className="text-[10px] font-mono text-zinc-500">
+                        Production Vidéo
                       </span>
                     </div>
                   )}
 
-                  {/* Bouton de survol Play cinématique */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-                    <div className="w-13 h-13 rounded-full bg-white/20 backdrop-blur-md border border-white/50 flex items-center justify-center text-white shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                      <Play className="w-6 h-6 fill-white ml-1" />
+                  {/* Gradient sombre cinématique */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+
+                  {/* Bouton de survol Play rouge */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                    <div className="w-12 h-12 rounded-full bg-[#FF2A14] text-white flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform duration-300">
+                      <Play className="w-5 h-5 fill-white ml-0.5" />
                     </div>
                   </div>
 
-                  {/* Badge À la une ou format */}
+                  {/* Badge index minimaliste */}
+                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-[10px] font-mono text-zinc-300">
+                    PRJ_{String(idx + 1).padStart(2, "0")}
+                  </div>
+
                   {project.featured && (
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-mono text-[10px] font-bold tracking-wider uppercase shadow-md border border-white/20">
-                      ★ Showreel Phare
+                    <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-[#FF2A14] text-white font-mono text-[9px] font-bold tracking-wider uppercase">
+                      FEATURED
                     </div>
                   )}
 
@@ -263,52 +268,52 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
                   />
                 </div>
 
-                {/* 2. Corps du projet */}
+                {/* 2. Détails du projet */}
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    {/* Tags pastel violacé */}
-                    <div className="flex flex-wrap gap-1.5 mb-3.5">
+                    {/* Tags sobres */}
+                    <div className="flex flex-wrap gap-1.5 mb-3">
                       {project.tags.slice(0, 3).map((tag) => (
                         <span
                           key={tag}
-                          className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-purple-950/60 border border-purple-800/40 text-purple-300"
+                          className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-900 border border-white/10 text-zinc-300"
                         >
                           {tag}
                         </span>
                       ))}
                       {project.tags.length > 3 && (
-                        <span className="text-[10px] font-mono text-purple-400 self-center">
+                        <span className="text-[10px] font-mono text-zinc-500 self-center">
                           +{project.tags.length - 3}
                         </span>
                       )}
                     </div>
 
-                    {/* Titre */}
+                    {/* Titre & Lien */}
                     <Link
                       href={`/projets/${project.slug}`}
                       className="group/title block"
                     >
-                      <h3 className="font-syne font-bold text-lg text-white group-hover/title:text-pink-300 transition-colors flex items-center justify-between gap-2">
+                      <h3 className="font-syne font-bold text-lg text-white group-hover/title:text-[#FF2A14] transition-colors flex items-center justify-between gap-2">
                         <span className="truncate">{project.titre}</span>
-                        <ArrowUpRight className="w-4 h-4 text-purple-400 group-hover/title:text-pink-300 group-hover/title:translate-x-0.5 group-hover/title:-translate-y-0.5 transition-all shrink-0" />
+                        <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover/title:text-[#FF2A14] group-hover/title:translate-x-0.5 group-hover/title:-translate-y-0.5 transition-all shrink-0" />
                       </h3>
                     </Link>
 
                     {/* Description */}
-                    <p className="text-xs sm:text-sm text-slate-300 mt-2 line-clamp-2 leading-relaxed">
+                    <p className="text-xs font-mono text-zinc-400 mt-2 line-clamp-2 leading-relaxed">
                       {project.description}
                     </p>
                   </div>
 
-                  {/* 3. Pied de carte avec liens externes */}
-                  <div className="mt-6 pt-3.5 border-t border-purple-900/30 flex items-center justify-between relative z-20">
+                  {/* 3. Pied de carte */}
+                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between relative z-20">
                     <div className="flex items-center gap-2">
                       {links.demo && (
                         <a
                           href={links.demo}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1.5 rounded-lg text-purple-300 hover:text-white hover:bg-purple-900/40 transition-colors"
+                          className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
                           title="Lien Démo"
                         >
                           <Globe className="w-4 h-4" />
@@ -319,7 +324,7 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
                           href={links.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1.5 rounded-lg text-purple-300 hover:text-white hover:bg-purple-900/40 transition-colors"
+                          className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
                           title="Code source"
                         >
                           <GithubIcon className="w-4 h-4" />
@@ -330,7 +335,7 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
                           href={links.figma}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1.5 rounded-lg text-purple-300 hover:text-white hover:bg-purple-900/40 transition-colors"
+                          className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
                           title="Maquette Figma"
                         >
                           <FigmaIcon className="w-4 h-4" />
@@ -340,19 +345,95 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
 
                     <Link
                       href={`/projets/${project.slug}`}
-                      className="text-xs font-mono font-medium text-pink-300 hover:text-white transition-colors flex items-center gap-1"
+                      className="text-xs font-mono font-semibold text-zinc-300 hover:text-[#FF2A14] transition-colors flex items-center gap-1"
                     >
-                      Détails de production
+                      Étude de cas
                       <ArrowUpRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
                 </div>
               </div>
-            </SpotlightCard>
             );
           })}
         </div>
       )}
+
+      {/* 4. Filmstrip Ribbon Dynamique ("Always in motion.") */}
+      <div className="border-t border-white/10 pt-20 mb-24 overflow-hidden">
+        <div className="space-y-4 mb-8">
+          <span className="text-xs font-mono text-[#FF2A14] uppercase tracking-wider block">
+            [ FLUX CONTINU ]
+          </span>
+          <h3 className="font-syne text-3xl sm:text-5xl font-extrabold text-white uppercase">
+            Always in motion.
+          </h3>
+        </div>
+
+        {/* Bande défilante GSAP */}
+        <div className="relative w-full overflow-hidden py-4 select-none">
+          <div ref={ribbonRef} className="flex gap-5 w-max">
+            {projects.slice(0, 6).map((item, idx) => {
+              const src = item.coverMedia?.url || item.coverImage;
+              return (
+                <div
+                  key={idx}
+                  className="w-64 sm:w-80 aspect-16/9 rounded-2xl overflow-hidden bg-zinc-900 border border-white/15 relative shrink-0 group"
+                >
+                  {src ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={src}
+                      alt={item.titre}
+                      className="w-full h-full object-cover filter contrast-110 group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-zinc-500 font-mono text-xs">
+                      {item.titre}
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-4">
+                    <span className="text-xs font-syne font-bold text-white truncate">
+                      {item.titre}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Signature Brutaliste Marque (Inspiration "Your idea. Our next obsession. / Velom ®") */}
+      <div className="border-t border-white/10 pt-20 pb-10 space-y-8">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono text-[#FF2A14] uppercase tracking-wider block">
+              [ CALL TO ACTION ]
+            </span>
+            <h3 className="font-syne text-3xl sm:text-5xl font-extrabold text-white uppercase">
+              Your idea.<br />Our next obsession.
+            </h3>
+          </div>
+
+          <Link
+            href="#contact"
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#FF2A14] hover:bg-[#E0240F] active:scale-95 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-xl shadow-red-950/50 cursor-pointer self-start md:self-auto"
+          >
+            <span>Démarrer une collaboration</span>
+            <ArrowUpRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {/* Typographie Géante Style "Velom ®" */}
+        <div className="pt-12 border-t border-white/10 flex items-baseline justify-between select-none overflow-hidden">
+          <div className="font-syne font-black text-6xl sm:text-9xl tracking-tighter text-white uppercase leading-none">
+            ✦ SYLLA<span className="text-[#FF2A14]">®</span>
+          </div>
+          <span className="hidden sm:block font-mono text-xs text-zinc-500 uppercase tracking-widest">
+            PARIS / ABIDJAN · 2026
+          </span>
+        </div>
+      </div>
     </section>
   );
 }

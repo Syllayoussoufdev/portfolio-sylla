@@ -44,18 +44,18 @@
   --glass-border: rgba(255, 255, 255, 0.85);
 }
 
-/* Template Immersif : studio de création, motion et showreel 3D de luxe (Style Image 3) */
+/* Template Immersif : studio de création audiovisuelle, motion & direction éditoriale noire et rouge */
 [data-template="immersif"] {
-  --bg: #090514;
-  --surface: #120B22;
-  --ink: #F8FAFC;
-  --accent: #C084FC;
-  --accent-2: #F472B6;
-  --muted: #CBD5E1;
-  --subtle: #94A3B8;
-  --border: #2A174A;
-  --glass: rgba(18, 11, 34, 0.85);
-  --glass-border: rgba(192, 132, 252, 0.25);
+  --bg: #070708;
+  --surface: #111113;
+  --ink: #F4F4F6;
+  --accent: #FF2A14;
+  --accent-2: #FF4D36;
+  --muted: #A1A1AA;
+  --subtle: #71717A;
+  --border: #222225;
+  --glass: rgba(17, 17, 19, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 @theme inline {

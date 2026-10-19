@@ -16,6 +16,8 @@ import {
   Smile,
 } from "lucide-react";
 import { FigmaIcon, CanvaIcon } from "@/components/icons";
+import { CreativeCanvas3D } from "@/components/3d/CreativeCanvas3D";
+import { GlitchText } from "@/components/ui/GlitchText";
 import type { HeroData } from "@/lib/validations/profile";
 import type { MediaData, SiteSettingsData } from "@/lib/profiles";
 
@@ -107,6 +109,29 @@ export function HeroCreatif({
           { scale: 1, opacity: 1, duration: 0.5, stagger: 0.08, ease: "back.out(2)" },
           "-=0.4"
         );
+      }
+
+      // Flottement asynchrone organique et continu
+      if (polaroid1Ref.current) {
+        gsap.to(polaroid1Ref.current, {
+          y: "-=8",
+          rotation: "-=1.5",
+          duration: 3.2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
+      if (polaroid2Ref.current) {
+        gsap.to(polaroid2Ref.current, {
+          y: "+=10",
+          rotation: "+=2",
+          duration: 3.8,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          delay: 0.5,
+        });
       }
 
       // Titre et contenu textuel
@@ -252,6 +277,11 @@ export function HeroCreatif({
           ref={leftVisualRef}
           className="lg:col-span-6 relative flex items-center justify-center min-h-[440px] sm:min-h-[500px]"
         >
+          {/* Scène 3D Interactive Réactive en Arrière-plan du Portrait */}
+          <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none scale-125 opacity-80">
+            <CreativeCanvas3D />
+          </div>
+
           {/* Polaroid 1 (en haut à gauche, incliné -8deg) */}
           <div
             ref={polaroid1Ref}
@@ -351,9 +381,9 @@ export function HeroCreatif({
         {/* Colonne Droite : Typographie XXL & Discours Vivant (Bleu/Orange) */}
         <div ref={contentRef} className="lg:col-span-6 space-y-6 text-left">
           {/* Pastille Statut Créatif avec Badge Actif */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/80 shadow-2xs text-[#0F172A] text-xs font-medium">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/80 shadow-2xs text-[#0F172A] text-xs font-medium cursor-default">
             <span className="w-2 h-2 rounded-full bg-[#F97316] animate-pulse" />
-            <span className="font-mono font-semibold">Active Creative Badge · 2026</span>
+            <GlitchText text="Active Creative Badge · 2026" className="font-mono font-semibold" />
           </div>
 
           {/* Grand Titre Expressif en Bebas Neue + Pilules Doubles (ENGINEER / DESIGN) */}

@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Film, Sparkles, Video, Play, Compass } from "lucide-react";
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import type { SiteSettingsData } from "@/lib/profiles";
 
 interface AboutImmersifProps {
@@ -163,20 +164,24 @@ export function AboutImmersif({ settings }: AboutImmersifProps) {
                 title: "Direction Artistique & Identité",
                 desc: "Création d'univers graphiques singuliers, typographies sur-mesure et chartes multimédias.",
                 color: "from-purple-500 to-indigo-600",
+                spotlight: "rgba(168, 85, 247, 0.2)",
               },
               {
                 title: "Montage Vidéo & Motion Design",
                 desc: "Rythme cinématique, effets sonores, teasers percutants et animations vectorielles 2D.",
                 color: "from-pink-500 to-rose-600",
+                spotlight: "rgba(236, 72, 153, 0.2)",
               },
               {
                 title: "Expériences Interactives 3D",
                 desc: "Intégration WebGL fluide, animations spatiales et interfaces de nouvelle génération.",
                 color: "from-violet-500 to-purple-600",
+                spotlight: "rgba(139, 92, 246, 0.2)",
               },
             ].map((p) => (
-              <div
+              <SpotlightCard
                 key={p.title}
+                spotlightColor={p.spotlight}
                 className="p-5 rounded-2xl bg-purple-950/20 border border-purple-500/20 backdrop-blur-md space-y-1 hover:border-purple-500/50 hover:-translate-y-0.5 transition-all duration-300 cursor-default"
               >
                 <h4 className="text-sm font-syne font-bold text-white flex items-center gap-2">
@@ -184,7 +189,7 @@ export function AboutImmersif({ settings }: AboutImmersifProps) {
                   <span>{p.title}</span>
                 </h4>
                 <p className="text-xs text-slate-400 pl-4 leading-relaxed font-mono">{p.desc}</p>
-              </div>
+              </SpotlightCard>
             ))}
           </div>
         </div>

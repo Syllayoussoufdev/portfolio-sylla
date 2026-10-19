@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   Code2,
 } from "lucide-react";
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import type { SiteSettingsData } from "@/lib/profiles";
 
 interface AboutDeveloppeurProps {
@@ -180,11 +181,12 @@ export function AboutDeveloppeur({ settings }: AboutDeveloppeurProps) {
             </p>
           </div>
 
-          {/* 3 Piliers Numérotés (Style Image 1) */}
+          {/* 3 Piliers Numérotés avec Spotlight interactif */}
           <div ref={pillarsRef} className="space-y-4">
             {pillars.map((pillar) => (
-              <div
+              <SpotlightCard
                 key={pillar.num}
+                spotlightColor="rgba(37, 99, 235, 0.12)"
                 className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:border-[#2563EB]/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-default"
               >
                 <div className="flex items-start gap-4">
@@ -200,7 +202,7 @@ export function AboutDeveloppeur({ settings }: AboutDeveloppeurProps) {
                     </p>
                   </div>
                 </div>
-              </div>
+              </SpotlightCard>
             ))}
           </div>
         </div>

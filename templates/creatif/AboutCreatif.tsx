@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Sparkles, Palette, Code2, Rocket } from "lucide-react";
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import type { SiteSettingsData } from "@/lib/profiles";
 
 interface AboutCreatifProps {
@@ -174,13 +175,20 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
             ergonomie soignée et architecture logicielle robuste.
           </p>
 
-          {/* Les 3 piliers créatifs en cartes de verre */}
+          {/* Les 3 piliers créatifs en cartes de verre interactives */}
           <div ref={pillarsRef} className="space-y-3.5 pt-2">
             {pillars.map((pillar) => {
               const Icon = pillar.icon;
+              const glowColor =
+                pillar.color === "#F97316"
+                  ? "rgba(249, 115, 22, 0.18)"
+                  : pillar.color === "#2563EB"
+                  ? "rgba(37, 99, 235, 0.18)"
+                  : "rgba(139, 92, 246, 0.18)";
               return (
-                <div
+                <SpotlightCard
                   key={pillar.title}
+                  spotlightColor={glowColor}
                   className="glass p-5 rounded-2xl border border-white/80 shadow-sm hover:border-[#2563EB]/40 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4 group cursor-default"
                 >
                   <div
@@ -195,7 +203,7 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
                     </h4>
                     <p className="text-xs text-[#64748B] leading-relaxed">{pillar.desc}</p>
                   </div>
-                </div>
+                </SpotlightCard>
               );
             })}
           </div>

@@ -4,6 +4,7 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ProjectCard, type ProjectData } from "@/components/ProjectCard";
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { Layers, Sparkles } from "lucide-react";
 
 const CATEGORIES = [
@@ -188,7 +189,12 @@ export function ProjectsCreatif({ projects }: { projects: ProjectData[] }) {
         <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project) => (
             <TiltCardWrapper key={project.id}>
-              <ProjectCard project={project} />
+              <SpotlightCard
+                spotlightColor="rgba(37, 99, 235, 0.18)"
+                className="h-full rounded-2xl border border-white/60 bg-white/70 backdrop-blur-md shadow-md hover:shadow-xl"
+              >
+                <ProjectCard project={project} />
+              </SpotlightCard>
             </TiltCardWrapper>
           ))}
         </div>

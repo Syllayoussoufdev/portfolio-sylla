@@ -16,7 +16,7 @@ import {
   Cpu,
   Terminal,
 } from "lucide-react";
-import { HeroCanvas3D } from "@/components/HeroCanvas3D";
+import { TechWireframe3D } from "@/components/3d/TechWireframe3D";
 import type { HeroData } from "@/lib/validations/profile";
 import type { MediaData, SiteSettingsData } from "@/lib/profiles";
 
@@ -169,7 +169,7 @@ export function HeroDeveloppeur({
           <div className="relative w-[340px] sm:w-[400px] aspect-square flex items-center justify-center">
             {/* Canevas 3D d'anneaux orbitaux en arrière-plan du portrait */}
             <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none scale-110">
-              <HeroCanvas3D />
+              <TechWireframe3D />
             </div>
 
             {/* Cadre du Portrait Stylisé */}

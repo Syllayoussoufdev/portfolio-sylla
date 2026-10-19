@@ -72,7 +72,7 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
   ]);
 
   // Extraction des projets : soit depuis le sous-portfolio rattaché, soit tous les projets visibles (tolérance aux pannes)
-  let visibleProjects = [];
+  let visibleProjects: any[] = [];
   try {
     if (profile.subPortfolioId) {
       const spProjects = await prisma.subPortfolioProject.findMany({

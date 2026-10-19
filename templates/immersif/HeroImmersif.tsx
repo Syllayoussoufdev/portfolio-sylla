@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 import { ArrowRight, Play, Film, Sparkles, Video, Layers, MonitorPlay } from "lucide-react";
+import { MotionShowreel3D } from "@/components/3d/MotionShowreel3D";
 import type { HeroData } from "@/lib/validations/profile";
 import type { MediaData, SiteSettingsData } from "@/lib/profiles";
 
@@ -111,6 +112,11 @@ export function HeroImmersif({
     >
       {/* Halo lumineux violet & magenta (Style Image 3 ELAM) */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[350px] rounded-full bg-gradient-to-r from-purple-600/25 to-pink-600/20 blur-[140px] pointer-events-none -z-10" />
+
+      {/* Particules 3D & Nébuleuse Cinématique en arrière-plan */}
+      <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none opacity-50 scale-125">
+        <MotionShowreel3D />
+      </div>
 
       <div className="max-w-5xl mx-auto w-full space-y-10 text-center">
         {/* Pastille Studio de Création Numérique */}

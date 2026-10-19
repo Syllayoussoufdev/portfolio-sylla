@@ -28,7 +28,7 @@ export default async function HomePage() {
   const skillCategories = await getSkillsForSubPortfolio(profile.subPortfolioId);
 
   // Chargement des projets selon la configuration du profil avec tolérance aux pannes
-  let visibleProjects = [];
+  let visibleProjects: any[] = [];
   try {
     if (profile.subPortfolioId) {
       const spProjects = await prisma.subPortfolioProject.findMany({

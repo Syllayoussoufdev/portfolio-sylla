@@ -15,6 +15,7 @@ import {
   Globe,
 } from "lucide-react";
 import { GithubIcon, FigmaIcon } from "@/components/icons";
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import type { ProjectData } from "@/components/ProjectCard";
 
 const CATEGORIES = [
@@ -210,10 +211,14 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
             const imageAlt = project.coverMedia?.alt || project.titre;
 
             return (
-              <div
+              <SpotlightCard
                 key={project.id}
-                className="group relative flex flex-col justify-between rounded-3xl bg-[#120B22]/80 border border-purple-800/30 hover:border-pink-500/50 transition-all duration-400 overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-purple-900/30 backdrop-blur-md"
+                spotlightColor="rgba(236, 72, 153, 0.16)"
+                className="rounded-3xl h-full border border-purple-800/30 bg-[#120B22]/80 backdrop-blur-md shadow-xl hover:shadow-2xl hover:shadow-purple-900/30"
               >
+                <div
+                  className="group relative flex flex-col justify-between rounded-3xl h-full overflow-hidden"
+                >
                 {/* 1. Zone d'aperçu cinématographique */}
                 <div className="relative aspect-video w-full overflow-hidden bg-purple-950/50 border-b border-purple-900/30">
                   {imageSrc ? (
@@ -343,6 +348,7 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
                   </div>
                 </div>
               </div>
+            </SpotlightCard>
             );
           })}
         </div>

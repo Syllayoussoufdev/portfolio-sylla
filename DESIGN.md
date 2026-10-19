@@ -108,11 +108,18 @@ Utilisé pour : cartes projets, cartes du Hero, formulaire, header compacté. Pa
 
 ## 6. Template `developpeur` — bleu nuit, précision
 
-Base : la version actuelle (à documenter depuis le code), corrigée et animée.
+Base : version sobre et rigoureuse, animée avec GSAP et 3D Three.js.
 
-**Tokens (propositions, à confirmer en lisant le code).** Fond `#F6F7FB`, bleu nuit `#0B1B3A` (titres, navigation, panneaux sombres), accent bleu `#2F5BFF` (liens, boutons, états actifs), accent secondaire ambre `#F5B83D` **réservé aux surbrillances ponctuelles**, gris `#475569` pour le texte secondaire.
+**Tokens réels (confirmés et appliqués dans le code) :**
+- `--bg` : `#F6F7FB` (fond calme et feutré)
+- `--surface` : `#FFFFFF` (cartes techniques blanches)
+- `--ink` : `#0B1B3A` (bleu nuit profond pour les titres, navigation et boutons principaux)
+- `--accent` : `#2F5BFF` (bleu électrique moderne pour les liens, badges actifs et focus)
+- `--accent-2` : `#F5B83D` (ambre technique réservé aux surbrillances et puces d'attention)
+- `--muted` : `#475569` (gris technique lisible à ratio de contraste > 4.5:1)
+- `--border` : `#E2E8F0` (filets discrets)
 
-**Corrections obligatoires.** Retirer « Code certifié & déployé », « Profil vérifié » et toute promesse non renseignée. Cartes projets : varier les formats (une grande carte « à la une » + une grille) au lieu de six cartes identiques ; image de couverture grande ; état vide propre quand il n'y en a pas.
+**Corrections appliquées :** Retrait complet de « Code certifié & déployé », « Profil vérifié », « 25+ projets livrés », « 3+ années d'expérience » et toute promesse non confirmée. Cartes projets : grande carte « à la une » épinglée + index technique des autres réalisations ; état vide propre. Méthode en 4 étapes et bloc « L'apport du design et de l'IA » intégrés. Technologie mobile limitée aux compétences confirmées (retrait de Flutter et React Native non vérifiés).
 
 **Contrat de mouvement :**
 1. Titre du Hero révélé mot à mot (SplitText), masque qui monte.

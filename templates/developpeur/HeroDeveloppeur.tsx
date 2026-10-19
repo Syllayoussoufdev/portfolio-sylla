@@ -1,22 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowRight,
-  Sparkles,
   MapPin,
   CheckCircle2,
   FileText,
   Mail,
-  ExternalLink,
   Code2,
-  Layers,
-  Cpu,
   Terminal,
+  Sparkles,
 } from "lucide-react";
 import { TechWireframe3D } from "@/components/3d/TechWireframe3D";
+import { MagneticButton } from "@/components/motion/MagneticButton";
 import type { HeroData } from "@/lib/validations/profile";
 import type { MediaData, SiteSettingsData } from "@/lib/profiles";
 
@@ -28,152 +28,223 @@ interface HeroDeveloppeurProps {
 }
 
 const TECH_MARQUEE = [
-  { name: "Next.js", category: "Framework Fullstack" },
-  { name: "React", category: "Frontend UI" },
-  { name: "TypeScript", category: "Typage Strict" },
   { name: "Laravel", category: "Backend & API" },
+  { name: "React", category: "Frontend UI" },
+  { name: "Next.js", category: "Framework Fullstack" },
+  { name: "TypeScript", category: "Typage Strict" },
+  { name: "PostgreSQL", category: "Base de Données" },
   { name: "Tailwind CSS", category: "Design System" },
-  { name: "PostgreSQL", category: "Base Relationnelle" },
-  { name: "Prisma ORM", category: "Modélisation DB" },
-  { name: "React Native", category: "Applications Mobiles" },
-  { name: "Flutter", category: "Cross-Platform" },
   { name: "Docker", category: "Conteneurisation" },
-  { name: "GSAP", category: "Motion & Animations" },
+  { name: "Python", category: "Backend & IA" },
+  { name: "Prisma ORM", category: "Modélisation DB" },
+  { name: "WordPress", category: "CMS Moderne" },
+  { name: "GSAP", category: "Mouvement & Rendu" },
+  { name: "VS Code", category: "Environnement de Dev" },
 ];
 
 const DEFAULT_STACK = [
-  "TypeScript",
+  "Laravel",
   "React",
   "Next.js",
-  "Laravel",
-  "Tailwind CSS",
+  "TypeScript",
   "PostgreSQL",
+  "Tailwind CSS",
+  "Docker",
+  "Python",
 ];
 
 export function HeroDeveloppeur({
   hero,
   heroMedia,
-  projectsCount = 25,
   settings,
 }: HeroDeveloppeurProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const visualRef = useRef<HTMLDivElement>(null);
+
   const headline =
     hero?.headline ||
-    "Je conçois des expériences web et mobiles utiles, performantes et soignées.";
+    "Je développe des applications web et mobiles, avec un vrai soin du design.";
   const subline =
-    hero?.subline || "Développeur Web & Mobile · Laravel · React · Next.js";
+    hero?.subline ||
+    "Développeur web et mobile · Laravel · React · Next.js · PostgreSQL. Ma formation en design et en produits IA affine chaque interface.";
 
   const primaryCta = hero?.ctaPrimary || {
-    label: "Voir mes réalisations",
-    href: "#projets",
+    label: "Discutons de votre projet",
+    href: "#contact",
   };
   const secondaryCta = hero?.ctaSecondary || {
-    label: "Me contacter",
-    href: "#contact",
+    label: "Voir mes projets",
+    href: "#projets",
   };
 
   const displayName = settings?.nom || "Sylla Youssouf";
-  const displayMetier = settings?.metier || "Fullstack & Mobile Engineer";
+  const displayMetier = settings?.metier || "Développeur Web & Mobile";
   const imageSrc = heroMedia?.url || "/sylla.jpg";
   const imageAlt = heroMedia?.alt || `Portrait de ${displayName}`;
 
+  // Découpage du titre mot à mot pour l'animation SplitText avec masque
+  const words = headline.split(" ");
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isReduced) return;
+
+    const ctx = gsap.context(() => {
+      // 1. Révélation du titre mot à mot avec masque qui monte (Contrat de mouvement point 1)
+      if (titleRef.current) {
+        const wordSpans = titleRef.current.querySelectorAll(".word-reveal");
+        gsap.fromTo(
+          wordSpans,
+          { yPercent: 120, opacity: 0 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.85,
+            stagger: 0.04,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: titleRef.current,
+              start: "top 90%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+
+      // 2. Parallaxe et rotation lente du polyèdre avec le défilement (Point 2)
+      if (visualRef.current) {
+        gsap.to(visualRef.current, {
+          y: -40,
+          rotate: 4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [headline]);
+
   return (
     <section
+      ref={sectionRef}
       id="hero"
-      className="relative min-h-[92vh] flex flex-col justify-center pt-32 pb-16 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden bg-white text-[#0B132B]"
+      className="relative min-h-[92vh] flex flex-col justify-center pt-32 pb-16 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden bg-[#F6F7FB] text-[#0B1B3A]"
     >
-      {/* Halo lumineux bleu subtil d'ambiance */}
-      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-blue-100/60 blur-[130px] pointer-events-none -z-10" />
-      <div className="absolute top-1/3 left-10 w-[350px] h-[350px] rounded-full bg-slate-100/80 blur-[100px] pointer-events-none -z-10" />
+      {/* Halos d'ambiance sobres bleu nuit */}
+      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-blue-100/50 blur-[130px] pointer-events-none -z-10" />
+      <div className="absolute top-1/3 left-10 w-[350px] h-[350px] rounded-full bg-slate-200/50 blur-[100px] pointer-events-none -z-10" />
 
-      {/* Grille principale 2 colonnes (Style Image 1) */}
+      {/* Grille principale 2 colonnes asymétrique */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center mb-16">
         {/* Colonne Gauche : Discours, Stack & CTAs */}
         <div className="lg:col-span-7 space-y-6 text-left">
-          {/* Pastille de disponibilité avec point vert animé */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/90 text-xs font-medium text-[#0B132B] shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Disponible pour opportunités &amp; collaborations</span>
+          {/* Tagline / Badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-slate-200 text-xs font-semibold text-[#0B1B3A] shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-[#2F5BFF] animate-pulse" />
+            <span>Développement Logiciel · Soin du Design &amp; IA</span>
           </div>
 
-          {/* Titre Principal avec surbrillance bleue */}
-          <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold tracking-tight text-[#0B132B] leading-[1.12]">
-            Je conçois des expériences{" "}
-            <span className="text-[#2563EB]">web et mobiles</span> utiles,
-            performantes et soignées.
+          {/* Titre Principal avec effet masque montant par mot */}
+          <h1
+            ref={titleRef}
+            className="text-4xl sm:text-5xl lg:text-[3.25rem] font-bold tracking-tight text-[#0B1B3A] leading-[1.15]"
+          >
+            {words.map((w, idx) => (
+              <span key={idx} className="inline-block overflow-hidden mr-[0.25em] align-top pb-1">
+                <span className="word-reveal inline-block will-change-transform">
+                  {w}
+                </span>
+              </span>
+            ))}
           </h1>
 
-          {/* Métier & Technologies */}
+          {/* Sous-titre & démarche */}
           <div className="space-y-3">
-            <p className="text-base sm:text-lg font-semibold text-[#0B132B]">
+            <p className="text-base sm:text-lg font-semibold text-[#0B1B3A] leading-relaxed">
               {subline}
             </p>
-            <p className="text-sm sm:text-base text-[#475569] leading-relaxed max-w-2xl">
-              Passionné par l&apos;architecture logicielle, les interfaces soignées et le développement web moderne. J&apos;accompagne les entreprises et créateurs dans la concrétisation de projets numériques performants et pérennes.
+            <p className="text-sm text-[#475569] leading-relaxed max-w-2xl">
+              De l&apos;architecture back-end à l&apos;ergonomie front-end, je construis des applications stables, modulaires et soignées, où chaque détail d&apos;interface bénéficie d&apos;un vrai regard graphique.
             </p>
           </div>
 
-          {/* Badges de Technologies Clés */}
+          {/* Badges de Technologies Réelles */}
           <div className="flex flex-wrap gap-2 pt-1">
             {DEFAULT_STACK.map((tech) => (
               <span
                 key={tech}
-                className="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-100/80 border border-slate-200 text-[#334155]"
+                className="px-3 py-1 rounded-lg text-xs font-mono font-medium bg-white border border-slate-200 text-[#334155] shadow-2xs"
               >
                 {tech}
               </span>
             ))}
           </div>
 
-          {/* Boutons d'Action */}
+          {/* Boutons d'Action avec attraction magnétique légère (max 8px) */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Link
-              href={primaryCta.href}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0B132B] hover:bg-slate-800 text-white text-xs font-semibold shadow-md shadow-slate-900/10 transition-all active:scale-[0.98]"
-            >
-              <span>{primaryCta.label}</span>
-              <ArrowRight className="w-4 h-4 text-[#2563EB]" />
-            </Link>
+            <MagneticButton maxDistance={8}>
+              <Link
+                href={primaryCta.href}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0B1B3A] hover:bg-slate-800 text-white text-xs font-semibold shadow-md shadow-slate-900/10 transition-all active:scale-[0.98]"
+              >
+                <span>{primaryCta.label}</span>
+                <ArrowRight className="w-4 h-4 text-[#2F5BFF]" />
+              </Link>
+            </MagneticButton>
 
-            <Link
-              href={secondaryCta.href}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-slate-50 text-[#0B132B] text-xs font-semibold border border-slate-200/90 shadow-2xs transition-all active:scale-[0.98]"
-            >
-              <Mail className="w-4 h-4 text-[#2563EB]" />
-              <span>{secondaryCta.label}</span>
-            </Link>
+            <MagneticButton maxDistance={8}>
+              <Link
+                href={secondaryCta.href}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-slate-50 text-[#0B1B3A] text-xs font-semibold border border-slate-200 shadow-2xs transition-all active:scale-[0.98]"
+              >
+                <Code2 className="w-4 h-4 text-[#2F5BFF]" />
+                <span>{secondaryCta.label}</span>
+              </Link>
+            </MagneticButton>
 
-            <a
-              href="#a-propos"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white hover:bg-slate-50 text-[#475569] text-xs font-semibold border border-slate-200/90 shadow-2xs transition-all"
-            >
-              <FileText className="w-4 h-4 text-slate-400" />
-              <span>Bio &amp; Approche</span>
-            </a>
+            <MagneticButton maxDistance={8}>
+              <a
+                href="#a-propos"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white hover:bg-slate-50 text-[#475569] text-xs font-semibold border border-slate-200 shadow-2xs transition-all"
+              >
+                <FileText className="w-4 h-4 text-slate-400" />
+                <span>Démarche &amp; Méthode</span>
+              </a>
+            </MagneticButton>
           </div>
 
-          {/* Mentions de Réassurance (Style Image 1) */}
+          {/* Réassurance sobre */}
           <div className="flex flex-wrap items-center gap-6 pt-3 text-xs text-[#64748B] font-mono">
             <div className="flex items-center gap-2">
-              <MapPin className="w-3.5 h-3.5 text-[#2563EB]" />
-              <span>Basé à Abidjan, Côte d&apos;Ivoire</span>
+              <MapPin className="w-3.5 h-3.5 text-[#2F5BFF]" />
+              <span>Abidjan, Côte d&apos;Ivoire</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Code propre, typé &amp; structuré</span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Architecture modulaire &amp; Typage strict</span>
             </div>
           </div>
         </div>
 
-        {/* Colonne Droite : Visuel Portrait avec Anneaux Orbitaux 3D (Style Image 1 & Aquilas Dev) */}
+        {/* Colonne Droite : Visuel Portrait avec Polyèdre 3D réactif */}
         <div className="lg:col-span-5 flex justify-center lg:justify-end">
-          <div className="relative w-[340px] sm:w-[400px] aspect-square flex items-center justify-center">
-            {/* Canevas 3D d'anneaux orbitaux en arrière-plan du portrait */}
+          <div ref={visualRef} className="relative w-[340px] sm:w-[400px] aspect-square flex items-center justify-center">
+            {/* Polyèdre 3D filaire réactif à la souris et au scroll */}
             <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none scale-110">
               <TechWireframe3D />
             </div>
 
-            {/* Cadre du Portrait Stylisé */}
-            <div className="relative z-10 w-[280px] sm:w-[320px] aspect-square rounded-3xl overflow-hidden bg-slate-900 border-4 border-white shadow-2xl shadow-blue-500/10 group">
+            {/* Cadre du Portrait au liseré fin */}
+            <div className="relative z-10 w-[280px] sm:w-[320px] aspect-square rounded-3xl overflow-hidden bg-slate-900 border-2 border-white shadow-xl shadow-slate-900/10 group">
               <Image
                 src={imageSrc}
                 alt={imageAlt}
@@ -183,20 +254,20 @@ export function HeroDeveloppeur({
                 className="object-cover object-top transition-transform duration-700 group-hover:scale-104"
               />
 
-              {/* Gradient d'ombrage bas pour le badge */}
-              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 to-transparent" />
+              {/* Gradient subtil bas */}
+              <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent" />
 
-              {/* Badge Identité en bas de carte (Style Image 1) */}
+              {/* Badge Identité */}
               <div className="absolute bottom-3 inset-x-3 p-3 rounded-2xl bg-white/95 backdrop-blur-md border border-white/60 shadow-lg flex items-center justify-between gap-2">
                 <div className="truncate">
-                  <span className="block text-xs font-bold text-[#0B132B] truncate">
+                  <span className="block text-xs font-bold text-[#0B1B3A] truncate">
                     {displayName}
                   </span>
                   <span className="block text-[10px] font-mono text-[#64748B] truncate">
                     {displayMetier}
                   </span>
                 </div>
-                <div className="w-7 h-7 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-xl bg-blue-50 text-[#2F5BFF] flex items-center justify-center shrink-0">
                   <Code2 className="w-3.5 h-3.5" />
                 </div>
               </div>
@@ -205,19 +276,16 @@ export function HeroDeveloppeur({
         </div>
       </div>
 
-      {/* Ruban Défilant Marquee des Technologies (Style Aquilas Dev / Image 2) */}
-      <div className="mt-8 pt-8 border-t border-slate-200/70">
+      {/* Ruban Défilant Marquee des Technologies Réelles */}
+      <div className="mt-8 pt-8 border-t border-slate-200">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2 text-xs font-mono text-[#64748B]">
-            <Terminal className="w-3.5 h-3.5 text-[#2563EB]" />
-            <span>ÉCOSYSTÈME TECHNIQUE &amp; ENVIRONNEMENT DE DÉVELOPPEMENT</span>
+            <Terminal className="w-3.5 h-3.5 text-[#2F5BFF]" />
+            <span>ENVIRONNEMENT DE DÉVELOPPEMENT &amp; OUTILS DE PRODUCTION</span>
           </div>
-          <div className="hidden sm:flex items-center gap-4 text-xs font-mono text-[#0B132B]">
-            <span className="font-semibold text-[#2563EB]">25+ Projets livrés</span>
-            <span>·</span>
-            <span>3+ Années d&apos;expérience</span>
-            <span>·</span>
-            <span className="text-emerald-600 font-semibold">99% Code typé</span>
+          <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[#475569]">
+            <Sparkles className="w-3.5 h-3.5 text-[#F5B83D]" />
+            <span>Pratique continue &amp; Projets concrets</span>
           </div>
         </div>
 
@@ -227,9 +295,9 @@ export function HeroDeveloppeur({
             {[...TECH_MARQUEE, ...TECH_MARQUEE].map((tech, idx) => (
               <div
                 key={`${tech.name}-${idx}`}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-medium text-[#0B132B] hover:border-[#2563EB]/40 hover:bg-blue-50/50 transition-colors cursor-default"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-medium text-[#0B1B3A] hover:border-[#2F5BFF]/50 transition-colors cursor-default shadow-2xs"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2F5BFF]" />
                 <span className="font-bold">{tech.name}</span>
                 <span className="text-[10px] text-[#64748B] font-mono">({tech.category})</span>
               </div>

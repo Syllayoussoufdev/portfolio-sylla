@@ -86,19 +86,21 @@ export function SkillsSection({ categories = [] }: SkillsSectionProps) {
           }
         );
 
-        // 3. Animation vivante des barres de compétences (remplissage progressif)
-        const progressBars = cardsGridRef.current.querySelectorAll(".skill-progress-bar");
-        progressBars.forEach((bar) => {
+        // 3. Activation des compétences au défilement
+        const skillItems = cardsGridRef.current.querySelectorAll(".editorial-card");
+        skillItems.forEach((card) => {
           gsap.fromTo(
-            bar,
-            { scaleX: 0, transformOrigin: "left center" },
+            card.querySelectorAll(".flex.items-center.justify-between"),
+            { opacity: 0, x: -10 },
             {
-              scaleX: 1,
-              duration: 1.2,
-              ease: "power3.out",
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              stagger: 0.05,
+              ease: "power2.out",
               scrollTrigger: {
-                trigger: bar,
-                start: "top 90%",
+                trigger: card,
+                start: "top 85%",
                 toggleActions: "play none none none",
               },
             }
@@ -247,22 +249,15 @@ export function SkillsSection({ categories = [] }: SkillsSectionProps) {
                       </div>
                       <div className="space-y-2.5">
                         {competences.map((c) => (
-                          <div key={c.id} className="space-y-1">
-                            <div className="flex items-center justify-between text-xs">
-                              <span className="font-medium text-[var(--ink)]">{c.nom}</span>
-                              {c.niveau && (
-                                <span className="text-[10px] font-mono text-[var(--accent)] font-bold">
-                                  {c.niveau} {c.pourcentage ? `· ${c.pourcentage}%` : ""}
-                                </span>
-                              )}
-                            </div>
-                            {c.pourcentage !== null && (
-                              <div className="w-full bg-[var(--bg)] h-1.5 rounded-full overflow-hidden border border-[var(--border)]/50">
-                                <div
-                                  className="skill-progress-bar bg-[var(--accent)] h-full rounded-full"
-                                  style={{ width: `${c.pourcentage}%` }}
-                                />
-                              </div>
+                          <div
+                            key={c.id}
+                            className="flex items-center justify-between p-2 rounded-xl bg-[var(--bg)]/70 border border-[var(--border)]/60 text-xs"
+                          >
+                            <span className="font-medium text-[var(--ink)]">{c.nom}</span>
+                            {c.niveau && (
+                              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-[var(--accent)] border border-blue-100">
+                                {c.niveau}
+                              </span>
                             )}
                           </div>
                         ))}

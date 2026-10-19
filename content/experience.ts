@@ -18,25 +18,14 @@ export interface ExperienceMilestone {
  */
 export const PARCOURS_CHRONOLOGIQUE: ExperienceMilestone[] = [
   {
-    id: "exp-freelance",
-    type: "experience",
-    periode: "Depuis janvier 2026",
-    role: "Développeur Web Full Stack & Créatif Digital",
-    contexte: "Service de Freelance Web (Temps partiel)",
-    badge: "En poste",
-    description:
-      "Conception, réalisation et publication de solutions numériques et sites web pour particuliers et professionnels. Développement d'architectures modernes avec Laravel, React.js et Next.js. Prise en main de Docker pour les environnements de conteneurisation et déploiement.",
-    current: true,
-  },
-  {
     id: "form-simplon",
     type: "formation",
-    periode: "2025 — 2026",
+    periode: "2025 — Aujourd'hui",
     role: "Formation « Pratique IA Product Creator »",
     contexte: "Simplon CI",
-    badge: "Spécialisation IA & Création",
+    badge: "En cours",
     description:
-      "Programme intensif axé sur la création de produits numériques propulsés par l'IA et la maîtrise de la chaîne créative multimédia. Réalisation de trois projets majeurs d'entreprise.",
+      "Programme intensif d'excellence axé sur la création de produits numériques propulsés par l'IA et la maîtrise de toute la chaîne créative multimédia. Réalisation de trois projets majeurs d'entreprise.",
     modules: [
       "Branding & Identité visuelle",
       "Design graphique & Illustration",
@@ -46,6 +35,17 @@ export const PARCOURS_CHRONOLOGIQUE: ExperienceMilestone[] = [
       "Maquettes Figma UI/UX",
       "Développement web moderne",
     ],
+    current: true,
+  },
+  {
+    id: "exp-freelance",
+    type: "experience",
+    periode: "2025 — 2026",
+    role: "Développeur Web Full Stack & Créatif Digital",
+    contexte: "Service de Freelance Web",
+    badge: "Indépendant",
+    description:
+      "Conception, réalisation et publication de solutions numériques et sites web pour particuliers et professionnels. Développement d'architectures modernes avec Laravel, React.js et Next.js. Prise en main de Docker pour les environnements de conteneurisation et déploiement.",
     current: false,
   },
   {

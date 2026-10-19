@@ -26,7 +26,7 @@ export function ParcoursSection() {
   const timelineRef = useRef<HTMLDivElement>(null);
   const lineFillRef = useRef<HTMLDivElement>(null);
 
-  const [activeTab, setActiveTab] = useState<FilterTab>("all");
+  const [activeTab, setActiveTab] = useState<FilterTab>("formation");
 
   const displayedMilestones = useMemo(() => {
     if (activeTab === "all") return PARCOURS_CHRONOLOGIQUE;
@@ -133,9 +133,9 @@ export function ParcoursSection() {
   }, [displayedMilestones]);
 
   const tabs: { key: FilterTab; label: string; icon: React.ElementType }[] = [
-    { key: "all", label: "Vue Chronologique Complète", icon: Layers },
-    { key: "experience", label: "Expériences Pro", icon: Briefcase },
     { key: "formation", label: "Diplômes & Formations", icon: GraduationCap },
+    { key: "experience", label: "Expériences Pro", icon: Briefcase },
+    { key: "all", label: "Vue Chronologique Complète", icon: Layers },
     { key: "certification", label: "Certifications", icon: Award },
   ];
 

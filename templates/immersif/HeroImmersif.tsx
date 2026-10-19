@@ -4,7 +4,7 @@ import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
-import { ArrowRight, Play, Film, Sparkles, Video, ArrowUpRight, MonitorPlay } from "lucide-react";
+import { Play, ArrowUpRight, Sparkles, Video, Film, CheckCircle2 } from "lucide-react";
 import { MotionShowreel3D } from "@/components/3d/MotionShowreel3D";
 import type { HeroData } from "@/lib/validations/profile";
 import type { MediaData, SiteSettingsData } from "@/lib/profiles";
@@ -17,78 +17,78 @@ interface HeroImmersifProps {
 }
 
 const TICKER_ITEMS = [
-  { en: "EVOLVE", jp: "進化" },
-  { en: "IMAGINE", jp: "想像" },
-  { en: "SHAPE", jp: "創造" },
-  { en: "DIRECT", jp: "監督" },
-  { en: "CRAFT", jp: "技" },
-  { en: "MOTION", jp: "動画" },
-  { en: "IMPACT", jp: "衝撃" },
-  { en: "ELEVATE", jp: "高揚" },
+  "MONTAGE VIDÉO",
+  "RYTHME & TEMPO",
+  "NARRATION VISUELLE",
+  "PASSION CINÉMA",
+  "STORYTELLING",
+  "FORMATS COURTS",
+  "PROJETS DE FILMS",
+  "CADRAGE & DÉCOUPE",
 ];
 
 export function HeroImmersif({
   hero,
   heroMedia,
-  projectsCount = 35,
+  projectsCount = 6,
   settings,
 }: HeroImmersifProps) {
   const containerRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const metaRef = useRef<HTMLDivElement>(null);
+  const profileCardRef = useRef<HTMLDivElement>(null);
   const statementRef = useRef<HTMLDivElement>(null);
   const tickerRef = useRef<HTMLDivElement>(null);
 
-  const headline = hero?.headline || "Ideas made\nunforgettable.";
+  const headline = hero?.headline || "Des images qui vibrent,\nun récit qui captive.";
   const subline =
     hero?.subline ||
-    "We build films, motion systems and visual identities that turn a clear idea into a distinctive experience.";
+    "Monteur vidéo débutant et passionné, j'explore le rythme, la narration et le montage dynamique à travers mes premiers projets et créations visuelles.";
+
   const primaryCta = hero?.ctaPrimary || {
-    label: "Explorer le Showreel",
+    label: "Voir mes projets vidéo",
     href: "#projets",
   };
   const secondaryCta = hero?.ctaSecondary || {
-    label: "Démarrer un projet",
+    label: "Me contacter",
     href: "#contact",
   };
 
   const displayName = settings?.nom || "Sylla Youssouf";
+  const portraitSrc = heroMedia?.url || "/sylla.jpg";
 
   useEffect(() => {
     const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (isReduced) return;
 
     const ctx = gsap.context(() => {
-      // 1. Entrée cinématique du Hero
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
       tl.fromTo(
-        metaRef.current,
-        { opacity: 0, y: -15 },
+        profileCardRef.current,
+        { opacity: 0, y: -20 },
         { opacity: 1, y: 0, duration: 0.7 }
       );
 
       tl.fromTo(
         headlineRef.current,
-        { opacity: 0, y: 40, skewY: 1.5 },
-        { opacity: 1, y: 0, skewY: 0, duration: 1 },
+        { opacity: 0, y: 35 },
+        { opacity: 1, y: 0, duration: 0.9 },
         "-=0.4"
       );
 
       tl.fromTo(
         statementRef.current,
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 25 },
         { opacity: 1, y: 0, duration: 0.8 },
-        "-=0.5"
+        "-=0.4"
       );
 
-      // 2. Animation GSAP Marquee Ticker ultra fluide
+      // Animation GSAP du ruban défilant en français
       if (tickerRef.current) {
-        const row = tickerRef.current;
-        gsap.to(row, {
+        gsap.to(tickerRef.current, {
           xPercent: -50,
           repeat: -1,
-          duration: 22,
+          duration: 25,
           ease: "none",
         });
       }
@@ -101,52 +101,79 @@ export function HeroImmersif({
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-screen bg-[#070708] text-white pt-28 pb-16 overflow-hidden flex flex-col justify-between"
+      className="relative min-h-screen bg-[#070708] text-white pt-28 pb-14 overflow-hidden flex flex-col justify-between"
     >
-      {/* Grille structurelle subtile d'arrière-plan */}
+      {/* Grille structurelle subtile */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
 
-      {/* Lueur cinématique rouge vermillon très rasante */}
+      {/* Lueur rouge vermillon discrète */}
       <div className="absolute top-1/4 right-0 w-[420px] h-[420px] bg-[#FF2A14]/10 rounded-full blur-[140px] pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto px-5 sm:px-8 w-full relative z-10 flex-1 flex flex-col justify-center">
-        {/* Barre méta technique */}
+        {/* Carte Profil Personnel avec Photo de Sylla Youssouf */}
         <div
-          ref={metaRef}
-          className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5 mb-12 text-[11px] font-mono text-zinc-400 uppercase tracking-widest"
+          ref={profileCardRef}
+          className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6 mb-12"
         >
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#FF2A14] animate-pulse" />
-            <span className="text-white font-semibold">{displayName} · STUDIO</span>
+          <div className="flex items-center gap-4">
+            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden border-2 border-[#FF2A14]/60 bg-zinc-800 shadow-lg shadow-red-950/30 shrink-0">
+              <Image
+                src={portraitSrc}
+                alt={displayName}
+                fill
+                priority
+                sizes="80px"
+                className="object-cover object-top"
+              />
+              <span className="absolute bottom-1 right-1 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#070708]" title="Disponible pour projets" />
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="font-syne text-lg sm:text-xl font-bold text-white tracking-wide">
+                  {displayName}
+                </h2>
+                <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-mono text-[#FF2A14] font-semibold border border-white/10">
+                  PORTFOLIO PERSONNEL
+                </span>
+              </div>
+              <p className="text-xs font-mono text-zinc-400 mt-0.5 flex items-center gap-2">
+                <Video className="w-3.5 h-3.5 text-[#FF2A14]" />
+                <span>Monteur Vidéo · Projets de Films &amp; Formats Courts</span>
+              </p>
+            </div>
           </div>
-          <div className="hidden sm:block">DIRECTION CRÉATIVE &amp; MONTAGE VIDÉO</div>
-          <div className="text-zinc-500">PARIS / ABIDJAN / WORLDWIDE</div>
+
+          <div className="hidden md:flex items-center gap-3 text-xs font-mono text-zinc-400">
+            <span className="w-2 h-2 rounded-full bg-[#FF2A14] animate-pulse" />
+            <span>EN PHASE D&apos;APPRENTISSAGE ACTIF &amp; RÉALISATION</span>
+          </div>
         </div>
 
-        {/* Bloc Principal Asymétrique (Inspiration "Ideas made unforgettable.") */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-16">
+        {/* Section Principale : Titre & Sculpture 3D */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-14">
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#FF2A14] text-[11px] font-mono font-medium tracking-wider uppercase">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A14]" />
-              EST. 2026 · EDITION IMMERSIVE
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#FF2A14] text-[11px] font-mono font-medium">
+              <Film className="w-3.5 h-3.5" />
+              <span>MON 3ÈME UNIVERS · CRÉATION VIDÉO</span>
             </div>
 
             <h1
               ref={headlineRef}
-              className="font-syne text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight text-white leading-[0.98] uppercase"
+              className="font-syne text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.04] uppercase"
             >
-              Ideas made<br />
+              Des images qui vibrent,<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-[#FF2A14]">
-                unforgettable.
+                un récit qui captive.
               </span>
             </h1>
 
-            <p className="text-sm sm:text-base text-zinc-400 max-w-xl leading-relaxed font-light font-mono">
-              Montage haute cadence, motion design 3D et récits cinématographiques pour marques, créateurs et plateformes exigeantes.
+            <p className="text-sm sm:text-base text-zinc-300 max-w-xl leading-relaxed font-light">
+              {subline}
             </p>
 
-            {/* Actions rapides */}
-            <div className="flex flex-wrap items-center gap-4 pt-4">
+            {/* Boutons d'action clairs en français */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
                 href={primaryCta.href}
                 className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#FF2A14] hover:bg-[#E0240F] active:scale-95 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-red-950/50 cursor-pointer"
@@ -157,7 +184,7 @@ export function HeroImmersif({
 
               <Link
                 href={secondaryCta.href}
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-zinc-900/80 hover:bg-zinc-800 active:scale-95 text-zinc-300 hover:text-white border border-white/15 text-xs font-mono transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-zinc-900/90 hover:bg-zinc-800 active:scale-95 text-zinc-300 hover:text-white border border-white/15 text-xs font-mono transition-all cursor-pointer"
               >
                 <span>{secondaryCta.label}</span>
                 <ArrowUpRight className="w-4 h-4 text-[#FF2A14]" />
@@ -165,45 +192,42 @@ export function HeroImmersif({
             </div>
           </div>
 
-          {/* Sculpture 3D Chrome sombre avec reflets rouge vermillon */}
+          {/* Effet 3D conservé avec la sculpture géométrique sombre */}
           <div className="lg:col-span-5 relative aspect-square max-w-md mx-auto w-full flex items-center justify-center">
             <div className="absolute inset-0 -z-10 bg-radial from-[#FF2A14]/15 via-transparent to-transparent rounded-full blur-2xl" />
             <MotionShowreel3D />
           </div>
         </div>
 
-        {/* Second volet éditorial : "We build brands and websites..." */}
+        {/* Démarche & Authenticité */}
         <div
           ref={statementRef}
-          className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-10 border-t border-white/10 items-baseline"
+          className="grid grid-cols-1 md:grid-cols-12 gap-8 pt-8 border-t border-white/10 items-baseline"
         >
           <div className="md:col-span-8">
-            <h2 className="font-syne text-2xl sm:text-4xl font-bold tracking-tight text-white leading-snug">
-              {subline}
-            </h2>
+            <h3 className="font-syne text-xl sm:text-2xl font-bold tracking-tight text-white leading-snug">
+              Donner du rythme, soigner les transitions et apprendre chaque jour pour sublimer les histoires.
+            </h3>
           </div>
-          <div className="md:col-span-4 space-y-3 font-mono text-xs text-zinc-400">
+          <div className="md:col-span-4 space-y-2 font-mono text-xs text-zinc-400">
             <p className="leading-relaxed">
-              De la découpe au millième de seconde au sound design immersif, chaque seconde est pensée pour retenir l&apos;attention et imprimer une émotion durable.
+              Ce portfolio regroupe mes premières créations, mes exercices de montage et mes projets de films.
             </p>
-            <div className="flex items-center gap-3 text-white font-semibold">
-              <span className="text-[#FF2A14] font-bold">[{projectsCount}+]</span>
-              <span>RÉALISATIONS AU CATALOGUE</span>
+            <div className="text-white font-semibold flex items-center gap-2">
+              <span className="text-[#FF2A14]">[{projectsCount}]</span>
+              <span>PROJETS PRÉSENTÉS</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Marquee Ticker GSAP : EVOLVE 進化 • IMAGINE 想像 • SHAPE 創造 */}
-      <div className="mt-14 border-y border-white/10 py-4 bg-zinc-950/80 overflow-hidden whitespace-nowrap relative select-none">
-        <div ref={tickerRef} className="inline-flex items-center gap-10">
+      {/* Ruban Défilant Ticker 100% en Français */}
+      <div className="mt-12 border-y border-white/10 py-3.5 bg-zinc-950/90 overflow-hidden whitespace-nowrap relative select-none">
+        <div ref={tickerRef} className="inline-flex items-center gap-8">
           {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
             <div key={idx} className="inline-flex items-center gap-4">
-              <span className="font-syne text-2xl sm:text-3xl font-extrabold tracking-wider text-white">
-                {item.en}
-              </span>
-              <span className="text-xl sm:text-2xl text-zinc-500 font-bold">
-                {item.jp}
+              <span className="font-syne text-xl sm:text-2xl font-bold tracking-wider text-white">
+                {item}
               </span>
               <span className="w-2 h-2 rounded-full bg-[#FF2A14] mx-2" />
             </div>

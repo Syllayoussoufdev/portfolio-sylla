@@ -80,15 +80,15 @@ export function SkillsImmersif({ categories = [] }: SkillsImmersifProps) {
       <div ref={headerRef} className="space-y-4 mb-14 border-b border-white/10 pb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#FF2A14] text-xs font-mono font-medium tracking-wider uppercase">
           <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A14]" />
-          <span>[ 03 · ARSENAL TECHNIQUE &amp; LOGICIELS ]</span>
+          <span>[ 03 · LOGICIELS &amp; OUTILS DE MONTAGE ]</span>
         </div>
 
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-          <h2 className="font-syne text-4xl sm:text-6xl font-extrabold tracking-tight text-white uppercase leading-tight">
-            Stack &amp; Outils<br />de Production.
+          <h2 className="font-syne text-3xl sm:text-5xl font-extrabold tracking-tight text-white uppercase leading-tight">
+            Mes Outils de Création.
           </h2>
           <p className="text-xs sm:text-sm font-mono text-zinc-400 max-w-md leading-relaxed">
-            De la suite Adobe à DaVinci Resolve, en passant par les moteurs 3D et les générateurs IA de dernière génération.
+            Les logiciels et outils créatifs que j&apos;utilise et sur lesquels je me perfectionne au fil de mes projets.
           </p>
         </div>
       </div>
@@ -133,32 +133,32 @@ export function SkillsImmersif({ categories = [] }: SkillsImmersifProps) {
         </div>
       </div>
 
-      {/* 3. Bento Grid des 4 Piliers d'Excellence Vidéo */}
+      {/* 3. Bento Grid des 4 Piliers d'Apprentissage Vidéo */}
       <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-16">
         {[
           {
             num: "01",
-            title: "Montage & Découpe Haute Cadence",
-            desc: "Rythme calibré, jump cuts dynamiques, rétention maximale et narration émotionnelle percutante.",
+            title: "Montage & Découpe Vidéo",
+            desc: "Assemblage chronologique, coupes franches, dynamique de scènes et sélection minutieuse des prises.",
             tools: ["Premiere Pro", "DaVinci Resolve", "CapCut Pro"],
           },
           {
             num: "02",
-            title: "Motion Design & 3D WebGL",
-            desc: "Titres cinétiques percutants, animation de marques, tracking 3D et intégrations WebGL spatiales.",
-            tools: ["After Effects", "Blender", "Cinema 4D"],
+            title: "Animation & Titrages",
+            desc: "Création de textes animés, sous-titres dynamiques, transitions personnalisées et initiation à la 3D.",
+            tools: ["After Effects", "Blender", "Canva"],
           },
           {
             num: "03",
-            title: "Ingénierie Audio & Sound Design",
-            desc: "Ambiances sonores immersives, transitions SFX, nettoyage vocal et mastering aux normes de diffusion.",
-            tools: ["Adobe Audition", "Foley SFX", "Sound Design"],
+            title: "Habillage Graphique & Vignettes",
+            desc: "Conception de miniatures percutantes, retouche d'images et préparation d'éléments graphiques.",
+            tools: ["Photoshop", "Illustrator", "Figma"],
           },
           {
             num: "04",
-            title: "Pipelines IA & Étalonnage 4K",
-            desc: "Génération de textures et scènes par IA, color science cinématique et optimisation multi-formats.",
-            tools: ["Midjourney", "Runway Gen-3", "LUTs Custom"],
+            title: "Outils IA & Productivité",
+            desc: "Accompagnement créatif par l'IA pour l'inspiration visuelle, la génération de plans et les scripts.",
+            tools: ["ChatGPT", "Midjourney", "Claude"],
           },
         ].map((item) => (
           <div

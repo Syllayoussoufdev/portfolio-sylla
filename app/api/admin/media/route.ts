@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { normalizeImageUrl } from "@/lib/media-url";
 
 export const dynamic = "force-dynamic";
 
@@ -83,7 +84,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const cleanUrl = url.trim();
+    const cleanUrl = normalizeImageUrl(url.trim());
     const finalPublicId =
       publicId && typeof publicId === "string" && publicId.trim()
         ? publicId.trim()

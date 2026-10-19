@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { MediaUploader, type UploadedMedia } from "@/components/admin/MediaUploader";
+import { normalizeImageUrl } from "@/lib/media-url";
 
 export interface MediaWithUsage {
   id: string;
@@ -53,7 +54,8 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
 
   const handleUrlAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!urlInput.trim() || !urlAltInput.trim()) return;
+    const cleanUrl = normalizeImageUrl(urlInput);
+    if (!cleanUrl || !urlAltInput.trim()) return;
     setUrlSubmitting(true);
     setErrorNotice(null);
     try {
@@ -61,7 +63,7 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          url: urlInput.trim(),
+          url: cleanUrl,
           alt: urlAltInput.trim(),
         }),
       });

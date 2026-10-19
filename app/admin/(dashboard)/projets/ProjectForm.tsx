@@ -22,6 +22,7 @@ import {
 import { GithubIcon, FigmaIcon } from "@/components/icons";
 import { MediaPickerModal } from "@/components/admin/MediaPickerModal";
 import { type UploadedMedia } from "@/components/admin/MediaUploader";
+import { normalizeImageUrl } from "@/lib/media-url";
 
 interface ProjectFormProps {
   initialData?: {
@@ -404,10 +405,11 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
                 type="text"
                 value={coverImageUrl}
                 onChange={(e) => {
-                  setCoverImageUrl(e.target.value);
+                  const normalized = normalizeImageUrl(e.target.value);
+                  setCoverImageUrl(normalized);
                   setCoverMedia(null);
                 }}
-                placeholder="https://images.unsplash.com/... ou URL d'image"
+                placeholder="https://images.unsplash.com/... ou lien Google Drive"
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
               />
               {coverImageUrl && (

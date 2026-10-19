@@ -25,6 +25,78 @@ const CATEGORIES = [
   { id: "Design", label: "Direction Artistique" },
 ];
 
+function CinematicProjectVisual({
+  imageSrc,
+  imageAlt,
+  title,
+  index,
+}: {
+  imageSrc?: string | null;
+  imageAlt: string;
+  title: string;
+  index: number;
+}) {
+  if (imageSrc) {
+    return (
+      <img
+        src={imageSrc}
+        alt={imageAlt}
+        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+      />
+    );
+  }
+
+  // Visual cinématique haute fidélité pour les projets sans image
+  const timecodes = [
+    "00:01:24:18",
+    "00:03:45:09",
+    "00:02:11:04",
+    "00:04:19:22",
+    "00:00:58:15",
+    "00:02:50:00",
+  ];
+  const tc = timecodes[index % timecodes.length];
+
+  return (
+    <div className="relative w-full h-full bg-gradient-to-br from-[#141418] via-[#0A0A0D] to-black flex flex-col justify-between p-5 overflow-hidden select-none">
+      {/* Grille et viseur caméra cinéma */}
+      <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF2A14]/15 rounded-full blur-2xl pointer-events-none" />
+
+      {/* Barre d'état Viewfinder */}
+      <div className="relative z-10 flex items-center justify-between text-[10px] font-mono tracking-widest text-zinc-400">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-[#FF2A14] animate-pulse" />
+          <span className="text-white font-semibold">REC ● 4K UHD</span>
+        </div>
+        <span className="text-zinc-500 font-mono">{tc}</span>
+      </div>
+
+      {/* Centre : Titre percutant & Play badge */}
+      <div className="relative z-10 text-center my-auto py-2 space-y-2">
+        <div className="w-12 h-12 rounded-full bg-white/5 border border-white/15 flex items-center justify-center text-[#FF2A14] mx-auto group-hover:scale-110 group-hover:bg-[#FF2A14] group-hover:text-white transition-all duration-300 shadow-lg">
+          <Play className="w-5 h-5 fill-current ml-0.5" />
+        </div>
+        <div className="font-syne font-bold text-sm sm:text-base text-white truncate max-w-xs mx-auto">
+          {title}
+        </div>
+      </div>
+
+      {/* Bas : Timeline & Audio Waveform stylisée */}
+      <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-2 text-[9px] font-mono text-zinc-500">
+        <div className="flex items-center gap-1">
+          <span className="w-1 h-3 bg-[#FF2A14] rounded-full" />
+          <span className="w-1 h-4 bg-[#FF2A14]/80 rounded-full" />
+          <span className="w-1 h-2 bg-zinc-600 rounded-full" />
+          <span className="w-1 h-5 bg-[#FF2A14] rounded-full" />
+          <span className="w-1 h-3 bg-zinc-600 rounded-full" />
+        </div>
+        <span>60FPS · PRORES 422</span>
+      </div>
+    </div>
+  );
+}
+
 export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const sectionRef = useRef<HTMLElement>(null);
@@ -144,8 +216,11 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
       id="projets"
       className="py-28 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-24 text-white relative"
     >
-      {/* En-tête de section (Inspiration "Ideas out in the world.") */}
-      <div ref={headerRef} className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 border-b border-white/10 pb-6">
+      {/* 1. En-tête de section (Inspiration "Ideas out in the world.") */}
+      <div
+        ref={headerRef}
+        className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 border-b border-white/10 pb-6"
+      >
         <div className="space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#FF2A14] text-xs font-mono font-medium tracking-wider uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A14]" />
@@ -170,8 +245,56 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
         </div>
       </div>
 
-      {/* Filtres de catégorie en pilules sobres */}
-      <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-3 mb-14 -mx-4 px-4 sm:mx-0 sm:px-0">
+      {/* 2. LE CAROUSEL CINÉMATIQUE "ALWAYS IN MOTION" EN TÊTE DE SECTION */}
+      <div className="mb-20 overflow-hidden -mx-5 sm:-mx-8 py-6 bg-gradient-to-b from-[#0B0B0E] via-[#070708] to-[#0B0B0E] border-y border-white/10">
+        <div className="px-5 sm:px-8 flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <span className="w-2 h-2 rounded-full bg-[#FF2A14] animate-pulse" />
+            <h3 className="font-syne text-xl sm:text-2xl font-bold tracking-tight text-white uppercase">
+              Always in motion · Showcase Reel
+            </h3>
+          </div>
+          <span className="text-[11px] font-mono text-zinc-400">
+            [ DÉFILEMENT CONTINU ]
+          </span>
+        </div>
+
+        {/* Ruban animé avec GSAP Scrub */}
+        <div className="relative w-full overflow-hidden select-none">
+          <div ref={ribbonRef} className="flex gap-6 w-max px-4">
+            {projects.map((item, idx) => {
+              const src = item.coverMedia?.url || item.coverImage;
+              return (
+                <Link
+                  key={`ribbon-${item.id}-${idx}`}
+                  href={`/projets/${item.slug}`}
+                  className="w-72 sm:w-96 aspect-16/10 rounded-3xl overflow-hidden bg-[#111113] border border-white/15 hover:border-[#FF2A14] relative shrink-0 group transition-all duration-300 shadow-xl"
+                >
+                  <CinematicProjectVisual
+                    imageSrc={src}
+                    imageAlt={item.titre}
+                    title={item.titre}
+                    index={idx}
+                  />
+
+                  {/* Gradient & Overlay Titre */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-5 pointer-events-none">
+                    <span className="text-[10px] font-mono text-[#FF2A14] uppercase tracking-wider mb-1">
+                      {item.tags[0] || "Production"}
+                    </span>
+                    <h4 className="font-syne font-bold text-base text-white group-hover:text-[#FF2A14] transition-colors truncate">
+                      {item.titre}
+                    </h4>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Filtres de catégorie en pilules sobres */}
+      <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-3 mb-12 -mx-4 px-4 sm:mx-0 sm:px-0">
         {CATEGORIES.map((cat) => {
           const isActive = selectedCategory === cat.id;
 
@@ -192,7 +315,7 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
         })}
       </div>
 
-      {/* Grille de projets format Éditorial Sombre & Cadence */}
+      {/* 4. Grille de projets format Éditorial Sombre & Cadence */}
       {filteredProjects.length === 0 ? (
         <div className="p-16 text-center rounded-3xl bg-[#111113] border border-white/10 max-w-md mx-auto">
           <div className="w-12 h-12 rounded-2xl bg-zinc-800 text-[#FF2A14] flex items-center justify-center mx-auto mb-3">
@@ -206,7 +329,10 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
           </p>
         </div>
       ) : (
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-28">
+        <div
+          ref={gridRef}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-28"
+        >
           {filteredProjects.map((project, idx) => {
             const links = (project.links || {}) as Record<string, string>;
             const imageSrc = project.coverMedia?.url || project.coverImage;
@@ -217,28 +343,14 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
                 key={project.id}
                 className="group relative flex flex-col justify-between rounded-3xl bg-[#111113] border border-white/10 hover:border-[#FF2A14]/70 transition-all duration-500 overflow-hidden"
               >
-                {/* 1. Zone visuelle cinématique */}
+                {/* 1. Zone visuelle cinématique avec fallback 4K dynamique */}
                 <div className="relative aspect-16/10 w-full overflow-hidden bg-zinc-950 border-b border-white/10">
-                  {imageSrc ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
-                      src={imageSrc}
-                      alt={imageAlt}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-br from-zinc-900 to-black text-zinc-400">
-                      <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[#FF2A14] mb-2 group-hover:scale-110 transition-transform">
-                        <Play className="w-5 h-5 fill-current ml-0.5" />
-                      </div>
-                      <span className="font-syne text-sm text-white tracking-wide">
-                        {project.titre}
-                      </span>
-                      <span className="text-[10px] font-mono text-zinc-500">
-                        Production Vidéo
-                      </span>
-                    </div>
-                  )}
+                  <CinematicProjectVisual
+                    imageSrc={imageSrc}
+                    imageAlt={imageAlt}
+                    title={project.titre}
+                    index={idx}
+                  />
 
                   {/* Gradient sombre cinématique */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
@@ -357,51 +469,6 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
           })}
         </div>
       )}
-
-      {/* 4. Filmstrip Ribbon Dynamique ("Always in motion.") */}
-      <div className="border-t border-white/10 pt-20 mb-24 overflow-hidden">
-        <div className="space-y-4 mb-8">
-          <span className="text-xs font-mono text-[#FF2A14] uppercase tracking-wider block">
-            [ FLUX CONTINU ]
-          </span>
-          <h3 className="font-syne text-3xl sm:text-5xl font-extrabold text-white uppercase">
-            Always in motion.
-          </h3>
-        </div>
-
-        {/* Bande défilante GSAP */}
-        <div className="relative w-full overflow-hidden py-4 select-none">
-          <div ref={ribbonRef} className="flex gap-5 w-max">
-            {projects.slice(0, 6).map((item, idx) => {
-              const src = item.coverMedia?.url || item.coverImage;
-              return (
-                <div
-                  key={idx}
-                  className="w-64 sm:w-80 aspect-16/9 rounded-2xl overflow-hidden bg-zinc-900 border border-white/15 relative shrink-0 group"
-                >
-                  {src ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
-                      src={src}
-                      alt={item.titre}
-                      className="w-full h-full object-cover filter contrast-110 group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-zinc-500 font-mono text-xs">
-                      {item.titre}
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-4">
-                    <span className="text-xs font-syne font-bold text-white truncate">
-                      {item.titre}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
 
       {/* 5. Signature Brutaliste Marque (Inspiration "Your idea. Our next obsession. / Velom ®") */}
       <div className="border-t border-white/10 pt-20 pb-10 space-y-8">

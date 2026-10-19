@@ -13,6 +13,7 @@ import { ProjectsDeveloppeur } from "@/templates/developpeur/ProjectsDeveloppeur
 import { HeroImmersif } from "@/templates/immersif/HeroImmersif";
 import { AboutImmersif } from "@/templates/immersif/AboutImmersif";
 import { ProjectsImmersif } from "@/templates/immersif/ProjectsImmersif";
+import { SkillsImmersif } from "@/templates/immersif/SkillsImmersif";
 
 // Sections transversales adaptées aux tokens du template actif
 import { SkillsSection } from "./SkillsSection";
@@ -114,6 +115,9 @@ export function SectionRenderer({
     }
 
     case "competences": {
+      if (template === "immersif") {
+        return <SkillsImmersif categories={skillCategories} />;
+      }
       return <SkillsSection categories={skillCategories} />;
     }
 

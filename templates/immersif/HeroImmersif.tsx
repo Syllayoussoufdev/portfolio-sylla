@@ -39,17 +39,10 @@ export function HeroImmersif({
   const statementRef = useRef<HTMLDivElement>(null);
   const tickerRef = useRef<HTMLDivElement>(null);
 
-  const headline =
-    hero?.headline &&
-    hero.headline !== "Turning Ideas Into Beautiful Digital Experiences." &&
-    hero.headline !== "DES IMAGES QUI BOUGENT, UN RÉCIT QUI TIENT."
-      ? hero.headline
-      : "Ideas made\nunforgettable.";
+  const headline = hero?.headline || "Ideas made\nunforgettable.";
   const subline =
-    hero?.subline &&
-    hero.subline !== "Montage vidéo, motion et direction visuelle."
-      ? hero.subline
-      : "We build films, motion systems and visual identities that turn a clear idea into a distinctive experience.";
+    hero?.subline ||
+    "We build films, motion systems and visual identities that turn a clear idea into a distinctive experience.";
   const primaryCta = hero?.ctaPrimary || {
     label: "Explorer le Showreel",
     href: "#projets",

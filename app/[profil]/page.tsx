@@ -57,37 +57,46 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
     notFound();
   }
 
-  // Traçabilité anonymisée de la visite
-  await trackVisit(`/${slug}`, {
-    subPortfolioId: profile.subPortfolioId || undefined,
-  });
+  // Traçabilité anonymisée de la visite (résiliente)
+  try {
+    await trackVisit(`/${slug}`, {
+      subPortfolioId: profile.subPortfolioId || undefined,
+    });
+  } catch {
+    // Ignorer silencieusement si la base est temporairement inaccessible
+  }
 
   const [settings, skillCategories] = await Promise.all([
     getSiteSettings(),
     getSkillsForSubPortfolio(profile.subPortfolioId),
   ]);
 
-  // Extraction des projets : soit depuis le sous-portfolio rattaché, soit tous les projets visibles
+  // Extraction des projets : soit depuis le sous-portfolio rattaché, soit tous les projets visibles (tolérance aux pannes)
   let visibleProjects = [];
-  if (profile.subPortfolioId) {
-    const spProjects = await prisma.subPortfolioProject.findMany({
-      where: { subPortfolioId: profile.subPortfolioId },
-      include: {
-        project: {
-          include: { coverMedia: true },
+  try {
+    if (profile.subPortfolioId) {
+      const spProjects = await prisma.subPortfolioProject.findMany({
+        where: { subPortfolioId: profile.subPortfolioId },
+        include: {
+          project: {
+            include: { coverMedia: true },
+          },
         },
-      },
-      orderBy: { ordre: "asc" },
-    });
-    visibleProjects = spProjects
-      .map((sp) => sp.project)
-      .filter((p) => p.visible);
-  } else {
-    visibleProjects = await prisma.project.findMany({
-      where: { visible: true },
-      include: { coverMedia: true },
-      orderBy: [{ ordre: "asc" }, { createdAt: "desc" }],
-    });
+        orderBy: { ordre: "asc" },
+      });
+      visibleProjects = spProjects
+        .map((sp) => sp.project)
+        .filter((p) => p.visible);
+    } else {
+      visibleProjects = await prisma.project.findMany({
+        where: { visible: true },
+        include: { coverMedia: true },
+        orderBy: [{ ordre: "asc" }, { createdAt: "desc" }],
+      });
+    }
+  } catch (err) {
+    console.warn("Avertissement lors de la récupération des projets ciblés (repli vide) :", err);
+    visibleProjects = [];
   }
 
   const hero = profile.hero as unknown as HeroData;

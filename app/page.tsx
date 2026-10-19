@@ -27,27 +27,32 @@ export default async function HomePage() {
 
   const skillCategories = await getSkillsForSubPortfolio(profile.subPortfolioId);
 
-  // Chargement des projets selon la configuration du profil
+  // Chargement des projets selon la configuration du profil avec tolérance aux pannes
   let visibleProjects = [];
-  if (profile.subPortfolioId) {
-    const spProjects = await prisma.subPortfolioProject.findMany({
-      where: { subPortfolioId: profile.subPortfolioId },
-      include: {
-        project: {
-          include: { coverMedia: true },
+  try {
+    if (profile.subPortfolioId) {
+      const spProjects = await prisma.subPortfolioProject.findMany({
+        where: { subPortfolioId: profile.subPortfolioId },
+        include: {
+          project: {
+            include: { coverMedia: true },
+          },
         },
-      },
-      orderBy: { ordre: "asc" },
-    });
-    visibleProjects = spProjects
-      .map((sp) => sp.project)
-      .filter((p) => p.visible);
-  } else {
-    visibleProjects = await prisma.project.findMany({
-      where: { visible: true },
-      include: { coverMedia: true },
-      orderBy: [{ ordre: "asc" }, { createdAt: "desc" }],
-    });
+        orderBy: { ordre: "asc" },
+      });
+      visibleProjects = spProjects
+        .map((sp) => sp.project)
+        .filter((p) => p.visible);
+    } else {
+      visibleProjects = await prisma.project.findMany({
+        where: { visible: true },
+        include: { coverMedia: true },
+        orderBy: [{ ordre: "asc" }, { createdAt: "desc" }],
+      });
+    }
+  } catch (err) {
+    console.warn("Avertissement lors de la récupération des projets (repli vide) :", err);
+    visibleProjects = [];
   }
 
   const hero = profile.hero as unknown as HeroData;

@@ -18,7 +18,6 @@ export const RESERVED_SLUGS = [
   "robots.txt",
   "_next",
   "favicon.ico",
-  "design",
   "medias",
 ] as const;
 

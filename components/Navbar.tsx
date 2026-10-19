@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, Menu, X } from "lucide-react";
+import { useMotion } from "@/components/motion/MotionProvider";
 
 export interface NavbarSettings {
   nom?: string | null;
@@ -18,6 +19,8 @@ interface NavbarProps {
 
 export function Navbar({ settings }: NavbarProps) {
   const pathname = usePathname() || "";
+  const { lenis } = useMotion();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,7 +30,24 @@ export function Navbar({ settings }: NavbarProps) {
   const displayName = settings?.nom || "Sylla Youssouf";
   const displayMetier = settings?.metier ?? "Développeur Web & Mobile";
 
-  // Gestion du défilement : compactage après 80px, masquage à la descente, réapparition à la montée
+  // Déterminer le préfixe selon qu'on est sur l'accueil ou un sous-portfolio (ex: /dev)
+  const isSubPortfolio =
+    pathname !== "/" &&
+    !pathname.startsWith("/admin") &&
+    !pathname.startsWith("/projets/");
+
+  const basePath = isSubPortfolio ? pathname : "";
+
+  const navLinks = [
+    { id: "hero", href: `${basePath}#hero`, label: "Accueil" },
+    { id: "a-propos", href: `${basePath}#a-propos`, label: "À propos" },
+    { id: "projets", href: `${basePath}#projets`, label: "Projets" },
+    { id: "competences", href: `${basePath}#competences`, label: "Compétences" },
+    { id: "parcours", href: `${basePath}#parcours`, label: "Parcours" },
+    { id: "contact", href: `${basePath}#contact`, label: "Contact" },
+  ];
+
+  // Gestion du défilement & ScrollSpy robuste jusqu'au Contact et Footer
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -38,55 +58,65 @@ export function Navbar({ settings }: NavbarProps) {
       // Masquage / affichage selon direction
       if (currentScrollY > 120) {
         if (currentScrollY > lastScrollY.current + 5) {
-          // Défilement vers le bas : masquer
           setIsVisible(false);
         } else if (currentScrollY < lastScrollY.current - 5) {
-          // Défilement vers le haut : réafficher
           setIsVisible(true);
         }
       } else {
-        // En haut de page : toujours visible
         setIsVisible(true);
       }
 
       lastScrollY.current = currentScrollY;
+
+      // Détection fiable de la section active
+      const sectionIds = ["hero", "a-propos", "projets", "competences", "parcours", "contact"];
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const pageHeight = document.documentElement.scrollHeight;
+
+      // Si l'utilisateur a atteint le bas de page (Contact et Footer)
+      if (pageHeight - scrollPosition < 150) {
+        setActiveSection("contact");
+        return;
+      }
+
+      // Parcourir de bas en haut pour trouver la section actuellement traversée
+      const triggerY = window.scrollY + 200;
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const id = sectionIds[i];
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.scrollY;
+          if (top <= triggerY) {
+            setActiveSection(id);
+            break;
+          }
+        }
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Détection dynamique de la section active (ScrollSpy)
-  useEffect(() => {
-    const sectionIds = ["hero", "a-propos", "projets", "competences", "parcours", "contact"];
-    const elements = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => Boolean(el));
-
-    if (elements.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Détecter l'élément ayant la plus grande visibilité
-        const intersecting = entries.filter((e) => e.isIntersecting);
-        if (intersecting.length > 0) {
-          // Trier par position pour prendre la section courante
-          const sorted = intersecting.sort(
-            (a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top)
-          );
-          setActiveSection(sorted[0].target.id);
-        }
-      },
-      {
-        rootMargin: "-15% 0px -40% 0px",
-        threshold: [0, 0.25, 0.5, 0.75],
-      }
-    );
-
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
   }, [pathname]);
+
+  // Clic sur un lien de navigation : défilement fluide sans rechargement ni saut vers l'accueil
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    targetId: string
+  ) => {
+    const el = document.getElementById(targetId);
+    if (el) {
+      e.preventDefault();
+      if (lenis) {
+        lenis.scrollTo(el, { offset: -70, duration: 1.1 });
+      } else {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+      window.history.pushState(null, "", `${basePath}#${targetId}`);
+      setActiveSection(targetId);
+      setMobileMenuOpen(false);
+    }
+  };
 
   // Fermer le menu mobile lors d'un appui sur Échap et verrouiller le scroll
   useEffect(() => {
@@ -106,23 +136,6 @@ export function Navbar({ settings }: NavbarProps) {
       document.body.style.overflow = "auto";
     };
   }, [mobileMenuOpen]);
-
-  // Déterminer le préfixe selon qu'on est sur l'accueil ou un sous-portfolio (ex: /dev)
-  const isSubPortfolio =
-    pathname !== "/" &&
-    !pathname.startsWith("/admin") &&
-    !pathname.startsWith("/projets/");
-
-  const basePath = isSubPortfolio ? pathname : "";
-
-  const navLinks = [
-    { id: "hero", href: `${basePath}#hero`, label: "Accueil" },
-    { id: "a-propos", href: `${basePath}#a-propos`, label: "À propos" },
-    { id: "projets", href: `${basePath}#projets`, label: "Projets" },
-    { id: "competences", href: `${basePath}#competences`, label: "Compétences" },
-    { id: "parcours", href: `${basePath}#parcours`, label: "Parcours" },
-    { id: "contact", href: `${basePath}#contact`, label: "Contact" },
-  ];
 
   // Initiales pour le monogramme
   const initials = displayName
@@ -148,7 +161,11 @@ export function Navbar({ settings }: NavbarProps) {
         }`}
       >
         {/* Logo & Identité issue de SiteSettings */}
-        <Link href={basePath || "/"} className="flex items-center gap-3 group">
+        <Link
+          href={basePath || "/"}
+          onClick={(e) => handleNavClick(e, "hero")}
+          className="flex items-center gap-3 group"
+        >
           <div className="w-8 h-8 rounded-xl bg-[var(--ink)] text-[var(--bg)] flex items-center justify-center font-bebas text-lg shadow-xs transition-transform group-hover:scale-105">
             {initials}
           </div>
@@ -164,7 +181,7 @@ export function Navbar({ settings }: NavbarProps) {
           </div>
         </Link>
 
-        {/* Liens de navigation Desktop avec ScrollSpy */}
+        {/* Liens de navigation Desktop avec ScrollSpy et gestion du clic fluide */}
         <div className="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-medium text-[var(--muted)]">
           {navLinks.map((link) => {
             const isActive = activeSection === link.id;
@@ -172,6 +189,7 @@ export function Navbar({ settings }: NavbarProps) {
               <Link
                 key={link.id}
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link.id)}
                 className={`transition-all py-1 relative ${
                   isActive
                     ? "text-[var(--ink)] font-semibold"
@@ -191,6 +209,7 @@ export function Navbar({ settings }: NavbarProps) {
         <div className="flex items-center gap-3">
           <Link
             href={`${basePath}#contact`}
+            onClick={(e) => handleNavClick(e, "contact")}
             className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--ink)] hover:opacity-90 text-[var(--bg)] text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
           >
             <span>Me contacter</span>
@@ -238,7 +257,7 @@ export function Navbar({ settings }: NavbarProps) {
                   <Link
                     key={link.id}
                     href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={(e) => handleNavClick(e, link.id)}
                     className={`py-2 px-3 rounded-xl transition-colors flex items-center justify-between ${
                       isActive
                         ? "bg-blue-50 text-[var(--accent)] font-semibold"
@@ -256,7 +275,7 @@ export function Navbar({ settings }: NavbarProps) {
               <div className="pt-4 mt-2 border-t border-slate-100">
                 <Link
                   href={`${basePath}#contact`}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={(e) => handleNavClick(e, "contact")}
                   className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[var(--ink)] text-white text-sm font-semibold shadow-md active:scale-[0.98] transition-all"
                 >
                   <span>Me contacter</span>

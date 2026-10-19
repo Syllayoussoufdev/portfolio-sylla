@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
+import Link from "next/link";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ProjectCard, type ProjectData } from "@/components/ProjectCard";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
-import { Layers, Sparkles } from "lucide-react";
+import { Layers, Sparkles, ArrowUpRight } from "lucide-react";
 
 const CATEGORIES = [
   { id: "all", label: "Toutes les réalisations" },
@@ -15,63 +15,10 @@ const CATEGORIES = [
   { id: "Vidéo", label: "Vidéo & Motion" },
 ];
 
-function TiltCardWrapper({ children }: { children: React.ReactNode }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = cardRef.current;
-    if (!el) return;
-    if (window.matchMedia("(hover: none)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
-
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = ((y - centerY) / centerY) * -6; // max 6 deg
-    const rotateY = ((x - centerX) / centerX) * 6;  // max 6 deg
-
-    gsap.to(el, {
-      rotateX,
-      rotateY,
-      transformPerspective: 1000,
-      ease: "power1.out",
-      duration: 0.3,
-      overwrite: "auto",
-    });
-  };
-
-  const handleMouseLeave = () => {
-    const el = cardRef.current;
-    if (!el) return;
-    gsap.to(el, {
-      rotateX: 0,
-      rotateY: 0,
-      ease: "power2.out",
-      duration: 0.5,
-      overwrite: "auto",
-    });
-  };
-
-  return (
-    <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="h-full will-change-transform"
-      style={{ transformStyle: "preserve-3d" }}
-    >
-      {children}
-    </div>
-  );
-}
-
 export function ProjectsCreatif({ projects }: { projects: ProjectData[] }) {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const gridRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
 
   const filteredProjects = useMemo(() => {
     if (selectedCategory === "all") return projects;
@@ -82,54 +29,99 @@ export function ProjectsCreatif({ projects }: { projects: ProjectData[] }) {
 
       switch (selectedCategory) {
         case "Design":
-          return tagsStr.includes("brand") || tagsStr.includes("graphique") || tagsStr.includes("canva") || tagsStr.includes("design") || tagsStr.includes("figma");
+          return (
+            tagsStr.includes("brand") ||
+            tagsStr.includes("graphique") ||
+            tagsStr.includes("canva") ||
+            tagsStr.includes("design") ||
+            tagsStr.includes("figma")
+          );
         case "Web":
-          return tagsStr.includes("web") || tagsStr.includes("dev") || tagsStr.includes("next") || tagsStr.includes("react") || tagsStr.includes("laravel");
+          return (
+            tagsStr.includes("web") ||
+            tagsStr.includes("dev") ||
+            tagsStr.includes("next") ||
+            tagsStr.includes("react") ||
+            tagsStr.includes("laravel")
+          );
         case "Mobile":
-          return tagsStr.includes("mobile") || tagsStr.includes("ui") || tagsStr.includes("ux");
+          return (
+            tagsStr.includes("mobile") ||
+            tagsStr.includes("ui") ||
+            tagsStr.includes("ux")
+          );
         case "Vidéo":
-          return tagsStr.includes("vidéo") || tagsStr.includes("video") || tagsStr.includes("motion");
+          return (
+            tagsStr.includes("vidéo") ||
+            tagsStr.includes("video") ||
+            tagsStr.includes("motion")
+          );
         default:
-          return tagsStr.includes(selectedCategory.toLowerCase()) || titleDesc.includes(selectedCategory.toLowerCase());
+          return (
+            tagsStr.includes(selectedCategory.toLowerCase()) ||
+            titleDesc.includes(selectedCategory.toLowerCase())
+          );
       }
     });
   }, [projects, selectedCategory]);
 
-  // Point 4 : Apparition échelonnée des cartes (stagger 70ms)
+  // Duplication des cartes pour une boucle infinie continue et fluide
+  const displayProjects = useMemo(() => {
+    if (filteredProjects.length === 0) return [];
+    if (filteredProjects.length < 4) {
+      return [
+        ...filteredProjects,
+        ...filteredProjects,
+        ...filteredProjects,
+        ...filteredProjects,
+      ];
+    }
+    return [...filteredProjects, ...filteredProjects];
+  }, [filteredProjects]);
+
+  // Défilement automatique continu en boucle avec GSAP
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
     const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (isReduced || !gridRef.current) return;
+    if (isReduced || !trackRef.current || displayProjects.length === 0) return;
 
-    const cards = gridRef.current.children;
-    if (cards.length === 0) return;
+    const track = trackRef.current;
+    gsap.set(track, { xPercent: 0 });
 
-    gsap.fromTo(
-      cards,
-      { opacity: 0, y: 30 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.07,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: gridRef.current,
-          start: "top 85%",
-          toggleActions: "play none none none",
-        },
-      }
-    );
-  }, [selectedCategory]);
+    // Durée proportionnelle au nombre de projets (environ 4s par carte visible)
+    const duration = Math.max(22, (displayProjects.length / 2) * 4.5);
+
+    const tween = gsap.to(track, {
+      xPercent: -50,
+      ease: "none",
+      duration,
+      repeat: -1,
+    });
+    tweenRef.current = tween;
+
+    return () => {
+      tween.kill();
+    };
+  }, [displayProjects]);
+
+  // Mettre en pause le défilement au survol de la souris
+  const handleMouseEnter = () => {
+    tweenRef.current?.pause();
+  };
+
+  const handleMouseLeave = () => {
+    tweenRef.current?.play();
+  };
 
   return (
-    <section id="projets" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24 relative text-[#0F172A]">
-      {/* Orbe lumineuse bleue */}
+    <section
+      id="projets"
+      className="py-24 max-w-7xl mx-auto scroll-mt-24 relative text-[#0F172A] overflow-hidden"
+    >
+      {/* Orbe lumineuse bleue en arrière-plan */}
       <div className="absolute top-1/3 left-[-40px] w-80 h-80 rounded-full bg-[#2563EB] opacity-15 blur-[120px] pointer-events-none -z-10" />
 
       {/* En-tête de section Créatif */}
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+      <div className="px-4 sm:px-6 flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
         <div className="space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass border border-white/80 shadow-2xs text-xs font-semibold text-[#0F172A]">
             <Sparkles className="w-3.5 h-3.5 text-[#F97316]" />
@@ -154,8 +146,8 @@ export function ProjectsCreatif({ projects }: { projects: ProjectData[] }) {
         </div>
       </div>
 
-      {/* Filtres Créatifs en Verre avec Accent Orange/Bleu */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-10 -mx-4 px-4 sm:mx-0 sm:px-0">
+      {/* Filtres Créatifs en Verre */}
+      <div className="px-4 sm:px-6 flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-8">
         {CATEGORIES.map((cat) => {
           const isActive = selectedCategory === cat.id;
 
@@ -176,29 +168,68 @@ export function ProjectsCreatif({ projects }: { projects: ProjectData[] }) {
         })}
       </div>
 
-      {/* Grille des cartes avec 3D Tilt individuel */}
+      {/* CAROUSEL HORIZONTAL À DÉFILEMENT AUTOMATIQUE */}
       {filteredProjects.length === 0 ? (
-        <div className="glass p-12 text-center rounded-3xl border border-white max-w-md mx-auto">
-          <div className="w-12 h-12 rounded-2xl bg-orange-50 text-[#F97316] flex items-center justify-center mx-auto mb-3">
-            <Layers className="w-6 h-6" />
+        <div className="px-4 sm:px-6">
+          <div className="glass p-12 text-center rounded-3xl border border-white max-w-md mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-orange-50 text-[#F97316] flex items-center justify-center mx-auto mb-3">
+              <Layers className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-bold text-[#0F172A]">
+              Aucun projet dans cette catégorie
+            </h3>
+            <p className="text-xs text-[#64748B] mt-1">
+              Sélectionnez un autre filtre ou consultez tous les projets.
+            </p>
           </div>
-          <h3 className="text-base font-bold text-[#0F172A]">Aucun projet dans cette catégorie</h3>
-          <p className="text-xs text-[#64748B] mt-1">Sélectionnez un autre filtre ou consultez tous les projets.</p>
         </div>
       ) : (
-        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project) => (
-            <TiltCardWrapper key={project.id}>
-              <SpotlightCard
-                spotlightColor="rgba(37, 99, 235, 0.18)"
-                className="h-full rounded-2xl border border-white/60 bg-white/70 backdrop-blur-md shadow-md hover:shadow-xl"
-              >
-                <ProjectCard project={project} />
-              </SpotlightCard>
-            </TiltCardWrapper>
-          ))}
+        <div
+          className="relative py-4 select-none group/carousel"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {/* Dégradés latéraux pour fondu cinématique */}
+          <div className="absolute inset-y-0 left-0 w-12 sm:w-24 bg-gradient-to-r from-[#F9FAFB] to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-12 sm:w-24 bg-gradient-to-l from-[#F9FAFB] to-transparent z-10 pointer-events-none" />
+
+          {/* Piste défilante en continu */}
+          <div className="overflow-hidden">
+            <div
+              ref={trackRef}
+              className="flex gap-5 sm:gap-6 w-max px-4 sm:px-6 will-change-transform"
+            >
+              {displayProjects.map((project, idx) => (
+                <div
+                  key={`${project.id}-${idx}`}
+                  className="w-[280px] sm:w-[320px] shrink-0 transform transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <SpotlightCard
+                    spotlightColor="rgba(37, 99, 235, 0.18)"
+                    className="h-full rounded-2xl border border-white/80 bg-white/80 backdrop-blur-md shadow-md hover:shadow-xl transition-shadow"
+                  >
+                    <ProjectCard project={project} />
+                  </SpotlightCard>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
+
+      {/* BOUTON FLOTTANT "VOIR TOUS LES PROJETS" */}
+      <div className="mt-8 flex justify-center px-4 relative z-20">
+        <Link
+          href="/projets"
+          className="group inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[#0F172A] hover:bg-[#2563EB] active:scale-95 text-white font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-xl shadow-slate-900/15 hover:shadow-blue-600/30 border border-white/20 hover:-translate-y-0.5 cursor-pointer"
+        >
+          <span>Voir tous les projets</span>
+          <span className="px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-mono font-medium">
+            {projects.length}
+          </span>
+          <ArrowUpRight className="w-4 h-4 text-white/80 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+        </Link>
+      </div>
     </section>
   );
 }

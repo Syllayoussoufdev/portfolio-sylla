@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { MediaUploader, type UploadedMedia } from "@/components/admin/MediaUploader";
-import { normalizeImageUrl } from "@/lib/media-url";
+import { normalizeImageUrl, isGoogleDriveUrl } from "@/lib/media-url";
 
 export interface MediaWithUsage {
   id: string;
@@ -49,6 +49,7 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
   const [urlSubmitting, setUrlSubmitting] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [urlImgError, setUrlImgError] = useState(false);
   const [errorNotice, setErrorNotice] = useState<string | null>(null);
   const [successNotice, setSuccessNotice] = useState<string | null>(null);
 
@@ -238,7 +239,10 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
                 <input
                   type="url"
                   value={urlInput}
-                  onChange={(e) => setUrlInput(e.target.value)}
+                  onChange={(e) => {
+                    setUrlInput(e.target.value);
+                    setUrlImgError(false);
+                  }}
                   placeholder="https://images.unsplash.com/... ou URL d'image"
                   className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
                 />
@@ -289,15 +293,26 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
             {/* Aperçu */}
             <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-3 bg-slate-50/50 aspect-video max-h-48 overflow-hidden">
               {urlInput.trim() ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={urlInput.trim()}
-                  alt={urlAltInput || "Aperçu"}
-                  className="w-full h-full object-contain"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = "none";
-                  }}
-                />
+                urlImgError ? (
+                  <div className="p-3 text-center text-amber-700 flex flex-col items-center justify-center gap-1.5">
+                    <AlertCircle className="w-5 h-5 text-amber-600" />
+                    <p className="text-[11px] font-semibold">Image inaccessible</p>
+                    <p className="text-[10px] text-slate-500 leading-snug">
+                      {isGoogleDriveUrl(urlInput)
+                        ? "Vérifiez que ce fichier Google Drive est partagé sur « Tous les utilisateurs disposant du lien »."
+                        : "Le lien ne renvoie pas une image valide."}
+                    </p>
+                  </div>
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={normalizeImageUrl(urlInput.trim())}
+                    alt={urlAltInput || "Aperçu"}
+                    className="w-full h-full object-contain"
+                    onError={() => setUrlImgError(true)}
+                    onLoad={() => setUrlImgError(false)}
+                  />
+                )
               ) : (
                 <div className="text-center text-slate-400 text-xs">
                   <ImageIcon className="w-6 h-6 mx-auto mb-1 opacity-50" />

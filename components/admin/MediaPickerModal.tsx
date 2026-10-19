@@ -40,6 +40,7 @@ export function MediaPickerModal({
   const [urlAltInput, setUrlAltInput] = useState("");
   const [urlSubmitting, setUrlSubmitting] = useState(false);
   const [urlError, setUrlError] = useState<string | null>(null);
+  const [urlImageError, setUrlImageError] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -300,7 +301,10 @@ export function MediaPickerModal({
                   <input
                     type="url"
                     value={urlInput}
-                    onChange={(e) => setUrlInput(e.target.value)}
+                    onChange={(e) => {
+                      setUrlInput(e.target.value);
+                      setUrlImageError(false);
+                    }}
                     placeholder="https://drive.google.com/file/d/... ou https://..."
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
                   />
@@ -332,15 +336,26 @@ export function MediaPickerModal({
                       Aperçu en direct
                     </span>
                     <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video max-h-48 flex items-center justify-center">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={normalizedInputUrl}
-                        alt={urlAltInput || "Prévisualisation"}
-                        onError={(e) => {
-                          (e.target as HTMLElement).style.display = "none";
-                        }}
-                        className="w-full h-full object-contain"
-                      />
+                      {urlImageError ? (
+                        <div className="p-4 text-center text-amber-200 flex flex-col items-center justify-center gap-1.5 max-w-sm">
+                          <AlertCircle className="w-6 h-6 text-amber-400" />
+                          <p className="text-xs font-semibold text-white">Impossible d&apos;afficher l&apos;image</p>
+                          <p className="text-[11px] text-slate-300 leading-snug">
+                            {isDriveLink
+                              ? "Ce fichier Google Drive est privé ou bloqué par Google. Assurez-vous que l'accès général est configuré sur « Tous les utilisateurs disposant du lien » (Lecteur) dans Google Drive."
+                              : "Ce lien ne renvoie pas une image valide ou bloque l'affichage direct."}
+                          </p>
+                        </div>
+                      ) : (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                          src={normalizedInputUrl}
+                          alt={urlAltInput || "Prévisualisation"}
+                          onError={() => setUrlImageError(true)}
+                          onLoad={() => setUrlImageError(false)}
+                          className="w-full h-full object-contain"
+                        />
+                      )}
                     </div>
                   </div>
                 )}

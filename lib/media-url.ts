@@ -37,9 +37,11 @@ export function normalizeImageUrl(rawUrl: string): string {
   return trimmed;
 }
 
-/**
- * Indique si une URL semble provenir de Google Drive
- */
 export function isGoogleDriveUrl(url: string): boolean {
-  return typeof url === "string" && url.includes("drive.google.com");
+  if (!url || typeof url !== "string") return false;
+  return (
+    url.includes("drive.google.com") ||
+    url.includes("googleusercontent.com/d/") ||
+    url.includes("drive.google.com/thumbnail")
+  );
 }

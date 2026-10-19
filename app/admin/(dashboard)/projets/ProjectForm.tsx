@@ -22,7 +22,7 @@ import {
 import { GithubIcon, FigmaIcon } from "@/components/icons";
 import { MediaPickerModal } from "@/components/admin/MediaPickerModal";
 import { type UploadedMedia } from "@/components/admin/MediaUploader";
-import { normalizeImageUrl } from "@/lib/media-url";
+import { normalizeImageUrl, isGoogleDriveUrl } from "@/lib/media-url";
 
 interface ProjectFormProps {
   initialData?: {
@@ -104,6 +104,7 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
   const [coverImageUrl, setCoverImageUrl] = useState(
     initialData?.coverImage || initialData?.coverMedia?.url || ""
   );
+  const [coverImageError, setCoverImageError] = useState(false);
 
   // Gestion Galerie ordonnée (ProjectMedia)
   const [galleryItems, setGalleryItems] = useState<{
@@ -142,6 +143,7 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
         alt: media.alt,
       });
       setCoverImageUrl(media.url);
+      setCoverImageError(false);
     } else {
       if (!galleryItems.some((item) => item.id === media.id)) {
         setGalleryItems([...galleryItems, { id: media.id, url: media.url, alt: media.alt }]);
@@ -152,6 +154,7 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
   const removeCover = () => {
     setCoverMedia(null);
     setCoverImageUrl("");
+    setCoverImageError(false);
   };
 
   const moveGalleryItem = (index: number, direction: "up" | "down") => {
@@ -346,14 +349,28 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
           {/* Aperçu de la couverture */}
           {coverMedia || coverImageUrl ? (
             <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 aspect-video max-h-72 flex items-center justify-center group">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={coverMedia?.url || coverImageUrl}
-                alt={coverMedia?.alt || "Image de couverture"}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 p-4 flex flex-col justify-between">
-                <div className="flex justify-end gap-2">
+              {coverImageError ? (
+                <div className="p-6 text-center text-amber-200 flex flex-col items-center justify-center gap-2 max-w-md">
+                  <AlertCircle className="w-8 h-8 text-amber-400" />
+                  <p className="text-xs font-semibold text-white">Impossible d&apos;afficher l&apos;image</p>
+                  <p className="text-[11px] text-slate-300 leading-relaxed">
+                    {isGoogleDriveUrl(coverMedia?.url || coverImageUrl)
+                      ? "Ce lien Google Drive est privé ou bloqué. Assurez-vous que le fichier est partagé sur « Tous les utilisateurs disposant du lien » (accès public), ou utilisez un hébergeur d'images direct (ex: ImgBB, Unsplash)."
+                      : "Le lien ne renvoie pas un flux d'image valide ou le serveur d'hébergement bloque l'affichage externe."}
+                  </p>
+                </div>
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={coverMedia?.url || coverImageUrl}
+                  alt={coverMedia?.alt || "Image de couverture"}
+                  className="w-full h-full object-cover"
+                  onError={() => setCoverImageError(true)}
+                  onLoad={() => setCoverImageError(false)}
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 p-4 flex flex-col justify-between pointer-events-none">
+                <div className="flex justify-end gap-2 pointer-events-auto">
                   <button
                     type="button"
                     onClick={openPickerForCover}
@@ -408,6 +425,7 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
                   const normalized = normalizeImageUrl(e.target.value);
                   setCoverImageUrl(normalized);
                   setCoverMedia(null);
+                  setCoverImageError(false);
                 }}
                 placeholder="https://images.unsplash.com/... ou lien Google Drive"
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]"

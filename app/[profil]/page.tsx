@@ -116,6 +116,12 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
       data-accent={profile.accent}
       className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col selection:bg-blue-100 selection:text-blue-900 transition-colors duration-300"
     >
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[10000] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:shadow-xl focus:rounded-lg focus:font-medium focus:outline-none"
+      >
+        Aller au contenu principal
+      </a>
       {profile.template === "immersif" && <ImmersiveCursor />}
       <Navbar
         settings={settings}
@@ -123,7 +129,7 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
         slug={slug}
         template={profile.template}
       />
-      <main className="flex-1">
+      <main id="main-content" role="main" tabIndex={-1} className="flex-1 outline-none">
         {sortedSections.map((sec) => (
           <SectionRenderer
             key={sec.key}

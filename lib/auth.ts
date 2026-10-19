@@ -3,9 +3,22 @@ import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 
 const COOKIE_NAME = "admin_session";
-const SECRET_KEY = new TextEncoder().encode(
-  process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET || "default_fallback_secret_change_me_in_env_32chars"
-);
+
+function getJwtSecret(): Uint8Array {
+  const secret = process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "Sécurité critique : AUTH_SECRET ou NEXTAUTH_SECRET doit être défini en production avec au moins 32 caractères."
+      );
+    }
+    return new TextEncoder().encode("dev_local_secret_only_for_testing_purposes_min_32_chars");
+  }
+  if (secret.length < 32 && process.env.NODE_ENV === "production") {
+    throw new Error("Sécurité critique : AUTH_SECRET doit comporter au moins 32 caractères.");
+  }
+  return new TextEncoder().encode(secret);
+}
 
 export interface AdminSession {
   email: string;
@@ -21,7 +34,7 @@ export async function signSessionToken(payload: AdminSession): Promise<string> {
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
-    .sign(SECRET_KEY);
+    .sign(getJwtSecret());
 }
 
 /**
@@ -29,7 +42,7 @@ export async function signSessionToken(payload: AdminSession): Promise<string> {
  */
 export async function verifySessionToken(token: string): Promise<AdminSession | null> {
   try {
-    const { payload } = await jwtVerify(token, SECRET_KEY, {
+    const { payload } = await jwtVerify(token, getJwtSecret(), {
       algorithms: ["HS256"],
     });
     return payload as unknown as AdminSession;

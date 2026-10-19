@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { getDefaultProfile, getSiteSettings } from "@/lib/profiles";
 import { getSkillsForSubPortfolio } from "@/lib/skills";
+import { getParcours } from "@/lib/parcours";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SectionRenderer } from "@/components/SectionRenderer";
@@ -20,9 +21,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [profile, settings] = await Promise.all([
+  const [profile, settings, parcoursItems] = await Promise.all([
     getDefaultProfile(),
     getSiteSettings(),
+    getParcours("default"),
   ]);
 
   const skillCategories = await getSkillsForSubPortfolio(profile.subPortfolioId);
@@ -82,6 +84,7 @@ export default async function HomePage() {
             template={profile.template}
             variables={profile.variables as Record<string, unknown>}
             skillCategories={skillCategories}
+            parcoursItems={parcoursItems}
           />
         ))}
       </main>

@@ -24,6 +24,7 @@ import type { MediaData, SiteSettingsData } from "@/lib/profiles";
 import type { ProjectData } from "./ProjectCard";
 
 import type { SkillCategoryWithSkills } from "@/lib/skills";
+import type { ParcoursItemData } from "@/lib/parcours";
 
 interface SectionRendererProps {
   sectionKey: SectionKey;
@@ -34,6 +35,7 @@ interface SectionRendererProps {
   template?: string;
   variables?: Record<string, unknown> | null;
   skillCategories?: SkillCategoryWithSkills[];
+  parcoursItems?: ParcoursItemData[];
 }
 
 export function SectionRenderer({
@@ -45,6 +47,7 @@ export function SectionRenderer({
   template = "creatif",
   variables,
   skillCategories,
+  parcoursItems,
 }: SectionRendererProps) {
   switch (sectionKey) {
     case "hero": {
@@ -122,7 +125,7 @@ export function SectionRenderer({
     }
 
     case "parcours":
-      return <ParcoursSection />;
+      return <ParcoursSection items={parcoursItems} />;
 
     case "contact":
       return <ContactSection settings={settings} />;

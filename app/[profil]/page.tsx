@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { isReservedSlug } from "@/lib/constants/reserved-slugs";
 import { getProfileBySlug, getSiteSettings } from "@/lib/profiles";
 import { getSkillsForSubPortfolio } from "@/lib/skills";
+import { getParcours } from "@/lib/parcours";
 import { prisma } from "@/lib/prisma";
 import { trackVisit } from "@/lib/analytics";
 import { Navbar } from "@/components/Navbar";
@@ -66,9 +67,10 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
     // Ignorer silencieusement si la base est temporairement inaccessible
   }
 
-  const [settings, skillCategories] = await Promise.all([
+  const [settings, skillCategories, parcoursItems] = await Promise.all([
     getSiteSettings(),
     getSkillsForSubPortfolio(profile.subPortfolioId),
+    getParcours(slug),
   ]);
 
   // Extraction des projets : soit depuis le sous-portfolio rattaché, soit tous les projets visibles (tolérance aux pannes)
@@ -126,6 +128,7 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
             template={profile.template}
             variables={profile.variables as Record<string, unknown>}
             skillCategories={skillCategories}
+            parcoursItems={parcoursItems}
           />
         ))}
       </main>

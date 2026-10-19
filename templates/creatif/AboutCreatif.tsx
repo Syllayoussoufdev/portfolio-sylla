@@ -98,22 +98,22 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
 
   const pillars = [
     {
-      title: "1. Direction Artistique & Graphisme",
-      desc: "Chartes graphiques mémorables, typographies tranchées et identités visuelles conçues sous Figma et Canva.",
+      title: "1. Concevoir vos visuels & votre identité",
+      desc: "Création de chartes graphiques mémorables, affiches, flyers, supports de communication et maquettes Figma UI/UX soignées.",
       icon: Palette,
       color: "#F97316",
     },
     {
-      title: "2. Ingénierie Logicielle & Web",
-      desc: "Développement fullstack moderne (Next.js, React, Tailwind, Laravel) optimisé pour la vitesse et le SEO.",
-      icon: Code2,
-      color: "#2563EB",
+      title: "2. Piloter & produire vos contenus",
+      desc: "Stratégie de communication digitale, animation éditoriale, publications pour réseaux sociaux et visuels renforcés par l'IA.",
+      icon: Sparkles,
+      color: "#8B5CF6",
     },
     {
-      title: "3. Finition Soignée & Effets Vivants",
-      desc: "Verre givré, micro-interactions, mouvement fluide et textures visuelles qui font vibrer chaque écran.",
-      icon: Rocket,
-      color: "#8B5CF6",
+      title: "3. Construire votre site ou plateforme",
+      desc: "Développement d'applications web modernes et réactives (Next.js, React, Laravel, PostgreSQL), performantes et prêtes pour la production.",
+      icon: Code2,
+      color: "#2563EB",
     },
   ];
 

@@ -157,6 +157,8 @@ model Profile {
   hero           Json                                // Structuré et validé par Zod
   sections       Json                                // Ordre et visibilité : [{ key, visible, order }]
   variables      Json?         @default("{}")        // Variables additionnelles
+  variants       Json?                               // Variantes de section par template (ex: split, mur, frise)
+  about          Json?                               // Sections À propos personnalisées
   seoTitle       String?
   seoDescription String?       @db.Text
   heroMediaId    String?
@@ -183,6 +185,7 @@ model SiteSettings {
   metier      String?                           // Ligne de métier sous le logo
   emailPublic String?                           // Optionnel (rien n'est affiché si non renseigné)
   whatsapp    String?                           // Optionnel
+  cvUrl       String?                           // Lien externe vers le CV (optionnel, bouton masqué si vide)
   github      String?
   linkedin    String?
   twitter     String?
@@ -248,3 +251,37 @@ model SubPortfolioSkillCategory {
   @@index([categoryId])
 }
 
+// ----------------------------------------------------
+// 10. Parcours & Évolutions (Formations, Expériences, Certifications)
+// ----------------------------------------------------
+enum ParcoursType {
+  formation
+  experience
+  certification
+}
+
+model ParcoursItem {
+  id          String       @id @default(cuid())
+  type        ParcoursType @default(formation)
+  titre       String
+  organisme   String
+  lieu        String?
+  anneeDebut  Int
+  moisDebut   Int?
+  anneeFin    Int?
+  moisFin     Int?
+  enCours     Boolean      @default(false)
+  description String?      @db.Text
+  tags        String[]
+  badge       String?
+  url         String?      // Lien de vérification officiel (Coursera, Cisco, Google, etc.)
+  visible     Boolean      @default(true)
+  ordre       Int          @default(0)
+  profilSlugs String[]     // vide = affiché sur tous les profils
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([type])
+  @@index([visible])
+  @@index([ordre])
+}

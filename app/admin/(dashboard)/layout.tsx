@@ -15,6 +15,7 @@ import {
   LogOut,
   Sparkles,
   Cpu,
+  GraduationCap,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -97,6 +98,14 @@ export default async function AdminDashboardLayout({
             >
               <Cpu className="w-4 h-4 text-[#F97316]" />
               <span>Compétences &amp; Outils</span>
+            </Link>
+
+            <Link
+              href="/admin/parcours"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-[#475569] hover:bg-slate-100/80 hover:text-[#2563EB] transition-colors"
+            >
+              <GraduationCap className="w-4 h-4 text-[#2563EB]" />
+              <span>Parcours &amp; Évolutions</span>
             </Link>
 
             <Link

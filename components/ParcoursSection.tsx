@@ -80,7 +80,16 @@ interface ParcoursSectionProps {
 }
 
 export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
-  const [activeTab, setActiveTab] = useState<FilterTab>("all");
+  // Par défaut sur "experience" (Expériences professionnelles), repli sur "formation" si aucune
+  const initialTab = useMemo<FilterTab>(() => {
+    const hasExp = items.some((i) => i.type === "experience");
+    if (hasExp) return "experience";
+    const hasFormation = items.some((i) => i.type === "formation");
+    if (hasFormation) return "formation";
+    return "experience";
+  }, [items]);
+
+  const [activeTab, setActiveTab] = useState<FilterTab>(initialTab);
 
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -188,10 +197,10 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
   }, [displayedMilestones]);
 
   const tabs: { key: FilterTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-    { key: "all", label: "Tous les jalons", icon: Compass },
-    { key: "experience", label: "Expériences", icon: Briefcase },
+    { key: "experience", label: "Expériences pro", icon: Briefcase },
     { key: "formation", label: "Formations", icon: GraduationCap },
     { key: "certification", label: "Certifications", icon: Award },
+    { key: "all", label: "Tous les jalons", icon: Compass },
   ];
 
   return (

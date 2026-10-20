@@ -98,20 +98,20 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
 
   const pillars = [
     {
-      title: "1. Concevoir vos visuels & votre identité",
-      desc: "Création de chartes graphiques mémorables, affiches, flyers, supports de communication et maquettes Figma UI/UX soignées.",
+      title: "1. Identité visuelle & Supports de communication",
+      desc: "Création de chartes graphiques complètes, affiches, flyers, bannières et maquettes d'interfaces Figma UI/UX conçues pour professionnaliser l'image de votre marque.",
       icon: Palette,
       color: "#F97316",
     },
     {
-      title: "2. Piloter & produire vos contenus",
-      desc: "Stratégie de communication digitale, animation éditoriale, publications pour réseaux sociaux et visuels renforcés par l'IA.",
+      title: "2. Stratégie de contenu & Visibilité",
+      desc: "Production de visuels percutants, animation de vos réseaux et supports marketing ciblés pour capter l'attention de vos prospects et valoriser votre offre.",
       icon: Sparkles,
       color: "#8B5CF6",
     },
     {
-      title: "3. Construire votre site ou plateforme",
-      desc: "Développement d'applications web modernes et réactives (Next.js, React, Laravel, PostgreSQL), performantes et prêtes pour la production.",
+      title: "3. Conception & Développement web",
+      desc: "Sites vitrines et applications web modernes (Next.js, React, Laravel), rapides, sécurisés et optimisés pour le référencement naturel et la conversion.",
       icon: Code2,
       color: "#2563EB",
     },
@@ -152,7 +152,7 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
                 <p className="text-xs text-[#64748B] font-mono">{displayMetier}</p>
               </div>
               <span className="font-caveat text-base text-[#F97316] font-bold">
-                Double casquette ✌️
+                De l'idée au déploiement
               </span>
             </div>
           </div>
@@ -166,13 +166,11 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
           </div>
 
           <h2 className="about-reveal font-bebas text-4xl sm:text-5xl lg:text-6xl tracking-wide text-[#0F172A] leading-tight">
-            ALLIER LA BEAUTÉ VISUELLE À LA RIGUEUR LOGICIELLE.
+            CRÉER DES SUPPORTS QUI MARQUENT ET DES SITES QUI CONVERTISSENT.
           </h2>
 
           <p className="about-reveal text-base text-[#475569] leading-relaxed">
-            Je refuse de choisir entre créativité expressive et rigueur d&apos;ingénierie.
-            Chaque projet est pensé comme une pièce d&apos;art fonctionnelle : impact visuel immédiat,
-            ergonomie soignée et architecture logicielle robuste.
+            Pour développer votre activité, votre image et vos outils digitaux doivent inspirer confiance dès le premier regard. Je conçois des supports visuels professionnels et développe des sites rapides, fiables et pensés pour transformer vos visiteurs en clients.
           </p>
 
           {/* Les 3 piliers créatifs en cartes de verre interactives */}

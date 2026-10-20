@@ -281,7 +281,7 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
         <div className="space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#FF2A14] text-xs font-mono font-medium tracking-wider uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-[#FF2A14]" />
-            <span>[ 02 · MES RÉALISATIONS &amp; ESSAIS ]</span>
+            <span>[ 02 · SÉLECTION DE RÉALISATIONS ]</span>
           </div>
 
           <h2 className="font-syne text-3xl sm:text-5xl font-extrabold tracking-tight text-white uppercase leading-tight">
@@ -289,7 +289,7 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
           </h2>
 
           <p className="text-xs sm:text-sm font-mono text-zinc-400 max-w-2xl leading-relaxed">
-            Vidéos courtes, projets de films, exercices de montage et réalisations en cours d&apos;apprentissage.
+            Vidéos courtes pour réseaux sociaux, contenus promotionnels, clips et créations audiovisuelles percutantes.
           </p>
         </div>
 

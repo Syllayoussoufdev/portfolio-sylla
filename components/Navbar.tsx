@@ -98,7 +98,7 @@ export function Navbar({ settings, sections, slug }: NavbarProps) {
     }
 
     return {
-      label: "Collaborer avec moi",
+      label: "Discuter d'un projet",
       href: `${basePath}#contact`,
       isExternal: false,
       icon: ArrowRight,

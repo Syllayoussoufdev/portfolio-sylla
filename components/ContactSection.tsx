@@ -96,8 +96,7 @@ export function ContactSection({ settings }: ContactSectionProps) {
           </h2>
 
           <p className="text-sm sm:text-base text-[var(--muted)] leading-relaxed">
-            Vous recherchez une collaboration pour concevoir une application, renforcer votre équipe
-            ou concrétiser une idée numérique ? Transmettez-moi les détails de votre besoin.
+            Un besoin en communication, une refonte de site ou une création de visuels ? Échangeons directement sur vos objectifs pour concevoir une solution adaptée et orientée résultats.
           </p>
 
           {/* Cartes de contact rapide (affichées uniquement si configurées) */}

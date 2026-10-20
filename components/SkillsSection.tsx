@@ -163,8 +163,8 @@ export function SkillsSection({ categories = [] }: SkillsSectionProps) {
       icon: ShieldCheck,
     },
     {
-      title: "Créativité Technologique",
-      description: "Passerelle naturelle entre le design visuel et l'implémentation logicielle.",
+      title: "Orientation Résultats",
+      description: "Des solutions conçues pour convertir, renforcer votre visibilité et valoriser votre marque.",
       icon: Cpu,
     },
   ];

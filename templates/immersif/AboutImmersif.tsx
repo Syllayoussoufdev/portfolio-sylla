@@ -111,7 +111,7 @@ export function AboutImmersif({ settings }: AboutImmersifProps) {
           </h2>
         </div>
         <p className="text-xs font-mono text-zinc-400 max-w-xs leading-relaxed">
-          Débutant motivé en montage vidéo, passionné par la narration et le pouvoir des images en mouvement.
+          Créateur vidéo &amp; monteur, je produis des contenus rythmés et dynamiques pour renforcer votre communication.
         </p>
       </div>
 
@@ -137,7 +137,7 @@ export function AboutImmersif({ settings }: AboutImmersifProps) {
               {displayName}
             </h3>
             <p className="text-xs font-mono text-zinc-300">
-              « Chaque nouveau projet est un terrain d&apos;exercice pour aiguiser mon regard et progresser. »
+              « L&apos;attention se joue dans les premières secondes : chaque plan, chaque coupe et chaque transition doit servir votre objectif. »
             </p>
           </div>
         </div>
@@ -154,10 +154,10 @@ export function AboutImmersif({ settings }: AboutImmersifProps) {
               01
             </span>
             <h3 className="font-syne text-2xl sm:text-3xl font-bold leading-tight max-w-lg">
-              Apprendre, expérimenter et donner une âme à chaque montage.
+              Donner du rythme et de l'impact à vos messages vidéo.
             </h3>
             <p className="text-xs sm:text-sm font-mono text-white/90 leading-relaxed max-w-md">
-              Je construis mes compétences pas à pas : assembler les rushs avec soin, équilibrer les coupes, soigner le son et raconter une histoire simple et captivante.
+              Un montage précis et dynamique : éliminer les temps morts, caler les coupes sur le tempo sonore, soigner les transitions et maintenir l'attention de vos spectateurs jusqu'au bout.
             </p>
           </div>
 

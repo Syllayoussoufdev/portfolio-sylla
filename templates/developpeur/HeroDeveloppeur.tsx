@@ -64,13 +64,13 @@ export function HeroDeveloppeur({
 
   const headline =
     hero?.headline ||
-    "Je développe des applications web et mobiles, avec un vrai soin du design.";
+    "Je conçois et déploie des applications web robustes qui font tourner votre business";
   const subline =
     hero?.subline ||
-    "Développeur web et mobile · Laravel · React · Next.js · PostgreSQL. Ma formation en design et en produits IA affine chaque interface.";
+    "Du backend solide aux interfaces qui convertissent — architectures fiables, code maintenable et performance mesurable.";
 
   const primaryCta = hero?.ctaPrimary || {
-    label: "Discutons de votre projet",
+    label: "Discuter de votre projet",
     href: "#contact",
   };
   const secondaryCta = hero?.ctaSecondary || {
@@ -150,7 +150,7 @@ export function HeroDeveloppeur({
           {/* Tagline / Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-slate-200 text-xs font-semibold text-[#0B1B3A] shadow-xs">
             <span className="w-2 h-2 rounded-full bg-[#2F5BFF] animate-pulse" />
-            <span>Développement Logiciel · Soin du Design &amp; IA</span>
+            <span>Applications Web Robustes · Performance &amp; Conversion</span>
           </div>
 
           {/* Titre Principal avec effet masque montant par mot */}
@@ -173,7 +173,7 @@ export function HeroDeveloppeur({
               {subline}
             </p>
             <p className="text-sm text-[#475569] leading-relaxed max-w-2xl">
-              De l&apos;architecture back-end à l&apos;ergonomie front-end, je construis des applications stables, modulaires et soignées, où chaque détail d&apos;interface bénéficie d&apos;un vrai regard graphique.
+              De l&apos;architecture back-end aux interfaces réactives, je développe des solutions logicielles stables et véloces, pensées pour soutenir l&apos;activité de votre entreprise et offrir un parcours fluide à vos utilisateurs.
             </p>
           </div>
 

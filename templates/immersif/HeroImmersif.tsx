@@ -20,11 +20,11 @@ const TICKER_ITEMS = [
   "MONTAGE VIDÉO",
   "RYTHME & TEMPO",
   "NARRATION VISUELLE",
-  "PASSION CINÉMA",
-  "STORYTELLING",
   "FORMATS COURTS",
-  "PROJETS DE FILMS",
-  "CADRAGE & DÉCOUPE",
+  "REELS & TIKTOK",
+  "MOTION DESIGN",
+  "ENGAGEMENT AUDIENCE",
+  "MONTAGE DYNAMIQUE",
 ];
 
 export function HeroImmersif({
@@ -39,17 +39,17 @@ export function HeroImmersif({
   const statementRef = useRef<HTMLDivElement>(null);
   const tickerRef = useRef<HTMLDivElement>(null);
 
-  const headline = hero?.headline || "Des images qui vibrent,\nun récit qui captive.";
+  const headline = hero?.headline || "Je capte l’attention en quelques secondes";
   const subline =
     hero?.subline ||
-    "Monteur vidéo débutant et passionné, j'explore le rythme, la narration et le montage dynamique à travers mes premiers projets et créations visuelles.";
+    "Contenus vidéo et motion design qui engagent votre audience et valorisent votre message.";
 
   const primaryCta = hero?.ctaPrimary || {
-    label: "Voir mes projets vidéo",
+    label: "Voir mes réalisations vidéo",
     href: "#projets",
   };
   const secondaryCta = hero?.ctaSecondary || {
-    label: "Me contacter",
+    label: "Proposer un projet vidéo",
     href: "#contact",
   };
 

@@ -12,15 +12,15 @@ export const FALLBACK_DEFAULT_PROFILE = {
   template: "creatif",
   accent: "default",
   hero: {
-    headline: "Communication digitale, création visuelle et développement web, au même endroit.",
-    subline: "Chargé de communication digitale polyvalent : stratégie, contenus, visuels, et la plateforme web pour les porter.",
-    tagline: "Stratégie, contenus & développement web",
+    headline: "Communication digitale, création visuelle et développement web",
+    subline: "Je prends en charge votre présence en ligne de A à Z : identité visuelle, contenus percutants et site web optimisé pour convertir.",
+    tagline: "Présence en ligne de A à Z",
     ctaPrimary: {
       label: "Voir mes réalisations",
       href: "#projets",
     },
     ctaSecondary: {
-      label: "Me contacter",
+      label: "Discuter d'un projet",
       href: "#contact",
     },
     media: {
@@ -37,9 +37,9 @@ export const FALLBACK_DEFAULT_PROFILE = {
     { key: "contact", visible: true, order: 5 },
   ] as SectionItem[],
   variables: {},
-  seoTitle: "Sylla Youssouf — Chargé de communication digitale polyvalent",
+  seoTitle: "Sylla Youssouf — Communication Digitale, Création Visuelle & Web",
   seoDescription:
-    "Communication digitale, création visuelle et développement web au même endroit.",
+    "Communication digitale, création visuelle et développement web : je prends en charge votre présence en ligne de A à Z.",
   heroMediaId: null,
   heroMedia: null,
   isDefault: true,

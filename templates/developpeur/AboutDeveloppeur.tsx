@@ -149,18 +149,18 @@ export function AboutDeveloppeur({ settings }: AboutDeveloppeurProps) {
   const designAiPoints = [
     {
       icon: Layout,
-      title: "Interfaces plus soignées",
-      desc: "Typographie nette, hiérarchie visuelle lisible et contrastes scrupuleusement respectés pour une navigation fluide.",
+      title: "Interfaces intuitives & soignées",
+      desc: "Hiérarchie visuelle lisible, parcours utilisateurs fluides et navigation intuitive pour maximiser l'engagement.",
     },
     {
       icon: Palette,
-      title: "Cohérence visuelle",
-      desc: "Composants harmonisés, micro-interactions discrètes et design system partagé sur l'ensemble de l'application.",
+      title: "Cohérence & Design System",
+      desc: "Composants harmonisés, typographie calibrée et architecture modulaire pour faciliter les évolutions futures.",
     },
     {
       icon: Zap,
-      title: "Visuels & contenus produits plus vite avec l'IA",
-      desc: "Itérations accélérées sur les maquettes et génération ciblée d'éléments visuels et d'assets d'accompagnement.",
+      title: "Performance & Optimisation",
+      desc: "Temps de chargement minimisés, SEO technique et sécurité pour garantir une haute disponibilité en production.",
     },
   ];
 
@@ -211,15 +211,15 @@ export function AboutDeveloppeur({ settings }: AboutDeveloppeurProps) {
           <div ref={textColRef} className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200/70 text-[#2F5BFF] text-xs font-semibold">
               <Compass className="w-3.5 h-3.5" />
-              <span>Méthode de Développement &amp; Vision</span>
+              <span>Méthode &amp; Engagement Technique</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0B1B3A] leading-tight">
-              Construire des applications solides, avec la rigueur du code et le soin du design.
+              Construire des applications robustes qui font tourner votre business.
             </h2>
 
             <p className="text-sm sm:text-base text-[#475569] leading-relaxed">
-              Développeur web et mobile, je conçois des plateformes fiables et maintenables. Chaque interface est affinée par ma formation en design graphique et enrichie par les technologies d&apos;intelligence artificielle.
+              Je conçois des solutions logicielles stables, intuitives et adaptées aux besoins réels de votre entreprise. Mon approche associe rigueur architecturale côté backend et fluidité ergonomique côté frontend pour offrir des outils performants qui soutiennent directement votre croissance.
             </p>
           </div>
 

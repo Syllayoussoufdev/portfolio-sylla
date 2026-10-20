@@ -88,7 +88,7 @@ export function SkillsImmersif({ categories = [] }: SkillsImmersifProps) {
             Mes Outils de Création.
           </h2>
           <p className="text-xs sm:text-sm font-mono text-zinc-400 max-w-md leading-relaxed">
-            Les logiciels et outils créatifs que j&apos;utilise et sur lesquels je me perfectionne au fil de mes projets.
+            Une maîtrise opérationnelle de la suite de montage, d&apos;étalonnage et d&apos;habillage graphique pour livrer des contenus prêts à diffuser.
           </p>
         </div>
       </div>

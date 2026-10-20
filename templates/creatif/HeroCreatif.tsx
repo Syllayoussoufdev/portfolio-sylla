@@ -45,16 +45,16 @@ export function HeroCreatif({
   const doodleSparkleRef = useRef<SVGPathElement>(null);
   const marqueeTrackRef = useRef<HTMLDivElement>(null);
 
-  const headline = hero?.headline || "SYLLA PORTFOLIO";
+  const headline = hero?.headline || "Communication digitale, création visuelle et développement web";
   const subline =
     hero?.subline ||
-    "Double casquette Créative & Ingénierie logicielle : identités mémorables et applications web performantes.";
+    "Je prends en charge votre présence en ligne de A à Z : identité visuelle, contenus percutants et site web optimisé pour convertir.";
   const primaryCta = hero?.ctaPrimary || {
     label: "Voir mes projets",
     href: "#projets",
   };
   const secondaryCta = hero?.ctaSecondary || {
-    label: "Me contacter",
+    label: "Discuter d'un projet",
     href: "#contact",
   };
 
@@ -264,18 +264,18 @@ export function HeroCreatif({
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-[92vh] flex flex-col justify-center pt-28 pb-14 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden text-[#0F172A]"
+      className="relative min-h-[85vh] lg:min-h-0 flex flex-col justify-center pt-20 pb-8 sm:pt-24 sm:pb-10 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden text-[#0F172A]"
     >
       {/* 1. Orbes lumineuses d'ambiance vibrantes (Bleu Royal & Orange Vif - DESIGN.md Image 1) */}
       <div className="absolute top-10 left-[-80px] w-96 h-96 rounded-full bg-[#2563EB] opacity-35 blur-[120px] pointer-events-none -z-10" />
       <div className="absolute bottom-10 right-[-60px] w-[420px] h-[420px] rounded-full bg-[#F97316] opacity-30 blur-[130px] pointer-events-none -z-10" />
       <div className="absolute top-1/2 left-1/3 w-72 h-72 rounded-full bg-[#3B82F6] opacity-25 blur-[100px] pointer-events-none -z-10" />
 
-      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center mb-12">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center mb-6">
         {/* Colonne Gauche : Composition Visuelle avec Polaroids, Stickers Y2K & Effets Techno */}
         <div
           ref={leftVisualRef}
-          className="lg:col-span-6 relative flex items-center justify-center min-h-[440px] sm:min-h-[500px]"
+          className="lg:col-span-6 relative flex items-center justify-center min-h-[340px] sm:min-h-[380px] lg:min-h-[400px]"
         >
           {/* Scène 3D Interactive Réactive en Arrière-plan du Portrait */}
           <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none scale-125 opacity-80">
@@ -285,7 +285,7 @@ export function HeroCreatif({
           {/* Polaroid 1 (en haut à gauche, incliné -8deg) */}
           <div
             ref={polaroid1Ref}
-            className="absolute top-2 left-2 sm:left-6 -rotate-8 z-10 p-2 sm:p-2.5 pb-6 sm:pb-8 bg-white rounded-xl shadow-xl shadow-slate-900/10 border border-slate-100 transform hover:rotate-0 hover:scale-105 transition-all duration-300 w-32 sm:w-36 cursor-pointer"
+            className="absolute top-2 left-2 sm:left-6 -rotate-8 z-10 p-2 sm:p-2.5 pb-6 sm:pb-8 bg-white rounded-xl shadow-xl shadow-slate-900/10 border border-slate-100 transform hover:rotate-0 hover:scale-105 transition-all duration-300 w-28 sm:w-32 cursor-pointer"
           >
             <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-slate-900">
               <Image
@@ -297,14 +297,14 @@ export function HeroCreatif({
               />
             </div>
             <span className="font-caveat text-[11px] text-slate-700 block text-center mt-1.5 font-bold">
-              Inspiration ☕
+              Direction artistique 🎨
             </span>
           </div>
 
           {/* Polaroid 2 (en bas à gauche, incliné 6deg) */}
           <div
             ref={polaroid2Ref}
-            className="absolute bottom-4 left-6 sm:left-12 rotate-6 z-10 p-2 sm:p-2.5 pb-6 sm:pb-8 bg-white rounded-xl shadow-xl shadow-slate-900/10 border border-slate-100 transform hover:rotate-0 hover:scale-105 transition-all duration-300 w-32 sm:w-36 cursor-pointer"
+            className="absolute bottom-4 left-6 sm:left-12 rotate-6 z-10 p-2 sm:p-2.5 pb-6 sm:pb-8 bg-white rounded-xl shadow-xl shadow-slate-900/10 border border-slate-100 transform hover:rotate-0 hover:scale-105 transition-all duration-300 w-28 sm:w-32 cursor-pointer"
           >
             <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-slate-800">
               <Image
@@ -316,14 +316,14 @@ export function HeroCreatif({
               />
             </div>
             <span className="font-caveat text-[11px] text-slate-700 block text-center mt-1.5 font-bold">
-              Creative mood ✨
+              Supports de marque ✨
             </span>
           </div>
 
           {/* Portrait Détouré Principal avec Contour Sticker Blanc */}
           <div
             ref={mainPortraitRef}
-            className="relative z-20 w-64 h-64 sm:w-76 sm:h-76 md:w-80 md:h-80 rounded-3xl overflow-hidden p-2.5 bg-gradient-to-tr from-white via-white/80 to-blue-50/50 backdrop-blur-xl border-2 border-white shadow-2xl shadow-blue-900/15 group"
+            className="relative z-20 w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-3xl overflow-hidden p-2 bg-gradient-to-tr from-white via-white/80 to-blue-50/50 backdrop-blur-xl border-2 border-white shadow-2xl shadow-blue-900/15 group"
           >
             <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#0F172A]">
               <Image
@@ -372,39 +372,42 @@ export function HeroCreatif({
                 </span>
               </div>
               <span className="text-xs font-semibold text-[#0F172A] font-mono">
-                Natural candids ✨
+                Design &amp; Ergonomie 🎯
               </span>
             </div>
           </div>
         </div>
 
         {/* Colonne Droite : Typographie XXL & Discours Vivant (Bleu/Orange) */}
-        <div ref={contentRef} className="lg:col-span-6 space-y-6 text-left">
+        <div ref={contentRef} className="lg:col-span-6 space-y-4 text-left">
           {/* Pastille Statut Créatif avec Badge Actif */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/80 shadow-2xs text-[#0F172A] text-xs font-medium cursor-default">
-            <span className="w-2 h-2 rounded-full bg-[#F97316] animate-pulse" />
-            <GlitchText text="Active Creative Badge · 2026" className="font-mono font-semibold" />
+            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+            <span className="font-mono font-semibold">Disponible pour accompagner vos projets · 2026</span>
           </div>
 
           {/* Grand Titre Expressif en Bebas Neue + Pilules Doubles (ENGINEER / DESIGN) */}
-          <div className="space-y-3 relative">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="px-3.5 py-1 rounded-full bg-[#2563EB] text-white font-mono text-xs font-bold tracking-wider uppercase shadow-md shadow-blue-500/20">
-                ENGINEER
+          <div className="space-y-2 relative">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="px-3 py-0.5 rounded-full bg-blue-50 text-[#2563EB] border border-blue-200/80 font-mono text-[11px] font-bold uppercase tracking-wider">
+                Image de marque &amp; Contenus
               </span>
-              <span className="px-3.5 py-1 rounded-full bg-[#F97316] text-white font-mono text-xs font-bold tracking-wider uppercase shadow-md shadow-orange-500/20">
-                DESIGN
+              <span className="px-3 py-0.5 rounded-full bg-orange-50 text-[#F97316] border border-orange-200/80 font-mono text-[11px] font-bold uppercase tracking-wider">
+                Site Web Optimisé
+              </span>
+              <span className="px-3 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200/80 font-mono text-[11px] font-bold uppercase tracking-wider">
+                Interlocuteur Unique
               </span>
             </div>
 
             <div className="relative inline-block">
-              <h1 className="font-bebas text-5xl sm:text-7xl lg:text-8xl tracking-wide text-[#0F172A] leading-[0.95]">
+              <h1 className="font-bebas text-3xl sm:text-4xl lg:text-[2.65rem] xl:text-[2.95rem] tracking-wide text-[#0F172A] leading-[1.06]">
                 {headline}
               </h1>
 
               {/* Point 2 : Doodle Sparkle SVG tracé */}
               <svg
-                className="absolute -top-6 -right-6 w-10 h-10 text-[#F97316] pointer-events-none"
+                className="absolute -top-5 -right-6 w-8 h-8 text-[#F97316] pointer-events-none"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -421,39 +424,39 @@ export function HeroCreatif({
           </div>
 
           {/* Positionnement et accroche */}
-          <p className="text-base sm:text-lg text-[#475569] max-w-xl leading-relaxed">
+          <p className="text-base sm:text-lg text-[#334155] max-w-xl leading-relaxed font-medium">
             {subline}
           </p>
 
           {/* Carte de métriques en verre givré */}
-          <div className="glass p-5 grid grid-cols-3 gap-4 border border-white/80 shadow-lg text-center max-w-lg">
+          <div className="glass py-2 px-3 sm:px-4 grid grid-cols-3 gap-2 sm:gap-3 border border-white/80 shadow-md text-center max-w-md rounded-2xl">
             <div className="space-y-0.5">
-              <div className="font-bebas text-2xl sm:text-3xl text-[#2563EB] tracking-wide">
+              <div className="font-bebas text-xl sm:text-2xl text-[#2563EB] tracking-wide">
                 {projectsCount}+
               </div>
-              <div className="text-[11px] font-mono text-[#64748B]">Projets Conçus</div>
+              <div className="text-[10px] font-mono text-[#64748B]">Projets Livrés</div>
             </div>
 
             <div className="space-y-0.5 border-x border-slate-200/60 px-2">
-              <div className="font-bebas text-2xl sm:text-3xl text-[#F97316] tracking-wide">
+              <div className="font-bebas text-xl sm:text-2xl text-[#F97316] tracking-wide">
                 100%
               </div>
-              <div className="text-[11px] font-mono text-[#64748B]">Sur-Mesure</div>
+              <div className="text-[10px] font-mono text-[#64748B]">Sur-Mesure</div>
             </div>
 
             <div className="space-y-0.5">
-              <div className="font-bebas text-2xl sm:text-3xl text-[#0F172A] tracking-wide">
-                DUAL
+              <div className="font-bebas text-xl sm:text-2xl text-[#0F172A] tracking-wide">
+                A à Z
               </div>
-              <div className="text-[11px] font-mono text-[#64748B]">Tech &amp; Design</div>
+              <div className="text-[10px] font-mono text-[#64748B]">Prise en Charge</div>
             </div>
           </div>
 
           {/* Boutons d'action en Verre & Bleu Royal */}
-          <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+          <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
             <Link
               href={primaryCta.href}
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-[#2563EB] hover:bg-blue-700 active:scale-98 text-white text-sm font-bold shadow-lg shadow-blue-500/25 transition-all group cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#2563EB] hover:bg-blue-700 active:scale-98 text-white text-sm font-bold shadow-lg shadow-blue-500/25 transition-all group cursor-pointer"
             >
               <span>{primaryCta.label}</span>
               <ArrowRight className="w-4 h-4 text-orange-300 group-hover:translate-x-1 transition-transform" />
@@ -461,7 +464,7 @@ export function HeroCreatif({
 
             <Link
               href={secondaryCta.href}
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full glass hover:bg-white text-[#0F172A] text-sm font-semibold border border-white/90 shadow-md active:scale-98 transition-all cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full glass hover:bg-white text-[#0F172A] text-sm font-semibold border border-white/90 shadow-md active:scale-98 transition-all cursor-pointer"
             >
               <Mail className="w-4 h-4 text-[#F97316]" />
               <span>{secondaryCta.label}</span>
@@ -484,35 +487,30 @@ export function HeroCreatif({
             </svg>
           </div>
 
-          {/* Annotation manuscrite style Caveat */}
-          <div className="pt-1 flex items-center gap-2 text-slate-500">
-            <span className="font-caveat text-base sm:text-lg text-[#F97316] font-bold">
-              ↗ Tout est personnalisable via le dashboard !
-            </span>
-          </div>
+          
         </div>
       </div>
 
       {/* Point 6 : Ruban de texte défilant dont la vitesse suit le défilement */}
-      <div className="pt-6 border-t border-slate-200/60 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+      <div className="pt-4 border-t border-slate-200/60 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
         <div ref={marqueeTrackRef} className="flex items-center gap-6 animate-marquee whitespace-nowrap text-xs font-mono font-semibold text-[#64748B]">
-          <span>⚡ MOTION GRAPHICS</span>
+          <span>⚡ VISIBILITÉ &amp; IMPACT</span>
           <span>·</span>
-          <span className="text-[#2563EB]">★ BRAND IDENTITY</span>
+          <span className="text-[#2563EB]">★ IMAGE DE MARQUE</span>
           <span>·</span>
-          <span>3D UNIVERSES</span>
+          <span>SITES HAUTE PERFORMANCE</span>
           <span>·</span>
-          <span className="text-[#F97316]">✨ PRODUCT ENGINEERING</span>
+          <span className="text-[#F97316]">✨ CONVERSION &amp; UTILISATEURS</span>
           <span>·</span>
-          <span>CREATIVE DIRECTION</span>
+          <span>ACCOMPAGNEMENT DÉDIÉ DE A À Z</span>
           <span>·</span>
-          <span>⚡ MOTION GRAPHICS</span>
+          <span>⚡ VISIBILITÉ &amp; IMPACT</span>
           <span>·</span>
-          <span className="text-[#2563EB]">★ BRAND IDENTITY</span>
+          <span className="text-[#2563EB]">★ IMAGE DE MARQUE</span>
           <span>·</span>
-          <span>3D UNIVERSES</span>
+          <span>SITES HAUTE PERFORMANCE</span>
           <span>·</span>
-          <span className="text-[#F97316]">✨ PRODUCT ENGINEERING</span>
+          <span className="text-[#F97316]">✨ CONVERSION &amp; UTILISATEURS</span>
         </div>
       </div>
     </section>

@@ -125,7 +125,7 @@ export function ProjectsCreatif({ projects }: { projects: ProjectData[] }) {
         <div className="space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass border border-white/80 shadow-2xs text-xs font-semibold text-[#0F172A]">
             <Sparkles className="w-3.5 h-3.5 text-[#F97316]" />
-            <span>Sélection Créative &amp; Ingénierie</span>
+            <span>Réalisations &amp; Résultats</span>
           </div>
 
           <h2 className="font-bebas text-4xl sm:text-5xl lg:text-6xl tracking-wide text-[#0F172A]">
@@ -133,7 +133,7 @@ export function ProjectsCreatif({ projects }: { projects: ProjectData[] }) {
           </h2>
 
           <p className="text-sm sm:text-base text-[#475569] max-w-2xl leading-relaxed">
-            Applications interactives, plateformes SaaS, identités visuelles et créations numériques.
+            Une sélection de projets récents conçus pour apporter une réponse claire, esthétique et mesurable à chaque besoin client.
           </p>
         </div>
 

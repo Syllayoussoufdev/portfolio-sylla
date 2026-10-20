@@ -25,7 +25,7 @@ import { MediaPickerModal } from "@/components/admin/MediaPickerModal";
 import { type UploadedMedia } from "@/components/admin/MediaUploader";
 import { isReservedSlug } from "@/lib/constants/reserved-slugs";
 import { MASTER_SKILL_CATEGORIES } from "@/lib/constants/skills";
-import type { HeroData, SectionItem, TemplateName } from "@/lib/validations/profile";
+import { HERO_ALLOWED_TOOLS, type HeroData, SectionItem, TemplateName } from "@/lib/validations/profile";
 
 interface ProfileFormProps {
   initialData?: {
@@ -107,6 +107,25 @@ export function ProfileForm({
     initialHero.media?.kind || "image"
   );
   const [mediaAlt, setMediaAlt] = useState(initialHero.media?.alt || "");
+
+  // Outils flottants en relief 3D (Hero - 8 max)
+  const [selectedTools, setSelectedTools] = useState<string[]>(
+    Array.isArray(initialHero.outils) && initialHero.outils.length > 0
+      ? (initialHero.outils as string[])
+      : ["Canva", "Figma", "Next.js", "Laravel", "React"]
+  );
+
+  const toggleTool = (toolName: string) => {
+    setSelectedTools((prev) => {
+      if (prev.includes(toolName)) {
+        return prev.filter((t) => t !== toolName);
+      }
+      if (prev.length >= 8) {
+        return prev;
+      }
+      return [...prev, toolName];
+    });
+  };
 
   // Hero Media relation
   const [heroMedia, setHeroMedia] = useState<{

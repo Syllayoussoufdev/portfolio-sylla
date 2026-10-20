@@ -74,6 +74,51 @@ describe("Schéma Zod Hero & Sections", () => {
     assert.equal(parsed.success, false);
   });
 
+  it("doit valider un Hero complet avec les outils autorisés (max 8)", () => {
+    const validHero = {
+      headline: "DIRECTION ARTISTIQUE & DIGITAL",
+      subline: "Expériences mémorables sur-mesure",
+      ctaPrimary: { label: "Voir mes projets", href: "#projets" },
+      ctaSecondary: { label: "Contact", href: "/contact" },
+      media: { kind: "image" as const, alt: "Portrait" },
+      outils: ["Canva", "Figma", "Next.js", "Laravel", "React"] as const,
+    };
+
+    const parsed = HeroSchema.safeParse(validHero);
+    assert.equal(parsed.success, true);
+  });
+
+  it("doit refuser un outil hors de la liste stricte des 24 outils", () => {
+    const heroWithInvalidTool = {
+      headline: "DIRECTION ARTISTIQUE",
+      subline: "Expériences sur mesure",
+      ctaPrimary: { label: "Projets", href: "#projets" },
+      ctaSecondary: { label: "Contact", href: "/contact" },
+      media: { kind: "image" as const },
+      outils: ["Photoshop"], // non autorisé dans la liste stricte
+    };
+
+    const parsed = HeroSchema.safeParse(heroWithInvalidTool);
+    assert.equal(parsed.success, false);
+  });
+
+  it("doit refuser plus de 8 outils dans le Hero", () => {
+    const heroTooManyTools = {
+      headline: "DIRECTION ARTISTIQUE",
+      subline: "Expériences sur mesure",
+      ctaPrimary: { label: "Projets", href: "#projets" },
+      ctaSecondary: { label: "Contact", href: "/contact" },
+      media: { kind: "image" as const },
+      outils: [
+        "Canva", "Figma", "Next.js", "Laravel", "React",
+        "PHP", "JavaScript", "Tailwind CSS", "Docker" // 9 outils
+      ],
+    };
+
+    const parsed = HeroSchema.safeParse(heroTooManyTools);
+    assert.equal(parsed.success, false);
+  });
+
   it("doit valider la liste ordonnée des sections autorisées", () => {
     const validSections = [
       { key: "hero" as const, visible: true, order: 0 },

@@ -10,12 +10,8 @@ import {
   Sparkles,
   FolderGit2,
   Mail,
-  Heart,
-  Video,
-  Camera,
-  Smile,
 } from "lucide-react";
-import { FigmaIcon, CanvaIcon } from "@/components/icons";
+import { HeroFloatingTools } from "@/components/tools/HeroFloatingTools";
 import { CreativeCanvas3D } from "@/components/3d/CreativeCanvas3D";
 import { GlitchText } from "@/components/ui/GlitchText";
 import type { HeroData } from "@/lib/validations/profile";
@@ -39,7 +35,6 @@ export function HeroCreatif({
   const polaroid1Ref = useRef<HTMLDivElement>(null);
   const polaroid2Ref = useRef<HTMLDivElement>(null);
   const mainPortraitRef = useRef<HTMLDivElement>(null);
-  const stickersRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const doodleArrowRef = useRef<SVGPathElement>(null);
   const doodleSparkleRef = useRef<SVGPathElement>(null);
@@ -99,19 +94,7 @@ export function HeroCreatif({
         { scale: 1, opacity: 1, rotation: 6, duration: 0.7, ease: "back.out(1.8)" },
         "-=0.5"
       );
-
-      // Stickers flottants pop-in
-      if (stickersRef.current) {
-        const items = stickersRef.current.children;
-        tl.fromTo(
-          items,
-          { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.5, stagger: 0.08, ease: "back.out(2)" },
-          "-=0.4"
-        );
-      }
-
-      // Flottement asynchrone organique et continu
+// Flottement asynchrone organique et continu
       if (polaroid1Ref.current) {
         gsap.to(polaroid1Ref.current, {
           y: "-=8",
@@ -236,15 +219,6 @@ export function HeroCreatif({
           overwrite: "auto",
         });
       }
-      if (stickersRef.current) {
-        gsap.to(stickersRef.current, {
-          x: relX * 8,
-          y: relY * 8,
-          duration: 0.8,
-          ease: "power1.out",
-          overwrite: "auto",
-        });
-      }
     };
 
     const container = containerRef.current;
@@ -320,61 +294,27 @@ export function HeroCreatif({
             </span>
           </div>
 
-          {/* Portrait Détouré Principal avec Contour Sticker Blanc */}
-          <div
-            ref={mainPortraitRef}
-            className="relative z-20 w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-3xl overflow-hidden p-2 bg-gradient-to-tr from-white via-white/80 to-blue-50/50 backdrop-blur-xl border-2 border-white shadow-2xl shadow-blue-900/15 group"
-          >
-            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#0F172A]">
-              <Image
-                src={imageSrc}
-                alt={imageAlt}
-                fill
-                priority
-                sizes="(max-width: 640px) 260px, 320px"
-                className="object-cover object-center group-hover:scale-104 transition-transform duration-700 ease-out"
-              />
-            </div>
-
-            {/* Sticker Flottant Figma */}
-            <div className="absolute top-4 right-4 z-30 p-2 rounded-xl bg-white shadow-lg border border-slate-100 flex items-center justify-center transform hover:scale-110 transition-transform">
-              <FigmaIcon className="w-5 h-5 text-purple-600" />
-            </div>
-
-            {/* Sticker Flottant Canva */}
-            <div className="absolute top-16 right-[-8px] z-30 p-2 rounded-xl bg-white shadow-lg border border-slate-100 flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform">
-              <CanvaIcon className="w-5 h-5" />
-            </div>
-          </div>
-
-          {/* Groupe de Stickers Flottants & Badges Y2K */}
-          <div ref={stickersRef} className="contents">
-            <div className="absolute top-6 right-8 sm:right-16 z-30 px-3 py-1 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-mono text-[10px] font-extrabold uppercase shadow-lg transform rotate-12 hover:rotate-0 transition-transform cursor-default">
-              Y2K Vibe ⚡
-            </div>
-
-            <div className="absolute top-1/2 left-[-10px] z-30 w-10 h-10 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center shadow-lg border-2 border-white transform -rotate-12 hover:scale-110 transition-transform">
-              <Smile className="w-6 h-6 fill-current text-slate-900" />
-            </div>
-
-            <div className="absolute bottom-20 left-0 z-30 w-9 h-9 rounded-xl bg-white text-slate-800 flex items-center justify-center shadow-lg border border-slate-200 transform rotate-12 hover:scale-110 transition-transform">
-              <Camera className="w-5 h-5 text-[#2563EB]" />
-            </div>
-
-            {/* Pastille Verre Givré : Natural Candids */}
-            <div className="absolute -bottom-2 right-4 sm:right-10 z-30 glass px-4 py-2.5 flex items-center gap-2.5 shadow-xl border border-white/80">
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="p-1 rounded-md bg-purple-100 text-purple-600">
-                  <Heart className="w-3.5 h-3.5 fill-current" />
-                </span>
-                <span className="p-1 rounded-md bg-blue-100 text-[#2563EB]">
-                  <Video className="w-3.5 h-3.5" />
-                </span>
+          {/* Conteneur Portrait Central & Satellites Outils 3D */}
+          <div className="relative">
+            {/* Portrait Détouré Principal avec Contour Sticker Blanc */}
+            <div
+              ref={mainPortraitRef}
+              className="relative z-20 w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-3xl overflow-hidden p-2 bg-gradient-to-tr from-white via-white/80 to-blue-50/50 backdrop-blur-xl border-2 border-white shadow-2xl shadow-blue-900/15 group"
+            >
+              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#0F172A]">
+                <Image
+                  src={imageSrc}
+                  alt={imageAlt}
+                  fill
+                  priority
+                  sizes="(max-width: 640px) 260px, 320px"
+                  className="object-cover object-center group-hover:scale-104 transition-transform duration-700 ease-out"
+                />
               </div>
-              <span className="text-xs font-semibold text-[#0F172A] font-mono">
-                Design &amp; Ergonomie 🎯
-              </span>
             </div>
+
+            {/* Tuiles 3D d'Outils Réels Flottantes en Relief (Canva, Figma, Next.js, Laravel, React...) */}
+            <HeroFloatingTools tools={hero?.outils} />
           </div>
         </div>
 

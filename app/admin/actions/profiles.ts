@@ -35,6 +35,7 @@ function parseFormData(formData: FormData): {
   }
 
   // 2. Préparation du Hero
+  const rawHeroOutils = formData.getAll("heroOutils") as string[];
   const heroData = {
     headline: (formData.get("headline") as string) || "",
     subline: (formData.get("subline") as string) || "",
@@ -51,6 +52,7 @@ function parseFormData(formData: FormData): {
       kind: ((formData.get("mediaKind") as string) || "image") as "image" | "abstract",
       alt: (formData.get("mediaAlt") as string) || undefined,
     },
+    outils: rawHeroOutils.length > 0 ? rawHeroOutils : undefined,
   };
 
   // 3. Préparation des sections

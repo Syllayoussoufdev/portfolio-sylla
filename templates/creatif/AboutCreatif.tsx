@@ -4,8 +4,14 @@ import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Sparkles, Palette, Code2, Rocket } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
+import { GlassReliefTile } from "@/components/ui/GlassReliefTile";
+import {
+  Icon3DVisualIdentity,
+  Icon3DContentStrategy,
+  Icon3DWebDev,
+} from "@/components/icons/Rich3DIcons";
 import type { SiteSettingsData } from "@/lib/profiles";
 
 interface AboutCreatifProps {
@@ -100,20 +106,20 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
     {
       title: "1. Identité visuelle & Supports de communication",
       desc: "Création de chartes graphiques complètes, affiches, flyers, bannières et maquettes d'interfaces Figma UI/UX conçues pour professionnaliser l'image de votre marque.",
-      icon: Palette,
-      color: "#F97316",
+      IconComponent: Icon3DVisualIdentity,
+      glowColor: "rgba(249, 115, 22, 0.22)",
     },
     {
       title: "2. Stratégie de contenu & Visibilité",
       desc: "Production de visuels percutants, animation de vos réseaux et supports marketing ciblés pour capter l'attention de vos prospects et valoriser votre offre.",
-      icon: Sparkles,
-      color: "#8B5CF6",
+      IconComponent: Icon3DContentStrategy,
+      glowColor: "rgba(139, 92, 246, 0.22)",
     },
     {
       title: "3. Conception & Développement web",
       desc: "Sites vitrines et applications web modernes (Next.js, React, Laravel), rapides, sécurisés et optimisés pour le référencement naturel et la conversion.",
-      icon: Code2,
-      color: "#2563EB",
+      IconComponent: Icon3DWebDev,
+      glowColor: "rgba(37, 99, 235, 0.22)",
     },
   ];
 
@@ -173,28 +179,23 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
             Pour développer votre activité, votre image et vos outils digitaux doivent inspirer confiance dès le premier regard. Je conçois des supports visuels professionnels et développe des sites rapides, fiables et pensés pour transformer vos visiteurs en clients.
           </p>
 
-          {/* Les 3 piliers créatifs en cartes de verre interactives */}
+          {/* Les 3 piliers créatifs en cartes de verre interactives avec icônes 3D en relief */}
           <div ref={pillarsRef} className="space-y-3.5 pt-2">
             {pillars.map((pillar) => {
-              const Icon = pillar.icon;
-              const glowColor =
-                pillar.color === "#F97316"
-                  ? "rgba(249, 115, 22, 0.18)"
-                  : pillar.color === "#2563EB"
-                  ? "rgba(37, 99, 235, 0.18)"
-                  : "rgba(139, 92, 246, 0.18)";
+              const { IconComponent } = pillar;
               return (
                 <SpotlightCard
                   key={pillar.title}
-                  spotlightColor={glowColor}
+                  spotlightColor={pillar.glowColor}
                   className="glass p-5 rounded-2xl border border-white/80 shadow-sm hover:border-[#2563EB]/40 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4 group cursor-default"
                 >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs text-white group-hover:scale-110 transition-transform duration-300"
-                    style={{ backgroundColor: pillar.color }}
+                  <GlassReliefTile
+                    size="md"
+                    glowColor={pillar.glowColor}
+                    className="shrink-0"
                   >
-                    <Icon className="w-5 h-5" />
-                  </div>
+                    <IconComponent className="w-6 h-6" />
+                  </GlassReliefTile>
                   <div>
                     <h4 className="text-sm font-bold text-[#0F172A] mb-1 group-hover:text-[#2563EB] transition-colors">
                       {pillar.title}

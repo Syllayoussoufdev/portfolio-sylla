@@ -5,6 +5,38 @@ import { isReservedSlug } from "../constants/reserved-slugs";
  * Schéma Zod pour le Hero d'un profil.
  * Référence : PRD.md (section 7)
  */
+/**
+ * Registre strict des 24 outils autorisés pour le Hero.
+ */
+export const HERO_ALLOWED_TOOLS = [
+  "Canva",
+  "Figma",
+  "Next.js",
+  "React",
+  "Laravel",
+  "PHP",
+  "JavaScript",
+  "Tailwind CSS",
+  "MySQL",
+  "PostgreSQL",
+  "SQL Server",
+  "Prisma",
+  "WordPress",
+  "Git",
+  "GitHub",
+  "Docker",
+  "Linux",
+  "FastAPI",
+  "LangChain",
+  "Swagger",
+  "Symfony",
+  "Vue.js",
+  "Python",
+  "Django",
+] as const;
+
+export type HeroAllowedTool = (typeof HERO_ALLOWED_TOOLS)[number];
+
 export const HeroSchema = z.object({
   headline: z.string().min(2, "Le titre principal du Hero est obligatoire"),
   subline: z.string().min(2, "Le sous-titre du Hero est obligatoire"),
@@ -21,6 +53,10 @@ export const HeroSchema = z.object({
     kind: z.enum(["image", "abstract"]).default("image"),
     alt: z.string().optional(),
   }),
+  outils: z
+    .array(z.enum(HERO_ALLOWED_TOOLS))
+    .max(8, "Au maximum 8 outils peuvent être sélectionnés pour le Hero")
+    .optional(),
 });
 
 export type HeroData = z.infer<typeof HeroSchema>;

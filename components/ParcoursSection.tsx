@@ -16,6 +16,15 @@ import {
   MapPin,
   Building2,
 } from "lucide-react";
+import { GlassReliefTile } from "@/components/ui/GlassReliefTile";
+import {
+  Icon3DAIFormation,
+  Icon3DUniversityDegree,
+  Icon3DSoftwareEngineer,
+  Icon3DScientificBac,
+  Icon3DExperiencePro,
+  Icon3DCertificationBadge,
+} from "@/components/icons/Rich3DIcons";
 
 type FilterTab = "all" | "experience" | "formation" | "certification";
 
@@ -43,20 +52,44 @@ function formatPeriode(item: ParcoursItemData): string {
   return debut;
 }
 
+function renderParcours3DIcon(milestone: ParcoursItemData) {
+  const t = (milestone.titre + " " + milestone.organisme).toLowerCase();
+
+  if (t.includes("ia") || t.includes("simplon") || t.includes("prompt")) {
+    return <Icon3DAIFormation className="w-5 h-5" />;
+  }
+  if (t.includes("licence") || t.includes("pigier") || t.includes("master")) {
+    return <Icon3DUniversityDegree className="w-5 h-5" />;
+  }
+  if (t.includes("bts") || t.includes("application") || t.includes("isfmi") || t.includes("développeur")) {
+    return <Icon3DSoftwareEngineer className="w-5 h-5" />;
+  }
+  if (t.includes("baccalauréat") || t.includes("lycée") || t.includes("bac")) {
+    return <Icon3DScientificBac className="w-5 h-5" />;
+  }
+  if (milestone.type === "experience") {
+    return <Icon3DExperiencePro className="w-5 h-5" />;
+  }
+  if (milestone.type === "certification") {
+    return <Icon3DCertificationBadge className="w-5 h-5" />;
+  }
+  return <Icon3DUniversityDegree className="w-5 h-5" />;
+}
+
 interface ParcoursSectionProps {
   items?: ParcoursItemData[];
 }
 
 export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
+  const [activeTab, setActiveTab] = useState<FilterTab>("all");
+
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
   const lineFillRef = useRef<HTMLDivElement>(null);
 
-  const [activeTab, setActiveTab] = useState<FilterTab>("formation");
-
+  // Filtrage réactif selon l'onglet actif
   const displayedMilestones = useMemo(() => {
-    if (!items || items.length === 0) return [];
     if (activeTab === "all") return items;
     return items.filter((m) => m.type === activeTab);
   }, [items, activeTab]);
@@ -143,8 +176,8 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
           if (card) {
             tl.fromTo(
               card,
-              { opacity: 0, x: 30, y: 15 },
-              { opacity: 1, x: 0, y: 0, duration: 0.6, ease: "power3.out" },
+              { opacity: 0, y: 25, scale: 0.98 },
+              { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power2.out" },
               "-=0.3"
             );
           }
@@ -155,35 +188,35 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
     return () => ctx.revert();
   }, [displayedMilestones]);
 
-  const tabs: { key: FilterTab; label: string; icon: React.ElementType }[] = [
-    { key: "formation", label: "Formations & Diplômes", icon: GraduationCap },
-    { key: "experience", label: "Expériences Pro", icon: Briefcase },
+  const tabs: { key: FilterTab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+    { key: "all", label: "Tous les jalons", icon: Compass },
+    { key: "experience", label: "Expériences", icon: Briefcase },
+    { key: "formation", label: "Formations", icon: GraduationCap },
     { key: "certification", label: "Certifications", icon: Award },
-    { key: "all", label: "Vue Globale", icon: Layers },
   ];
 
   return (
     <section
       ref={sectionRef}
       id="parcours"
-      className="py-24 px-4 sm:px-6 max-w-5xl mx-auto scroll-mt-24 relative"
+      className="py-24 px-4 sm:px-6 max-w-5xl mx-auto scroll-mt-24"
     >
-      {/* En-tête de section */}
-      <div ref={headerRef} className="space-y-4 mb-14 text-center max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 border border-slate-200/80 shadow-xs text-[#0F172A] text-xs font-semibold">
+      {/* En-tête de section avec onglets de filtrage */}
+      <div ref={headerRef} className="space-y-4 mb-16 text-center max-w-2xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/80 backdrop-blur-xs border border-slate-200 text-[#0F172A] text-xs font-mono font-medium shadow-2xs">
           <Compass className="w-3.5 h-3.5 text-[#2563EB]" />
-          <span>Trajectoire, Formations &amp; Expériences</span>
+          <span>Évolution &amp; Trajectoire</span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#0F172A]">
-          Parcours &amp; Évolutions
+        <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0F172A]">
+          Mon Parcours &amp; Expériences
         </h2>
 
         <p className="text-sm sm:text-base text-[#475569] leading-relaxed">
-          Les étapes réelles qui structurent mes compétences en communication digitale, développement logiciel et technologies modernes.
+          Une trajectoire alliant rigueur universitaire, veille continue sur l'IA et réalisations concrètes sur le terrain.
         </p>
 
-        {/* Sélecteur d'onglets */}
+        {/* Boutons de filtrage dynamiques */}
         <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -228,12 +261,6 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
             const isFormation = milestone.type === "formation";
             const isCert = milestone.type === "certification";
 
-            const IconComponent = isExp
-              ? Briefcase
-              : isFormation
-              ? GraduationCap
-              : Award;
-
             const dotColor = milestone.enCours
               ? "bg-[#F97316] ring-4 ring-orange-100"
               : isFormation
@@ -241,6 +268,14 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
               : isCert
               ? "bg-[#10B981] ring-2 ring-emerald-100"
               : "bg-[#2563EB] ring-2 ring-blue-100";
+
+            const glowColor = milestone.enCours
+              ? "rgba(249, 115, 22, 0.22)"
+              : isFormation
+              ? "rgba(139, 92, 246, 0.22)"
+              : isCert
+              ? "rgba(16, 185, 129, 0.22)"
+              : "rgba(37, 99, 235, 0.22)";
 
             const periodeStr = formatPeriode(milestone);
 
@@ -278,19 +313,15 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
                     </span>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                          isExp
-                            ? "bg-blue-50 text-[#2563EB]"
-                            : isFormation
-                            ? "bg-purple-50 text-purple-600"
-                            : "bg-emerald-50 text-emerald-600"
-                        }`}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3.5">
+                      <GlassReliefTile
+                        size="sm"
+                        glowColor={glowColor}
+                        className="shrink-0"
                       >
-                        <IconComponent className="w-4 h-4" />
-                      </div>
+                        {renderParcours3DIcon(milestone)}
+                      </GlassReliefTile>
                       <div>
                         <h3 className="text-base sm:text-lg font-bold text-[#0F172A] leading-snug">
                           {milestone.titre}
@@ -331,13 +362,13 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
                     </p>
                   )}
 
-                  {/* Modules et tags */}
+                  {/* Compétences / Tags associés */}
                   {milestone.tags && milestone.tags.length > 0 && (
-                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                      {milestone.tags.map((tag) => (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {milestone.tags.map((tag, sIdx) => (
                         <span
-                          key={tag}
-                          className="text-[11px] font-mono px-2.5 py-0.5 rounded-lg bg-slate-100/80 text-slate-700 border border-slate-200/60"
+                          key={sIdx}
+                          className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-slate-100 text-slate-700"
                         >
                           {tag}
                         </span>
@@ -345,17 +376,16 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
                     </div>
                   )}
 
-                  {/* Bouton de vérification officielle */}
                   {milestone.url && (
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-end">
+                    <div className="pt-1">
                       <a
                         href={milestone.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2563EB] hover:text-blue-700 hover:underline"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2563EB] hover:underline"
                       >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        <span>Vérifier le certificat officiel</span>
+                        <span>En savoir plus / Certificat</span>
+                        <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                   )}

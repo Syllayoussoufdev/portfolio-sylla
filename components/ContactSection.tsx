@@ -160,11 +160,23 @@ export function ContactSection({ settings }: ContactSectionProps) {
                 </div>
                 <h3 className="text-xl font-bold text-[var(--ink)]">Message bien reçu !</h3>
                 <p className="text-sm text-[var(--muted)] max-w-md mx-auto leading-relaxed">
-                  Merci pour votre message. Je vous répondrai dans les plus brefs délais sur votre adresse email.
+                  Merci pour votre message. Je vous répondrai dès que possible sur votre adresse email.
                 </p>
               </div>
             ) : (
               <form action={formAction} className="space-y-5">
+                {/* Champ anti-spam invisible (Honeypot) */}
+                <div className="absolute opacity-0 -z-50 pointer-events-none h-0 w-0 overflow-hidden" aria-hidden="true">
+                  <label htmlFor="company_website">Ne pas remplir ce champ</label>
+                  <input
+                    type="text"
+                    id="company_website"
+                    name="company_website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+
                 {state.error && (
                   <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 text-xs flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 shrink-0" />

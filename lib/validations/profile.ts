@@ -11,6 +11,8 @@ import { isReservedSlug } from "../constants/reserved-slugs";
 export const HERO_ALLOWED_TOOLS = [
   "Canva",
   "Figma",
+  "Photoshop",
+  "Illustrator",
   "Next.js",
   "React",
   "Laravel",

@@ -16,7 +16,6 @@ import {
   MapPin,
   Building2,
 } from "lucide-react";
-import { GlassReliefTile } from "@/components/ui/GlassReliefTile";
 import {
   Icon3DAIFormation,
   Icon3DUniversityDegree,
@@ -315,13 +314,9 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
 
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-3.5">
-                      <GlassReliefTile
-                        size="sm"
-                        glowColor={glowColor}
-                        className="shrink-0"
-                      >
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-slate-200/80 bg-white/90 shadow-2xs group-hover:scale-105 transition-transform">
                         {renderParcours3DIcon(milestone)}
-                      </GlassReliefTile>
+                      </div>
                       <div>
                         <h3 className="text-base sm:text-lg font-bold text-[#0F172A] leading-snug">
                           {milestone.titre}

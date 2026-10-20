@@ -88,14 +88,14 @@ describe("Schéma Zod Hero & Sections", () => {
     assert.equal(parsed.success, true);
   });
 
-  it("doit refuser un outil hors de la liste stricte des 24 outils", () => {
+  it("doit refuser un outil hors de la liste stricte des 26 outils", () => {
     const heroWithInvalidTool = {
       headline: "DIRECTION ARTISTIQUE",
       subline: "Expériences sur mesure",
       ctaPrimary: { label: "Projets", href: "#projets" },
       ctaSecondary: { label: "Contact", href: "/contact" },
       media: { kind: "image" as const },
-      outils: ["Photoshop"], // non autorisé dans la liste stricte
+      outils: ["FinalCutPro"], // non autorisé dans la liste stricte
     };
 
     const parsed = HeroSchema.safeParse(heroWithInvalidTool);

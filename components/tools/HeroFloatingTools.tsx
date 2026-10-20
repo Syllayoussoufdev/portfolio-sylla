@@ -8,12 +8,12 @@ interface HeroFloatingToolsProps {
   tools?: (HeroAllowedTool | string)[];
 }
 
-const DEFAULT_TOOLS: HeroAllowedTool[] = ["Canva", "Figma", "Next.js", "Laravel", "React"];
+const DEFAULT_TOOLS: HeroAllowedTool[] = ["Figma", "Photoshop", "Illustrator", "Canva", "React"];
 
 // Coordonnées satellites stratégiques ancrées directement autour du portrait
 // Garantit un espacement harmonieux sans jamais recouvrir le visage, le texte hero ou les boutons CTA
 const SATELLITE_POSITIONS = [
-  // Tuile 0 : En haut à droite du portrait (Canva) — visible mobile & desktop
+  // Tuile 0 : En haut à droite du portrait (Figma) — visible mobile & desktop
   {
     className: "absolute -top-5 -right-5 sm:-top-7 sm:-right-8 z-30",
     depth: 14,
@@ -21,7 +21,7 @@ const SATELLITE_POSITIONS = [
     floatingOffset: 10,
     mobileVisible: true,
   },
-  // Tuile 1 : En bas à droite du portrait (Figma) — visible mobile & desktop
+  // Tuile 1 : En bas à droite du portrait (Photoshop) — visible mobile & desktop
   {
     className: "absolute -bottom-5 -right-4 sm:-bottom-7 sm:-right-7 z-30",
     depth: 16,
@@ -29,7 +29,7 @@ const SATELLITE_POSITIONS = [
     floatingOffset: 12,
     mobileVisible: true,
   },
-  // Tuile 2 : En bas à gauche du portrait (Next.js) — visible mobile & desktop
+  // Tuile 2 : En bas à gauche du portrait (Illustrator) — visible mobile & desktop
   {
     className: "absolute -bottom-6 left-3 sm:-bottom-8 sm:left-4 z-30",
     depth: 12,
@@ -37,7 +37,7 @@ const SATELLITE_POSITIONS = [
     floatingOffset: 9,
     mobileVisible: true,
   },
-  // Tuile 3 : En haut à gauche du portrait (Laravel) — desktop/tablette uniquement
+  // Tuile 3 : En haut à gauche du portrait (Canva) — desktop/tablette uniquement
   {
     className: "absolute -top-7 -left-5 sm:-top-9 sm:-left-8 z-25 hidden sm:block",
     depth: 10,

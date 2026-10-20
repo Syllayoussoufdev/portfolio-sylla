@@ -6,7 +6,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Sparkles } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
-import { GlassReliefTile } from "@/components/ui/GlassReliefTile";
 import {
   Icon3DVisualIdentity,
   Icon3DContentStrategy,
@@ -189,13 +188,14 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
                   spotlightColor={pillar.glowColor}
                   className="glass p-5 rounded-2xl border border-white/80 shadow-sm hover:border-[#2563EB]/40 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-start gap-4 group cursor-default"
                 >
-                  <GlassReliefTile
-                    size="md"
-                    glowColor={pillar.glowColor}
-                    className="shrink-0"
+                  <div
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-white/80 bg-white/90 shadow-xs group-hover:scale-105 transition-transform"
+                    style={{
+                      boxShadow: `0 4px 14px -2px ${pillar.glowColor}`,
+                    }}
                   >
                     <IconComponent className="w-6 h-6" />
-                  </GlassReliefTile>
+                  </div>
                   <div>
                     <h4 className="text-sm font-bold text-[#0F172A] mb-1 group-hover:text-[#2563EB] transition-colors">
                       {pillar.title}

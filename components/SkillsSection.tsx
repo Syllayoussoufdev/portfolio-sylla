@@ -11,8 +11,6 @@ import {
   Terminal,
   Cpu,
 } from "lucide-react";
-import { GlassReliefTile } from "@/components/ui/GlassReliefTile";
-import { ToolIconRenderer } from "@/components/tools/ToolIconRenderer";
 import {
   Icon3DWebFrontendCategory,
   Icon3DBackendCategory,
@@ -29,21 +27,21 @@ interface SkillsSectionProps {
 function renderCategory3DIcon(title: string, iconKey: string) {
   const t = title.toLowerCase();
   if (t.includes("front") || t.includes("web") || iconKey === "Code") {
-    return <Icon3DWebFrontendCategory className="w-6 h-6" />;
+    return <Icon3DWebFrontendCategory className="w-5.5 h-5.5" />;
   }
   if (t.includes("back") || t.includes("api") || t.includes("base") || iconKey === "Server") {
-    return <Icon3DBackendCategory className="w-6 h-6" />;
+    return <Icon3DBackendCategory className="w-5.5 h-5.5" />;
   }
   if (t.includes("mobil") || t.includes("multiplateforme") || iconKey === "Smartphone") {
-    return <Icon3DMobileCategory className="w-6 h-6" />;
+    return <Icon3DMobileCategory className="w-5.5 h-5.5" />;
   }
   if (t.includes("design") || t.includes("graph") || t.includes("ui") || iconKey === "Palette") {
-    return <Icon3DDesignCategory className="w-6 h-6" />;
+    return <Icon3DDesignCategory className="w-5.5 h-5.5" />;
   }
   if (t.includes("vid") || t.includes("motion") || t.includes("3d") || iconKey === "Film") {
-    return <Icon3DVideoCategory className="w-6 h-6" />;
+    return <Icon3DVideoCategory className="w-5.5 h-5.5" />;
   }
-  return <Icon3DWebFrontendCategory className="w-6 h-6" />;
+  return <Icon3DWebFrontendCategory className="w-5.5 h-5.5" />;
 }
 
 export function SkillsSection({ categories = [] }: SkillsSectionProps) {
@@ -125,13 +123,13 @@ export function SkillsSection({ categories = [] }: SkillsSectionProps) {
         const toolBadges = cardsGridRef.current.querySelectorAll(".tool-badge");
         gsap.fromTo(
           toolBadges,
-          { opacity: 0, scale: 0.8 },
+          { opacity: 0, scale: 0.85 },
           {
             opacity: 1,
             scale: 1,
-            duration: 0.5,
-            stagger: 0.03,
-            ease: "back.out(2)",
+            duration: 0.45,
+            stagger: 0.02,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: cardsGridRef.current,
               start: "top 78%",
@@ -236,15 +234,11 @@ export function SkillsSection({ categories = [] }: SkillsSectionProps) {
                 className="editorial-card p-6 sm:p-7 flex flex-col justify-between bg-[var(--surface)] border border-[var(--border)] rounded-3xl transition-all duration-300 hover:border-[var(--accent)]/60 hover:shadow-2xl hover:shadow-black/5 group"
               >
                 <div>
-                  {/* Icône 3D en Verre Relief & Titre de la famille */}
-                  <div className="flex items-center gap-4 mb-5">
-                    <GlassReliefTile
-                      size="md"
-                      glowColor="rgba(37, 99, 235, 0.2)"
-                      className="shrink-0"
-                    >
+                  {/* Icône de catégorie élégante & Titre */}
+                  <div className="flex items-center gap-3.5 mb-5">
+                    <div className="w-11 h-11 rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center shrink-0 border border-[var(--accent)]/20 transition-transform duration-300 group-hover:scale-105">
                       {renderCategory3DIcon(cat.titre, cat.icon)}
-                    </GlassReliefTile>
+                    </div>
                     <div>
                       <h3 className="text-lg font-bold text-[var(--ink)] leading-snug group-hover:text-[var(--accent)] transition-colors">
                         {cat.titre}
@@ -257,14 +251,14 @@ export function SkillsSection({ categories = [] }: SkillsSectionProps) {
                     </div>
                   </div>
 
-                  {/* 1. Savoir-faire & Compétences avec barres de progression animées */}
+                  {/* 1. Savoir-faire & Compétences */}
                   {competences.length > 0 && (
                     <div className="space-y-3 pt-3 pb-4 border-t border-[var(--border)]">
                       <div className="flex items-center gap-1.5 text-[11px] font-mono text-[var(--accent)] font-semibold uppercase tracking-wider">
                         <BookOpen className="w-3.5 h-3.5" />
                         <span>Savoir-faire ({competences.length})</span>
                       </div>
-                      <div className="space-y-2.5">
+                      <div className="space-y-2">
                         {competences.map((c) => (
                           <div
                             key={c.id}
@@ -282,21 +276,20 @@ export function SkillsSection({ categories = [] }: SkillsSectionProps) {
                     </div>
                   )}
 
-                  {/* 2. Outils & Technologies de production avec vrais logos vectoriels officiels */}
+                  {/* 2. Outils & Technologies de production — tags typographiques épurés et lisibles */}
                   {outils.length > 0 && (
                     <div className="space-y-2.5 pt-3 border-t border-[var(--border)]">
                       <div className="flex items-center gap-1.5 text-[11px] font-mono text-[var(--accent-2)] font-semibold uppercase tracking-wider">
                         <Wrench className="w-3.5 h-3.5" />
                         <span>Outils &amp; Technologies</span>
                       </div>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5">
                         {outils.map((tool) => (
                           <span
                             key={tool.id}
-                            className="tool-badge inline-flex items-center gap-1.5 text-[11px] font-mono font-medium px-2.5 py-1 rounded-xl bg-[var(--bg)]/90 border border-[var(--border)] text-[var(--ink)] shadow-2xs hover:border-[var(--accent)] hover:text-[var(--accent)] hover:shadow-xs hover:-translate-y-0.5 transition-all duration-200 cursor-default"
+                            className="tool-badge text-xs font-mono font-medium px-2.5 py-1 rounded-lg bg-[var(--bg)]/90 border border-[var(--border)] text-[var(--ink)] shadow-2xs hover:border-[var(--accent)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5 transition-all duration-150 cursor-default"
                           >
-                            <ToolIconRenderer name={tool.nom} className="w-4 h-4 shrink-0" />
-                            <span>{tool.nom}</span>
+                            {tool.nom}
                           </span>
                         ))}
                       </div>
@@ -309,7 +302,7 @@ export function SkillsSection({ categories = [] }: SkillsSectionProps) {
         </div>
       )}
 
-      {/* Bandeau d'approche de travail / Principes avec animation échelonnée */}
+      {/* Bandeau d'approche de travail / Principes */}
       <div
         ref={principlesRef}
         className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 rounded-3xl bg-[var(--surface)] border border-[var(--border)] text-[var(--ink)] shadow-xl shadow-black/5"

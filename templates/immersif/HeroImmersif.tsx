@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Play, ArrowUpRight, Sparkles, Video, Film, CheckCircle2 } from "lucide-react";
 import { MotionShowreel3D } from "@/components/3d/MotionShowreel3D";
 import type { HeroData } from "@/lib/validations/profile";

@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit, incrementRateLimit } from "@/lib/rate-limit";
+import { escapeHtml } from "@/lib/utils";
 
 export const ContactSchema = z.object({
   nom: z
@@ -26,15 +27,6 @@ export type ContactActionState = {
   success?: boolean;
   error?: string;
 };
-
-export function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
 
 export async function sendContactMessage(
   prevState: ContactActionState | undefined,

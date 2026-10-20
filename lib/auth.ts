@@ -103,8 +103,8 @@ export async function verifyAdminCredentials(email: string, password: string): P
     if (isValid) return true;
   }
 
-  // 2. Fallback temporaire sur mot de passe brut si configuré pour les tests
-  if (rawPassword && password === rawPassword) {
+  // 2. Fallback sur mot de passe brut strictement réservé au développement local
+  if (process.env.NODE_ENV !== "production" && rawPassword && password === rawPassword) {
     return true;
   }
 

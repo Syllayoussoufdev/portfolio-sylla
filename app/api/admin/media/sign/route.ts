@@ -30,7 +30,8 @@ export async function POST(request: Request) {
 
     const body = await request.json().catch(() => ({}));
     const timestamp = Math.round(new Date().getTime() / 1000);
-    const folder = body.folder || "portfolio/projets";
+    const allowedFolders = ["portfolio/projets", "portfolio/profils"];
+    const folder = allowedFolders.includes(body.folder) ? body.folder : "portfolio/projets";
 
     const paramsToSign: Record<string, string | number> = {
       folder,

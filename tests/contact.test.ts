@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { ContactSchema, escapeHtml } from "../app/actions/contact";
+import { ContactSchema } from "../app/actions/contact";
+import { escapeHtml } from "../lib/utils";
 import { checkRateLimit, incrementRateLimit, resetRateLimit } from "../lib/rate-limit";
 
 test("Validation Zod du Formulaire de Contact (Étape 10)", async (t) => {

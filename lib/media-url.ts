@@ -4,10 +4,21 @@
  * en liens d'images directes exploitables dans les balises <img>.
  */
 
+export function isSafeImageUrl(url: string): boolean {
+  if (!url || typeof url !== "string") return false;
+  const trimmed = url.trim().toLowerCase();
+  return (
+    trimmed.startsWith("https://") ||
+    trimmed.startsWith("http://") ||
+    trimmed.startsWith("/")
+  );
+}
+
 export function normalizeImageUrl(rawUrl: string): string {
   if (!rawUrl || typeof rawUrl !== "string") return "";
 
   const trimmed = rawUrl.trim();
+  if (!isSafeImageUrl(trimmed)) return "";
 
   // 1. Détection Google Drive (ex: https://drive.google.com/file/d/ID/view?usp=sharing)
   if (trimmed.includes("drive.google.com")) {

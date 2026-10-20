@@ -300,6 +300,18 @@ export function ProjectsDeveloppeur({ projects }: { projects: ProjectData[] }) {
                       {(idx + 2).toString().padStart(2, "0")}
                     </span>
 
+                    {img && (
+                      <div className="relative w-20 sm:w-28 aspect-video rounded-xl overflow-hidden shrink-0 border border-slate-200 bg-slate-100 hidden sm:block">
+                        <Image
+                          src={img}
+                          alt={project.titre}
+                          fill
+                          sizes="112px"
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
+
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <h4 className="text-base font-bold text-[#0B1B3A] group-hover:text-[#2F5BFF] transition-colors">

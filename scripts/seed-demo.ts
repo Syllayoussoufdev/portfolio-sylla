@@ -736,7 +736,7 @@ async function runSeed() {
         visible: p.visible,
         featured: p.featured,
         links: {},
-        coverImage: null,
+        coverImage: `/images/projects/${p.slug}.jpg`,
       },
       create: {
         slug: p.slug,
@@ -748,7 +748,7 @@ async function runSeed() {
         visible: p.visible,
         featured: p.featured,
         links: {},
-        coverImage: null,
+        coverImage: `/images/projects/${p.slug}.jpg`,
       },
     });
     projectMap.set(upserted.slug, upserted.id);

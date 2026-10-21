@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { sendContactMessage, type ContactActionState } from "@/app/actions/contact";
+import { trackContactSubmit } from "@/lib/analytics-client";
 import { Mail, MessageCircle, Send, CheckCircle2, AlertCircle, ArrowUpRight } from "lucide-react";
 import type { SiteSettingsData } from "@/lib/profiles";
 
@@ -25,6 +26,14 @@ export function ContactSection({ settings }: ContactSectionProps) {
   const email = settings?.emailPublic;
   const whatsapp = settings?.whatsapp;
   const cleanWhatsapp = whatsapp ? whatsapp.replace(/\D/g, "") : null;
+
+  useEffect(() => {
+    if (state.success) {
+      trackContactSubmit("success");
+    } else if (state.error) {
+      trackContactSubmit("error");
+    }
+  }, [state.success, state.error]);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);

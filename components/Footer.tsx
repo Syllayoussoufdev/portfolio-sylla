@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { GithubIcon, LinkedinIcon, TwitterIcon, InstagramIcon } from "./icons";
@@ -67,6 +69,23 @@ export function Footer({ settings }: FooterProps) {
           <Link href="/#contact" className="hover:text-[var(--accent)] transition-colors">
             Contact
           </Link>
+          <Link href="/mentions-legales" className="hover:text-[var(--accent)] transition-colors">
+            Mentions légales
+          </Link>
+          <Link href="/confidentialite" className="hover:text-[var(--accent)] transition-colors">
+            Confidentialité
+          </Link>
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== "undefined" && window.openCookieSettings) {
+                window.openCookieSettings();
+              }
+            }}
+            className="hover:text-[var(--accent)] transition-colors cursor-pointer"
+          >
+            Cookies
+          </button>
           <Link
             href="/admin"
             className="text-[var(--subtle)] hover:text-[var(--ink)] transition-colors font-mono"

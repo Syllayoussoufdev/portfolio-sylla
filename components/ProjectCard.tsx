@@ -10,6 +10,7 @@ import {
   Code2,
 } from "lucide-react";
 import { GithubIcon, FigmaIcon } from "./icons";
+import { trackProjectClick } from "@/lib/analytics-client";
 
 export interface ProjectData {
   id: string;
@@ -65,6 +66,7 @@ export function ProjectCard({ project }: { project: ProjectData }) {
         {/* Lien direct d'ouverture projet */}
         <Link
           href={`/projets/${project.slug}`}
+          onClick={() => trackProjectClick(project.slug, project.titre, project.tags[0])}
           className="absolute inset-0 z-10"
           aria-label={`Voir le détail du projet ${project.titre}`}
         />

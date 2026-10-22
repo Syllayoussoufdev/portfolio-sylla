@@ -305,6 +305,32 @@ export function SubPortfolioForm({
           </div>
         )}
       </div>
+      {/* Barre d'action inférieure */}
+      <div className="flex items-center justify-between pt-4 pb-8 border-t border-slate-200">
+        <Link
+          href="/admin/portfolios"
+          className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-xs font-semibold"
+        >
+          Retour aux sous-portfolios
+        </Link>
+        <button
+          type="submit"
+          disabled={isPending}
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#F97316] hover:bg-[#EA580C] text-white text-xs font-semibold shadow-sm transition-all cursor-pointer disabled:opacity-50"
+        >
+          {isPending ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Enregistrement...</span>
+            </>
+          ) : (
+            <>
+              <Save className="w-4 h-4" />
+              <span>{isEditing ? "Enregistrer les modifications" : "Créer le sous-portfolio"}</span>
+            </>
+          )}
+        </button>
+      </div>
     </form>
   );
 }

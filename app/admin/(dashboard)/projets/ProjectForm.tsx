@@ -726,6 +726,32 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
           </div>
         </div>
       </div>
+      {/* Barre d'action inférieure */}
+      <div className="flex items-center justify-between pt-4 pb-8 border-t border-slate-200">
+        <Link
+          href="/admin/projets"
+          className="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-xs font-semibold"
+        >
+          Retour aux projets
+        </Link>
+        <button
+          type="submit"
+          disabled={isPending}
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold shadow-sm transition-all cursor-pointer disabled:opacity-50"
+        >
+          {isPending ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Enregistrement...</span>
+            </>
+          ) : (
+            <>
+              <Save className="w-4 h-4" />
+              <span>{isEditing ? "Enregistrer les modifications" : "Créer le projet"}</span>
+            </>
+          )}
+        </button>
+      </div>
     </form>
 
     {/* Modal sélecteur de média hors du form HTML */}

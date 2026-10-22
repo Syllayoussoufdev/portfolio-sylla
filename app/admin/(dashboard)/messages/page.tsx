@@ -17,7 +17,7 @@ export default async function AdminMessagesPage() {
   });
 
   return (
-    <div className="space-y-6 select-none">
+    <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="font-bebas text-4xl sm:text-5xl text-[#0F172A] tracking-wide">

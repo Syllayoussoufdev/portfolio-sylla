@@ -33,7 +33,7 @@ export default async function AdminDashboardLayout({
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex flex-col md:flex-row text-[#0F172A]">
       {/* Sidebar latérale */}
-      <aside className="w-full md:w-64 bg-white/80 backdrop-blur-md border-r border-slate-200/80 flex flex-col justify-between shrink-0 p-5 md:min-h-screen">
+      <aside className="w-full md:w-64 md:h-screen md:sticky md:top-0 md:overflow-y-auto bg-white/80 backdrop-blur-md border-r border-slate-200/80 flex flex-col justify-between shrink-0 p-5">
         <div>
           {/* Logo & Titre */}
           <div className="flex items-center gap-3 pb-6 border-b border-slate-100">

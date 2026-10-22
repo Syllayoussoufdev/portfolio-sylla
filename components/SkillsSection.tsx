@@ -185,7 +185,7 @@ export function SkillsSection({ categories = [] }: SkillsSectionProps) {
     <section
       ref={sectionRef}
       id="competences"
-      className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24"
+      className="py-10 sm:py-16 lg:py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-20"
     >
       {/* En-tête de section animé */}
       <div ref={headerRef} className="space-y-3 mb-14 text-center max-w-2xl mx-auto">

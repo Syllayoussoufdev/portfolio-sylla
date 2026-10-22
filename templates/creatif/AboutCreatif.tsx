@@ -129,7 +129,7 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
     <section
       ref={sectionRef}
       id="a-propos"
-      className="py-14 sm:py-18 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-20 relative"
+      className="py-10 sm:py-14 lg:py-20 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-20 relative"
     >
       {/* Orbe lumineuse subtile */}
       <div className="absolute top-1/3 right-10 w-72 h-72 rounded-full bg-[#F97316] opacity-10 blur-[90px] pointer-events-none -z-10" />

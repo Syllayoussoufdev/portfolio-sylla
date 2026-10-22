@@ -115,7 +115,7 @@ export function ProjectsCreatif({ projects }: { projects: ProjectData[] }) {
   return (
     <section
       id="projets"
-      className="py-24 max-w-7xl mx-auto scroll-mt-24 relative text-[#0F172A] overflow-hidden"
+      className="py-10 sm:py-16 lg:py-24 max-w-7xl mx-auto scroll-mt-20 relative text-[#0F172A] overflow-hidden"
     >
       {/* Orbe lumineuse bleue en arrière-plan */}
       <div className="absolute top-1/3 left-[-40px] w-80 h-80 rounded-full bg-[#2563EB] opacity-15 blur-[120px] pointer-events-none -z-10" />

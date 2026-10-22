@@ -98,7 +98,7 @@ export function AboutImmersif({ settings }: AboutImmersifProps) {
     <section
       ref={sectionRef}
       id="a-propos"
-      className="py-24 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-24 text-white relative"
+      className="py-10 sm:py-16 lg:py-24 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-20 text-white relative"
     >
       {/* 1. En-tête de section en français */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12 border-b border-white/10 pb-6">

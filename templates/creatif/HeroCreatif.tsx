@@ -238,7 +238,7 @@ export function HeroCreatif({
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-[85vh] lg:min-h-0 flex flex-col justify-center pt-20 pb-8 sm:pt-24 sm:pb-10 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden text-[#0F172A]"
+      className="relative flex flex-col justify-start sm:justify-center pt-20 pb-4 sm:pt-24 sm:pb-6 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden text-[#0F172A]"
     >
       {/* 1. Orbes lumineuses d'ambiance vibrantes (Bleu Royal & Orange Vif - DESIGN.md Image 1) */}
       <div className="absolute top-10 left-[-80px] w-96 h-96 rounded-full bg-[#2563EB] opacity-35 blur-[120px] pointer-events-none -z-10" />
@@ -249,7 +249,7 @@ export function HeroCreatif({
         {/* Colonne Gauche : Composition Visuelle avec Polaroids, Stickers Y2K & Effets Techno */}
         <div
           ref={leftVisualRef}
-          className="lg:col-span-6 relative flex items-center justify-center min-h-[340px] sm:min-h-[380px] lg:min-h-[400px]"
+          className="lg:col-span-6 relative flex items-center justify-center min-h-[280px] sm:min-h-[340px] lg:min-h-[400px]"
         >
           {/* Scène 3D Interactive Réactive en Arrière-plan du Portrait */}
           <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none scale-125 opacity-80">

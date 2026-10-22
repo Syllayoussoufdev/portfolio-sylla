@@ -27,7 +27,7 @@ export function AboutSection({ settings }: AboutSectionProps) {
   ];
 
   return (
-    <section id="a-propos" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24">
+    <section id="a-propos" className="py-10 sm:py-16 lg:py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-20">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Colonne Gauche : Image & Fiche personnelle */}
         <div className="lg:col-span-5 relative">

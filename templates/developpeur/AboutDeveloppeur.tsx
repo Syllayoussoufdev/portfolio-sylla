@@ -168,7 +168,7 @@ export function AboutDeveloppeur({ settings }: AboutDeveloppeurProps) {
     <section
       ref={sectionRef}
       id="a-propos"
-      className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24 text-[#0B1B3A]"
+      className="py-10 sm:py-16 lg:py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-20 text-[#0B1B3A]"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Colonne Gauche : Portrait en Cadre Stylisé & Badge */}

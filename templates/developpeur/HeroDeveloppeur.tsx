@@ -137,7 +137,7 @@ export function HeroDeveloppeur({
     <section
       ref={sectionRef}
       id="hero"
-      className="relative min-h-[92vh] flex flex-col justify-center pt-32 pb-16 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden bg-[#F6F7FB] text-[#0B1B3A]"
+      className="relative flex flex-col justify-start sm:justify-center pt-20 pb-6 sm:pt-28 sm:pb-12 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden bg-[#F6F7FB] text-[#0B1B3A]"
     >
       {/* Halos d'ambiance sobres bleu nuit */}
       <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-blue-100/50 blur-[130px] pointer-events-none -z-10" />

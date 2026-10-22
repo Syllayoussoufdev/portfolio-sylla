@@ -207,7 +207,7 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
     <section
       ref={sectionRef}
       id="parcours"
-      className="py-24 px-4 sm:px-6 max-w-5xl mx-auto scroll-mt-24"
+      className="py-10 sm:py-16 lg:py-24 px-4 sm:px-6 max-w-5xl mx-auto scroll-mt-20"
     >
       {/* En-tête de section avec onglets de filtrage */}
       <div ref={headerRef} className="space-y-4 mb-16 text-center max-w-2xl mx-auto">

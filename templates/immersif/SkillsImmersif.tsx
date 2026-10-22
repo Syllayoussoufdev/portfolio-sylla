@@ -74,7 +74,7 @@ export function SkillsImmersif({ categories = [] }: SkillsImmersifProps) {
     <section
       ref={sectionRef}
       id="competences"
-      className="py-28 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-24 text-white relative overflow-hidden"
+      className="py-10 sm:py-16 lg:py-24 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-20 text-white relative overflow-hidden"
     >
       {/* 1. En-tête de section Éditorial Sombre */}
       <div ref={headerRef} className="space-y-4 mb-14 border-b border-white/10 pb-8">

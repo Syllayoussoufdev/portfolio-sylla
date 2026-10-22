@@ -271,7 +271,7 @@ export function ProjectsImmersif({ projects }: { projects: ProjectData[] }) {
     <section
       ref={sectionRef}
       id="projets"
-      className="py-24 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-24 text-white relative"
+      className="py-10 sm:py-16 lg:py-24 px-5 sm:px-8 max-w-7xl mx-auto scroll-mt-20 text-white relative"
     >
       {/* 1. En-tête de section en français */}
       <div

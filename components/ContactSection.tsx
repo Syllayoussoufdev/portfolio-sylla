@@ -90,7 +90,7 @@ export function ContactSection({ settings }: ContactSectionProps) {
     <section
       ref={sectionRef}
       id="contact"
-      className="py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-24 relative"
+      className="py-10 sm:py-16 lg:py-24 px-4 sm:px-6 max-w-7xl mx-auto scroll-mt-20 relative"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Colonne Gauche : Discours & Liens Directs Réels */}

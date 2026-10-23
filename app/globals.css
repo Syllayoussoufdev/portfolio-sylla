@@ -58,6 +58,26 @@
   --glass-border: rgba(255, 255, 255, 0.08);
 }
 
+/* Template DevCreative : éditorial freelance premium (PRD Section 10 — Indigo, Orange & Surface Pêche) */
+[data-template="devcreative"] {
+  --bg: #F6F4FF;
+  --surface: #FFFFFF;
+  --surface-warm: #F7D5C5;
+  --bg-dark: #14172E;
+  --ink: #1E2347;
+  --accent: #4C5FD7;
+  --accent-2: #F4825A;
+  --muted: #434975;
+  --subtle: #5C6394;
+  --border: #E2DFF5;
+  --glass: rgba(246, 244, 255, 0.9);
+  --glass-border: rgba(226, 223, 245, 0.9);
+  --radius-md: 24px;
+  --radius-pill: 999px;
+  font-family: var(--font-dm-sans), var(--font-sans), system-ui, sans-serif;
+
+}
+
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -72,6 +92,8 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-syne: var(--font-syne);
+  --font-dm-sans: var(--font-dm-sans);
+  --font-instrument-serif: var(--font-instrument-serif);
 }
 
 body {

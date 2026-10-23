@@ -1,0 +1,403 @@
+"use client";
+
+import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  ArrowUpRight,
+  ChevronDown,
+  MessageCircle,
+  Sparkles,
+  CheckCircle2,
+  Compass,
+  PenTool,
+  Code2,
+  Rocket,
+} from "lucide-react";
+import { BriefWizardModal } from "@/components/devcreative/BriefWizardModal";
+import { INITIAL_FAQ_ITEMS, type FaqItemData } from "@/lib/devcreative-catalog";
+import { trackCtaClick, trackWhatsappClick } from "@/lib/analytics-client";
+import type { SiteSettingsData } from "@/lib/profiles";
+
+const METHOD_STEPS = [
+  {
+    num: "01",
+    title: "Brief & Cadrage Stratégique",
+    timing: "Jour 1 · Validation en 24 h",
+    desc: "Analyse de votre activité, de votre cible et de vos objectifs commerciaux. Vous recevez un cahier des charges clair avec livrables, budget fixe en FCFA et planning garanti.",
+    deliverable: "Devis détaillé + Feuille de route validée",
+    icon: Compass,
+  },
+  {
+    num: "02",
+    title: "Maquette UI/UX & Identité",
+    timing: "Jours 2 à 5 · Zéro surprise",
+    desc: "Conception de l'identité visuelle et des maquettes interactives haute fidélité. Vous visualisez et validez le rendu exact de votre site sur mobile et ordinateur avant le développement.",
+    deliverable: "Maquette interactive Figma + Kit de marque",
+    icon: PenTool,
+  },
+  {
+    num: "03",
+    title: "Build Technique & Back-Office",
+    timing: "Jours 6 à 12 · Lien de suivi en direct",
+    desc: "Développement en Next.js & PostgreSQL optimisé pour la 4G mobile, le référencement Google et les aperçus de partage WhatsApp/LinkedIn, avec votre espace d'administration.",
+    deliverable: "Plateforme rapide, sécurisée & administrable",
+    icon: Code2,
+  },
+  {
+    num: "04",
+    title: "Mise en Ligne, Formation & Croissance",
+    timing: "Livraison finale & Suivi",
+    desc: "Déploiement sur votre nom de domaine, configuration des emails professionnels et de Google Analytics, suivi d'une session de prise en main pour vous rendre 100 % autonome.",
+    deliverable: "Site en production + Accès complets + Support",
+    icon: Rocket,
+  },
+] as const;
+
+const PILLAR_STORIES = [
+  {
+    title: "Architecture Web & SaaS",
+    tag: "Next.js · Laravel · PostgreSQL",
+    image: "/images/projects/plateforme-web-saas.jpg",
+    desc: "Applications rapides et évolutives avec back-office sur-mesure.",
+  },
+  {
+    title: "Direction Artistique & Marque",
+    tag: "Branding · UI/UX · Print",
+    image: "/images/projects/identite-visuelle-branding.jpg",
+    desc: "Identités visuelles mémorables qui inspirent confiance dès la première seconde.",
+  },
+  {
+    title: "Présence & Conversion",
+    tag: "SEO · Analytics · WhatsApp",
+    image: "/images/projects/portfolio-cv-personnel.jpg",
+    desc: "Chaque page est structurée pour transformer vos visiteurs en clients.",
+  },
+];
+
+interface AboutDevCreativeProps {
+  settings?: SiteSettingsData | null;
+  faqItems?: FaqItemData[];
+}
+
+export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativeProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const methodStepsRef = useRef<HTMLDivElement[]>([]);
+  const [openFaqId, setOpenFaqId] = useState<string | null>("faq-0");
+  const [wizardOpen, setWizardOpen] = useState(false);
+
+  const displayFaqs: FaqItemData[] =
+    faqItems.length > 0
+      ? faqItems
+      : INITIAL_FAQ_ITEMS.map((f, idx) => ({ ...f, id: `faq-${idx}` }));
+
+  const rawWhatsapp = (settings?.whatsapp || "2250700000000").replace(/[^0-9]/g, "");
+  const whatsappHref = `https://wa.me/${rawWhatsapp}?text=${encodeURIComponent(
+    "Bonjour Sylla 👋, j'aimerais échanger sur un projet après avoir consulté votre méthode."
+  )}`;
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isReduced) return;
+
+    const ctx = gsap.context(() => {
+      if (methodStepsRef.current.length > 0) {
+        gsap.fromTo(
+          methodStepsRef.current,
+          { y: 32, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.12,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: "#methode-4-etapes",
+              start: "top 82%",
+            },
+          }
+        );
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div ref={containerRef} className="space-y-14 sm:space-y-24">
+      {/* =====================================================================
+          1. SECTION SOMBRE DE CONTRASTE (#14172E — Style Référence Aquilas Dev)
+         ===================================================================== */}
+      <section
+        id="a-propos"
+        className="bg-[#14172E] text-white py-14 sm:py-24 px-4 sm:px-6 scroll-mt-20 relative overflow-hidden"
+      >
+        <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full bg-[#4C5FD7]/15 blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-0 left-10 w-80 h-80 rounded-full bg-[#F4825A]/15 blur-[120px] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Colonne Gauche : Grands Chiffres d'Impact (Blanc & Orange) + Réseaux + CTA */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="flex items-baseline gap-8 sm:gap-12">
+              <div>
+                <div className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white font-[family-name:var(--font-dm-sans)]">
+                  23+
+                </div>
+                <div className="text-xs font-mono uppercase tracking-wider text-white/60 mt-1">
+                  Projets &amp; Marques
+                </div>
+              </div>
+
+              <div>
+                <div className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#F4825A] font-[family-name:var(--font-dm-sans)]">
+                  100%
+                </div>
+                <div className="text-xs font-mono uppercase tracking-wider text-white/60 mt-1">
+                  Livrables Mesurables
+                </div>
+              </div>
+            </div>
+
+            <p className="text-sm sm:text-base text-white/80 leading-relaxed">
+              Basé à Abidjan et intervenant à l&apos;international, je réunis <strong className="text-white">conception visuelle, stratégie digitale et ingénierie logicielle</strong> pour offrir aux dirigeants et marques un interlocuteur unique, rapide et fiable.
+            </p>
+
+            {/* Liens Réseaux Sociaux en pastilles rondes */}
+            <div className="flex items-center gap-3 pt-1">
+              <span className="text-xs font-mono text-white/60 mr-1">Me suivre :</span>
+              {settings?.linkedin && (
+                <a
+                  href={settings.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#F4825A] hover:text-[#14172E] text-xs font-bold transition-colors"
+                >
+                  LinkedIn
+                </a>
+              )}
+              {settings?.github && (
+                <a
+                  href={settings.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#F4825A] hover:text-[#14172E] text-xs font-bold transition-colors"
+                >
+                  GitHub
+                </a>
+              )}
+              {settings?.instagram && (
+                <a
+                  href={settings.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#F4825A] hover:text-[#14172E] text-xs font-bold transition-colors"
+                >
+                  Instagram
+                </a>
+              )}
+            </div>
+
+            {/* Boutons d'action de la section sombre */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  trackCtaClick("Démarrer mon brief", "wizard_modal", "dark_impact_section");
+                  setWizardOpen(true);
+                }}
+                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-white hover:bg-[#F4825A] text-[#14172E] text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer"
+              >
+                <span>Lancer mon projet</span>
+                <ArrowUpRight className="w-4 h-4" />
+              </button>
+
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackWhatsappClick("dark_impact_section")}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white text-xs font-semibold transition-all"
+              >
+                <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                <span>Échanger sur WhatsApp</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Colonne Droite : 3 Cartes Verticales Visuelles (Style Référence Aquilas Dev) */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {PILLAR_STORIES.map((card, idx) => (
+              <div
+                key={idx}
+                onClick={() => setWizardOpen(true)}
+                className="group relative h-[280px] sm:h-[340px] rounded-[24px] overflow-hidden border border-white/15 bg-[#1E2347] cursor-pointer shadow-xl"
+              >
+                <Image
+                  src={card.image}
+                  alt={card.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 240px"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#14172E] via-[#14172E]/40 to-transparent" />
+
+                <div className="absolute inset-0 p-5 flex flex-col justify-between">
+                  <span className="self-start px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-xs border border-white/15 text-[10px] font-mono text-[#F4825A]">
+                    {card.tag}
+                  </span>
+
+                  <div className="flex items-end justify-between gap-2">
+                    <div>
+                      <h3 className="text-base font-bold text-white leading-tight">
+                        {card.title}
+                      </h3>
+                      <p className="text-[11px] text-white/75 mt-1 line-clamp-2">
+                        {card.desc}
+                      </p>
+                    </div>
+
+                    <span className="w-8 h-8 rounded-full bg-white text-[#14172E] group-hover:bg-[#F4825A] flex items-center justify-center shrink-0 transition-colors">
+                      <ArrowUpRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          2. MÉTHODE EN 4 ÉTAPES & CADRE DE LIVRAISON (PRD §4 & §10)
+         ===================================================================== */}
+      <section
+        id="methode-4-etapes"
+        className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10 text-[#1E2347]"
+      >
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-2 max-w-2xl">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F7D5C5]/70 text-[#1E2347] text-xs font-mono font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-[#F4825A]" />
+              Processus Clair &amp; Sans Friction
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight font-[family-name:var(--font-dm-sans)]">
+              Votre projet livré en{" "}
+              <span className="italic font-normal text-[#F4825A] font-[family-name:var(--font-instrument-serif)]">
+                4 étapes maîtrisées.
+              </span>
+            </h2>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setWizardOpen(true)}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#1E2347] hover:bg-[#4C5FD7] text-white text-xs font-bold transition-all self-start md:self-auto cursor-pointer"
+          >
+            <span>Démarrer l&apos;étape 1 gratuitement</span>
+            <ArrowUpRight className="w-4 h-4 text-[#F4825A]" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {METHOD_STEPS.map((step, idx) => {
+            const Icon = step.icon;
+            return (
+              <div
+                key={step.num}
+                ref={(el) => {
+                  if (el) methodStepsRef.current[idx] = el;
+                }}
+                className="bg-white rounded-[24px] border border-[#E2DFF5] p-6 flex flex-col justify-between space-y-5 shadow-xs hover:shadow-xl hover:border-[#4C5FD7]/50 transition-all"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-3xl font-extrabold font-mono text-[#F4825A]">
+                      {step.num}
+                    </span>
+                    <div className="w-10 h-10 rounded-2xl bg-[#F6F4FF] text-[#4C5FD7] flex items-center justify-center">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-[11px] font-mono text-[#5C6394] font-semibold">
+                      {step.timing}
+                    </span>
+                    <h3 className="text-lg font-bold text-[#1E2347] mt-0.5">
+                      {step.title}
+                    </h3>
+                    <p className="text-xs text-[#434975] mt-2 leading-relaxed">
+                      {step.desc}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-[#F6F4FF] flex items-center gap-1.5 text-[11px] font-bold text-[#1E2347]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>{step.deliverable}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* =====================================================================
+          3. SECTION FAQ ACCORDÉON & CTA FINAL (PRD §4 & §11)
+         ===================================================================== */}
+      <section id="faq" className="max-w-4xl mx-auto px-4 sm:px-6 pb-8 space-y-8 text-[#1E2347]">
+        <div className="text-center space-y-2">
+          <span className="text-xs font-mono uppercase tracking-wider text-[#4C5FD7] font-bold">
+            Questions Fréquentes
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-dm-sans)]">
+            Tout savoir avant de{" "}
+            <span className="italic font-normal text-[#F4825A] font-[family-name:var(--font-instrument-serif)]">
+              démarrer ensemble
+            </span>
+          </h2>
+        </div>
+
+        <div className="space-y-3">
+          {displayFaqs.map((faq) => {
+            const isOpen = openFaqId === faq.id;
+            return (
+              <div
+                key={faq.id}
+                className="bg-white rounded-[20px] border border-[#E2DFF5] overflow-hidden transition-all"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenFaqId(isOpen ? null : faq.id)}
+                  aria-expanded={isOpen}
+                  className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#F6F4FF]/50 transition-colors"
+                >
+                  <span className="font-bold text-sm sm:text-base text-[#1E2347]">
+                    {faq.question}
+                  </span>
+                  <ChevronDown
+                    className={`w-5 h-5 text-[#F4825A] shrink-0 transition-transform duration-200 ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {isOpen && (
+                  <div className="px-6 pb-5 text-xs sm:text-sm text-[#434975] leading-relaxed border-t border-[#F6F4FF] pt-3">
+                    {faq.reponse}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <BriefWizardModal
+        isOpen={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+      />
+    </div>
+  );
+}

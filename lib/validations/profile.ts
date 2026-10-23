@@ -95,7 +95,7 @@ export const SectionsListSchema = z
 /**
  * Templates officiels supportés (DESIGN.md).
  */
-export const TEMPLATES = ["creatif", "developpeur", "immersif"] as const;
+export const TEMPLATES = ["creatif", "developpeur", "immersif", "devcreative"] as const;
 export type TemplateName = (typeof TEMPLATES)[number];
 
 export const TemplateSchema = z.enum(TEMPLATES);

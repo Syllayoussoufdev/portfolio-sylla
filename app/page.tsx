@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getDefaultProfile, getSiteSettings } from "@/lib/profiles";
 import { getSkillsForSubPortfolio } from "@/lib/skills";
 import { getParcours } from "@/lib/parcours";
+import { getDevCreativeCatalog } from "@/lib/devcreative";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SectionRenderer } from "@/components/SectionRenderer";
@@ -28,7 +29,10 @@ export default async function HomePage() {
     getParcours("default"),
   ]);
 
-  const skillCategories = await getSkillsForSubPortfolio(profile.subPortfolioId);
+  const [skillCategories, devCreativeCatalog] = await Promise.all([
+    getSkillsForSubPortfolio(profile.subPortfolioId),
+    profile.template === "devcreative" ? getDevCreativeCatalog() : Promise.resolve(null),
+  ]);
 
   // Chargement des projets selon la configuration du profil avec tolérance aux pannes
   let visibleProjects: any[] = [];
@@ -98,6 +102,7 @@ export default async function HomePage() {
             variables={profile.variables as Record<string, unknown>}
             skillCategories={skillCategories}
             parcoursItems={parcoursItems}
+            devCreativeCatalog={devCreativeCatalog}
           />
         ))}
       </main>

@@ -19,6 +19,8 @@ export const RESERVED_SLUGS = [
   "_next",
   "favicon.ico",
   "medias",
+  "demarrer",
+  "services",
 ] as const;
 
 export type ReservedSlug = (typeof RESERVED_SLUGS)[number];

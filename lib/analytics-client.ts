@@ -112,3 +112,45 @@ export function trackMediaInteraction(mediaType: "showreel_3d" | "cinematic_visu
     action_type: action,
   });
 }
+
+
+// ============================================================================
+// KPIS DE CONVERSION DEVCREATIVE (PRD §11)
+// ============================================================================
+
+export function trackWizardStart(projectType: string, sourceSection: string) {
+  trackEvent("wizard_start", {
+    project_type: projectType,
+    source_section: sourceSection,
+  });
+}
+
+export function trackWizardStep(stepNumber: number, stepName: string) {
+  trackEvent("wizard_step", {
+    step_number: stepNumber,
+    step_name: stepName,
+  });
+}
+
+export function trackLeadSubmit(projectType: string, budgetRange: string, status: "success" | "error") {
+  trackEvent("lead_submit", {
+    project_type: projectType,
+    budget_range: budgetRange,
+    submission_status: status,
+  });
+}
+
+export function trackWhatsappClick(location: string, context?: string) {
+  trackEvent("whatsapp_click", {
+    click_location: location,
+    context_label: context || "general",
+  });
+}
+
+export function trackPackView(packSlug: string, packTitle: string, priceFcfa: number) {
+  trackEvent("pack_view", {
+    pack_slug: packSlug,
+    pack_title: packTitle,
+    price_fcfa: priceFcfa,
+  });
+}

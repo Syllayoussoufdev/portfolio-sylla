@@ -24,7 +24,13 @@ model Project {
   tags        String[]
   ordre       Int                   @default(0)
   visible     Boolean               @default(true)
-  featured    Boolean               @default(false)
+  featured      Boolean               @default(false)
+  accordClient  Boolean               @default(true)
+  client        String?
+  secteur       String?
+  resultats     String[]              @default([])
+  serviceOffers ServiceOffer[]
+  testimonials  Testimonial[]
   createdAt   DateTime              @default(now())
   updatedAt   DateTime              @updatedAt
 
@@ -284,4 +290,135 @@ model ParcoursItem {
   @@index([type])
   @@index([visible])
   @@index([ordre])
+}
+
+
+// ----------------------------------------------------
+// 11. DevCreative : Offres, Packs, Témoignages, FAQ, Leads & Liste d'attente (PRD §7)
+// ----------------------------------------------------
+enum OfferStatus {
+  DISPONIBLE
+  BIENTOT
+  LISTE_ATTENTE
+}
+
+enum LeadStatus {
+  NOUVEAU
+  CONTACTE
+  DEVIS_ENVOYE
+  SIGNE
+  PERDU
+}
+
+model ServiceOffer {
+  id         String      @id @default(cuid())
+  slug       String      @unique
+  famille    String      // "conception" | "strategie" | "presence-en-ligne" | "mobile-business" | "missions-ponctuelles"
+  titre      String
+  accroche   String      @db.Text
+  livrables  String[]
+  delai      String
+  prixDepuis Int?        // Prix en FCFA (null si "Sur devis")
+  prixLabel  String?     // Ex: "dès 200 000 FCFA" ou "Sur devis"
+  unite      String      @default("unique") // "unique" | "mensuel" | "journee"
+  phase      Int         @default(1)        // 1, 2 ou 3
+  statut     OfferStatus @default(DISPONIBLE)
+  projectId  String?
+  project    Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  ordre      Int         @default(0)
+  visible    Boolean     @default(true)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([famille])
+  @@index([phase])
+  @@index([statut])
+  @@index([ordre])
+}
+
+model ServicePack {
+  id             String      @id @default(cuid())
+  slug           String      @unique
+  titre          String
+  sousTitre      String?
+  prix           Int         // Prix en FCFA (ex: 270000)
+  economie       String?     // Ex: "Économisez 30 000 FCFA"
+  delai          String      @default("10 à 15 jours")
+  servicesInclus String[]
+  resultat       String?     // Résultat concret attendu
+  phase          Int         @default(1)
+  statut         OfferStatus @default(DISPONIBLE)
+  misEnAvant     Boolean     @default(false)
+  ordre          Int         @default(0)
+  visible        Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([ordre])
+  @@index([statut])
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  auteur      String
+  role        String
+  entreprise  String
+  citation    String   @db.Text
+  photo       String?
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  accordEcrit Boolean  @default(true)
+  visible     Boolean  @default(true)
+  ordre       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([visible])
+  @@index([ordre])
+}
+
+model FaqItem {
+  id        String   @id @default(cuid())
+  question  String
+  reponse   String   @db.Text
+  categorie String   @default("Général")
+  ordre     Int      @default(0)
+  visible   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categorie])
+  @@index([ordre])
+}
+
+model ProjectLead {
+  id            String     @id @default(cuid())
+  typeProjet    String     // "conception" | "strategie" | "presence-en-ligne" | "mobile-business" | "missions-ponctuelles" | "pack-lancement" etc.
+  objectif      String     @db.Text
+  budgetTranche String     // Ex: "100k-250k FCFA", "250k-600k FCFA", "+600k FCFA"
+  delai         String     // Ex: "Urgent (< 2 sem.)", "2 à 4 semaines", "1 à 2 mois"
+  nom           String
+  email         String
+  telephone     String
+  message       String?    @db.Text
+  consentement  Boolean    @default(true)
+  utm           Json?      @default("{}")
+  statut        LeadStatus @default(NOUVEAU)
+  notes         String?    @db.Text
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([statut])
+  @@index([createdAt])
+}
+
+model WaitlistEntry {
+  id           String   @id @default(cuid())
+  email        String
+  offreVisee   String
+  consentement Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  @@index([offreVisee])
+  @@index([createdAt])
 }

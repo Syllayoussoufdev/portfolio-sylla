@@ -45,6 +45,17 @@ export const TEMPLATES_REGISTRY: Record<TemplateId, TemplateDefinition> = {
       { id: "neon", label: "Néon Vert & Indigo", value: "#10B981" },
     ],
   },
+  devcreative: {
+    id: "devcreative",
+    label: "DevCreative (Conversion Freelance & Packs FCFA)",
+    description:
+      "Direction artistique éditoriale inspirée d'Aquilas Dev : cartes projets empilées 3D GSAP, catalogue 5 offres & 4 packs FCFA, wizard 4 étapes.",
+    defaultAccent: "default",
+    availableAccents: [
+      { id: "default", label: "Lavande, Encre Nuit & Orange Vif", value: "#F4825A" },
+      { id: "indigo", label: "Indigo Électrique & Corail", value: "#4C5FD7" },
+    ],
+  },
 };
 
 export function getTemplateDefinition(templateId: string): TemplateDefinition {

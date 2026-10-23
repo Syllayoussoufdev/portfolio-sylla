@@ -4,6 +4,7 @@ import { isReservedSlug } from "@/lib/constants/reserved-slugs";
 import { getProfileBySlug, getSiteSettings } from "@/lib/profiles";
 import { getSkillsForSubPortfolio } from "@/lib/skills";
 import { getParcours } from "@/lib/parcours";
+import { getDevCreativeCatalog } from "@/lib/devcreative";
 import { prisma } from "@/lib/prisma";
 import { trackVisit } from "@/lib/analytics";
 import { Navbar } from "@/components/Navbar";
@@ -68,10 +69,11 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
     // Ignorer silencieusement si la base est temporairement inaccessible
   }
 
-  const [settings, skillCategories, parcoursItems] = await Promise.all([
+  const [settings, skillCategories, parcoursItems, devCreativeCatalog] = await Promise.all([
     getSiteSettings(),
     getSkillsForSubPortfolio(profile.subPortfolioId),
     getParcours(slug),
+    profile.template === "devcreative" ? getDevCreativeCatalog() : Promise.resolve(null),
   ]);
 
   // Extraction des projets : soit depuis le sous-portfolio rattaché, soit tous les projets visibles (tolérance aux pannes)
@@ -142,6 +144,7 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
             variables={profile.variables as Record<string, unknown>}
             skillCategories={skillCategories}
             parcoursItems={parcoursItems}
+            devCreativeCatalog={devCreativeCatalog}
           />
         ))}
       </main>

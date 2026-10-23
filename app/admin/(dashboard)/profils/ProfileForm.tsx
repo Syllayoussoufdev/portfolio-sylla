@@ -352,7 +352,7 @@ export function ProfileForm({
           <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider mb-3">
             Template Visuel & Ambiance
           </label>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Template Creatif */}
             <label
               className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
@@ -446,6 +446,38 @@ export function ProfileForm({
               </div>
               <span className="text-[10px] font-mono text-[#2563EB] mt-3 font-semibold">
                 Recommandé : Vidéo, Motion, 3D
+              </span>
+            </label>
+
+            {/* Template DevCreative */}
+            <label
+              className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex flex-col justify-between ${
+                template === "devcreative"
+                  ? "border-[#F4825A] bg-orange-50/40 shadow-sm"
+                  : "border-slate-200 hover:border-slate-300 bg-white"
+              }`}
+            >
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#F4825A]" />
+                    <span className="text-sm font-bold text-[#0F172A]">DevCreative</span>
+                  </div>
+                  <input
+                    type="radio"
+                    name="template"
+                    value="devcreative"
+                    checked={template === "devcreative"}
+                    onChange={() => setTemplate("devcreative")}
+                    className="w-4 h-4 text-[#F4825A]"
+                  />
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Cartes projets empilées 3D GSAP, catalogue 5 offres &amp; 4 packs FCFA, wizard 4 étapes.
+                </p>
+              </div>
+              <span className="text-[10px] font-mono text-[#F4825A] mt-3 font-semibold">
+                Recommandé : Conversion Freelance, Packs
               </span>
             </label>
           </div>

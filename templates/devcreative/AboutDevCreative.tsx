@@ -92,7 +92,8 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
       ? faqItems
       : INITIAL_FAQ_ITEMS.map((f, idx) => ({ ...f, id: `faq-${idx}` }));
 
-  const rawWhatsapp = (settings?.whatsapp || "2250700000000").replace(/[^0-9]/g, "");
+  const rawDigits = (settings?.whatsapp || "2250594564993").replace(/[^0-9]/g, "");
+  const rawWhatsapp = rawDigits.length === 10 && rawDigits.startsWith("0") ? `225${rawDigits}` : (rawDigits || "2250594564993");
   const whatsappHref = `https://wa.me/${rawWhatsapp}?text=${encodeURIComponent(
     "Bonjour Sylla 👋, j'aimerais échanger sur un projet après avoir consulté votre méthode."
   )}`;

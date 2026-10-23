@@ -24,7 +24,8 @@ export function ContactFooterDevCreative({ settings }: ContactFooterDevCreativeP
   const magneticBtnRef = useRef<HTMLButtonElement>(null);
 
   const displayName = settings?.nom || "Sylla Youssouf";
-  const rawWhatsapp = (settings?.whatsapp || "2250700000000").replace(/[^0-9]/g, "");
+  const rawDigits = (settings?.whatsapp || "2250594564993").replace(/[^0-9]/g, "");
+  const rawWhatsapp = rawDigits.length === 10 && rawDigits.startsWith("0") ? `225${rawDigits}` : (rawDigits || "2250594564993");
   const whatsappHref = `https://wa.me/${rawWhatsapp}?text=${encodeURIComponent(
     "Bonjour Sylla 👋, je viens de parcourir votre site et je souhaite démarrer un projet."
   )}`;

@@ -19,10 +19,13 @@ export interface LeadSubmissionResult {
   statusCode?: number;
 }
 
-const DEFAULT_WHATSAPP_NUMBER = "2250700000000";
+const DEFAULT_WHATSAPP_NUMBER = "2250594564993";
 
 function cleanPhoneForWhatsApp(rawPhone: string | null | undefined): string {
   const digits = (rawPhone || "").replace(/[^0-9]/g, "");
+  if (digits.length === 10 && digits.startsWith("0")) {
+    return `225${digits}`;
+  }
   return digits.length >= 8 ? digits : DEFAULT_WHATSAPP_NUMBER;
 }
 

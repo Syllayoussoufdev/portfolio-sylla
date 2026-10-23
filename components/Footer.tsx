@@ -26,7 +26,8 @@ export function Footer({ settings }: FooterProps) {
   const displayMetier = settings?.metier ?? "Développeur Web & Mobile";
 
   // Formater le lien WhatsApp sans caractères non numériques
-  const cleanWhatsapp = settings?.whatsapp?.replace(/\D/g, "");
+  const rawDigits = (settings?.whatsapp || "2250594564993").replace(/\D/g, "");
+  const cleanWhatsapp = rawDigits.length === 10 && rawDigits.startsWith("0") ? `225${rawDigits}` : (rawDigits || "2250594564993");
 
   const hasSocials = Boolean(
     settings?.emailPublic ||

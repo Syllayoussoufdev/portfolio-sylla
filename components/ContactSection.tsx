@@ -25,7 +25,8 @@ export function ContactSection({ settings }: ContactSectionProps) {
 
   const email = settings?.emailPublic;
   const whatsapp = settings?.whatsapp;
-  const cleanWhatsapp = whatsapp ? whatsapp.replace(/\D/g, "") : null;
+  const rawDigits = (whatsapp || "2250594564993").replace(/\D/g, "");
+  const cleanWhatsapp = rawDigits.length === 10 && rawDigits.startsWith("0") ? `225${rawDigits}` : (rawDigits || "2250594564993");
 
   useEffect(() => {
     if (state.success) {

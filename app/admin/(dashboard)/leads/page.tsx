@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Sparkles, Users, CheckCircle2, Clock } from "lucide-react";
@@ -40,7 +40,7 @@ export default async function LeadsAdminPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200/80">
         <div>
           <h1 className="font-bebas text-3xl sm:text-4xl tracking-wide text-[#0F172A] flex items-center gap-2">
-            <Sparkles className="w-8 h-8 text-[#F4825A]" />
+            <Sparkles className="w-8 h-8 text-[#FF4D00]" />
             LEADS & BRIEFS QUALIFIÉS (CRM)
           </h1>
           <p className="text-xs text-[#64748B] mt-1">
@@ -49,7 +49,7 @@ export default async function LeadsAdminPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="px-3.5 py-2 rounded-xl bg-orange-50 border border-orange-200 text-xs font-bold text-[#F4825A]">
+          <div className="px-3.5 py-2 rounded-xl bg-orange-50 border border-orange-200 text-xs font-bold text-[#FF4D00]">
             {totalNouveaux} Nouveau(x)
           </div>
           <div className="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700">

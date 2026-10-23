@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+﻿import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { getDevCreativeCatalog } from "@/lib/devcreative";
@@ -23,22 +23,22 @@ export default async function ServicesCatalogPage() {
   return (
     <div
       data-template="devcreative"
-      className="min-h-screen bg-[#F6F4FF] text-[#1E2347] flex flex-col justify-between"
+      className="min-h-screen bg-[#FFFBF5] text-[#0D1F1A] flex flex-col justify-between"
     >
       <header className="max-w-7xl w-full mx-auto px-4 sm:px-6 pt-8 pb-2 flex items-center justify-between">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#E2DFF5] text-xs font-bold text-[#1E2347] hover:border-[#4C5FD7] transition-all shadow-2xs"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#E6DEC8] text-xs font-bold text-[#0D1F1A] hover:border-[#00A86B] transition-all shadow-2xs"
         >
-          <ArrowLeft className="w-3.5 h-3.5 text-[#F4825A]" />
+          <ArrowLeft className="w-3.5 h-3.5 text-[#FF4D00]" />
           <span>Retour au portfolio</span>
         </Link>
 
         <Link
           href="/demarrer"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#14172E] hover:bg-[#4C5FD7] text-white text-xs font-bold transition-all shadow-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#091410] hover:bg-[#00A86B] text-white text-xs font-bold transition-all shadow-sm"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[#F4825A]" />
+          <Sparkles className="w-3.5 h-3.5 text-[#FF4D00]" />
           <span>Démarrer un brief en 4 étapes</span>
         </Link>
       </header>

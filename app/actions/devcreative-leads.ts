@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { headers } from "next/headers";
 import { Resend } from "resend";
@@ -142,19 +142,19 @@ export async function submitProjectLeadAction(
           replyTo: safeEmail,
           subject: `🔥 [Brief Qualifié] ${escapeHtml(safeName)} — ${escapeHtml(data.projectType)} (${escapeHtml(data.budgetRange)})`,
           html: `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 620px; margin: 0 auto; padding: 24px; border: 1px solid #E2DFF5; border-radius: 16px; background: #ffffff;">
-              <div style="background: #14172E; color: #ffffff; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px;">
-                <span style="color: #F4825A; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Nouveau Lead DevCreative</span>
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 620px; margin: 0 auto; padding: 24px; border: 1px solid #E6DEC8; border-radius: 16px; background: #ffffff;">
+              <div style="background: #091410; color: #ffffff; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px;">
+                <span style="color: #FF4D00; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Nouveau Lead DevCreative</span>
                 <h2 style="margin: 4px 0 0; font-size: 20px;">${escapeHtml(safeName)} — ${escapeHtml(data.projectType)}</h2>
               </div>
-              <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #1E2347;">
-                <tr><td style="padding: 8px 0; color: #5C6394; width: 140px;"><strong>Type de projet :</strong></td><td style="padding: 8px 0;"><strong>${escapeHtml(data.projectType)}</strong></td></tr>
-                <tr><td style="padding: 8px 0; color: #5C6394;"><strong>Budget estimé :</strong></td><td style="padding: 8px 0; color: #F4825A; font-weight: 700;">${escapeHtml(data.budgetRange)}</td></tr>
-                <tr><td style="padding: 8px 0; color: #5C6394;"><strong>Délai souhaité :</strong></td><td style="padding: 8px 0;">${escapeHtml(data.deadline)}</td></tr>
-                <tr><td style="padding: 8px 0; color: #5C6394;"><strong>WhatsApp / Tél :</strong></td><td style="padding: 8px 0;"><a href="https://wa.me/${cleanPhoneForWhatsApp(safePhone)}" style="color: #4C5FD7; font-weight: 600;">${escapeHtml(safePhone)}</a></td></tr>
-                <tr><td style="padding: 8px 0; color: #5C6394;"><strong>Email :</strong></td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(safeEmail)}" style="color: #4C5FD7;">${escapeHtml(safeEmail)}</a></td></tr>
+              <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #0D1F1A;">
+                <tr><td style="padding: 8px 0; color: #4A635B; width: 140px;"><strong>Type de projet :</strong></td><td style="padding: 8px 0;"><strong>${escapeHtml(data.projectType)}</strong></td></tr>
+                <tr><td style="padding: 8px 0; color: #4A635B;"><strong>Budget estimé :</strong></td><td style="padding: 8px 0; color: #FF4D00; font-weight: 700;">${escapeHtml(data.budgetRange)}</td></tr>
+                <tr><td style="padding: 8px 0; color: #4A635B;"><strong>Délai souhaité :</strong></td><td style="padding: 8px 0;">${escapeHtml(data.deadline)}</td></tr>
+                <tr><td style="padding: 8px 0; color: #4A635B;"><strong>WhatsApp / Tél :</strong></td><td style="padding: 8px 0;"><a href="https://wa.me/${cleanPhoneForWhatsApp(safePhone)}" style="color: #00A86B; font-weight: 600;">${escapeHtml(safePhone)}</a></td></tr>
+                <tr><td style="padding: 8px 0; color: #4A635B;"><strong>Email :</strong></td><td style="padding: 8px 0;"><a href="mailto:${escapeHtml(safeEmail)}" style="color: #00A86B;">${escapeHtml(safeEmail)}</a></td></tr>
               </table>
-              <div style="margin-top: 16px; padding: 16px; background: #F6F4FF; border-radius: 12px; color: #1E2347; font-size: 14px; line-height: 1.6;">
+              <div style="margin-top: 16px; padding: 16px; background: #FFFBF5; border-radius: 12px; color: #0D1F1A; font-size: 14px; line-height: 1.6;">
                 <strong>Objectif principal :</strong><br/>
                 ${escapeHtml(safeGoal).replace(/\n/g, "<br/>")}
                 ${safeMessage ? `<br/><br/><strong>Détails complémentaires :</strong><br/>${escapeHtml(safeMessage).replace(/\n/g, "<br/>")}` : ""}

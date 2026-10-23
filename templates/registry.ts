@@ -1,4 +1,4 @@
-import { TEMPLATES } from "@/lib/validations/profile";
+﻿import { TEMPLATES } from "@/lib/validations/profile";
 
 export type TemplateId = (typeof TEMPLATES)[number];
 
@@ -52,8 +52,8 @@ export const TEMPLATES_REGISTRY: Record<TemplateId, TemplateDefinition> = {
       "Direction artistique éditoriale inspirée d'Aquilas Dev : cartes projets empilées 3D GSAP, catalogue 5 offres & 4 packs FCFA, wizard 4 étapes.",
     defaultAccent: "default",
     availableAccents: [
-      { id: "default", label: "Lavande, Encre Nuit & Orange Vif", value: "#F4825A" },
-      { id: "indigo", label: "Indigo Électrique & Corail", value: "#4C5FD7" },
+      { id: "default", label: "Lavande, Encre Nuit & Orange Vif", value: "#FF4D00" },
+      { id: "indigo", label: "Indigo Électrique & Corail", value: "#00A86B" },
     ],
   },
 };

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
@@ -129,21 +129,21 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
   return (
     <div ref={containerRef} className="space-y-14 sm:space-y-24">
       {/* =====================================================================
-          1. SECTION SOMBRE DE CONTRASTE (#14172E — Style Référence Aquilas Dev)
+          1. SECTION SOMBRE DE CONTRASTE (#091410 — Style Référence Aquilas Dev)
          ===================================================================== */}
       <section
         id="a-propos"
-        className="bg-[#14172E] text-white py-14 sm:py-24 px-4 sm:px-6 scroll-mt-20 relative overflow-hidden"
+        className="bg-[#091410] text-white py-14 sm:py-24 px-4 sm:px-6 scroll-mt-20 relative overflow-hidden"
       >
-        <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full bg-[#4C5FD7]/15 blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-0 left-10 w-80 h-80 rounded-full bg-[#F4825A]/15 blur-[120px] pointer-events-none" />
+        <div className="absolute top-0 right-1/4 w-96 h-96 rounded-full bg-[#00A86B]/15 blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-0 left-10 w-80 h-80 rounded-full bg-[#FF4D00]/15 blur-[120px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           {/* Colonne Gauche : Grands Chiffres d'Impact (Blanc & Orange) + Réseaux + CTA */}
           <div className="lg:col-span-5 space-y-6">
             <div className="flex items-baseline gap-8 sm:gap-12">
               <div>
-                <div className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white font-[family-name:var(--font-dm-sans)]">
+                <div className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white font-[family-name:var(--font-syne)]">
                   23+
                 </div>
                 <div className="text-xs font-mono uppercase tracking-wider text-white/60 mt-1">
@@ -152,7 +152,7 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
               </div>
 
               <div>
-                <div className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#F4825A] font-[family-name:var(--font-dm-sans)]">
+                <div className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#FF4D00] font-[family-name:var(--font-syne)]">
                   100%
                 </div>
                 <div className="text-xs font-mono uppercase tracking-wider text-white/60 mt-1">
@@ -173,7 +173,7 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
                   href={settings.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#F4825A] hover:text-[#14172E] text-xs font-bold transition-colors"
+                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#FF4D00] hover:text-[#091410] text-xs font-bold transition-colors"
                 >
                   LinkedIn
                 </a>
@@ -183,7 +183,7 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
                   href={settings.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#F4825A] hover:text-[#14172E] text-xs font-bold transition-colors"
+                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#FF4D00] hover:text-[#091410] text-xs font-bold transition-colors"
                 >
                   GitHub
                 </a>
@@ -193,7 +193,7 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
                   href={settings.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#F4825A] hover:text-[#14172E] text-xs font-bold transition-colors"
+                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-[#FF4D00] hover:text-[#091410] text-xs font-bold transition-colors"
                 >
                   Instagram
                 </a>
@@ -208,7 +208,7 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
                   trackCtaClick("Démarrer mon brief", "wizard_modal", "dark_impact_section");
                   setWizardOpen(true);
                 }}
-                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-white hover:bg-[#F4825A] text-[#14172E] text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer"
+                className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-white hover:bg-[#FF4D00] text-[#091410] text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer"
               >
                 <span>Lancer mon projet</span>
                 <ArrowUpRight className="w-4 h-4" />
@@ -233,7 +233,7 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
               <div
                 key={idx}
                 onClick={() => setWizardOpen(true)}
-                className="group relative h-[280px] sm:h-[340px] rounded-[24px] overflow-hidden border border-white/15 bg-[#1E2347] cursor-pointer shadow-xl"
+                className="group relative h-[280px] sm:h-[340px] rounded-[24px] overflow-hidden border border-white/15 bg-[#0D1F1A] cursor-pointer shadow-xl"
               >
                 <Image
                   src={card.image}
@@ -242,10 +242,10 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
                   sizes="(max-width: 640px) 100vw, 240px"
                   className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#14172E] via-[#14172E]/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#091410] via-[#091410]/40 to-transparent" />
 
                 <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                  <span className="self-start px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-xs border border-white/15 text-[10px] font-mono text-[#F4825A]">
+                  <span className="self-start px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-xs border border-white/15 text-[10px] font-mono text-[#FF4D00]">
                     {card.tag}
                   </span>
 
@@ -259,7 +259,7 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
                       </p>
                     </div>
 
-                    <span className="w-8 h-8 rounded-full bg-white text-[#14172E] group-hover:bg-[#F4825A] flex items-center justify-center shrink-0 transition-colors">
+                    <span className="w-8 h-8 rounded-full bg-white text-[#091410] group-hover:bg-[#FF4D00] flex items-center justify-center shrink-0 transition-colors">
                       <ArrowUpRight className="w-4 h-4" />
                     </span>
                   </div>
@@ -275,17 +275,17 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
          ===================================================================== */}
       <section
         id="methode-4-etapes"
-        className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10 text-[#1E2347]"
+        className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10 text-[#0D1F1A]"
       >
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F7D5C5]/70 text-[#1E2347] text-xs font-mono font-bold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-[#F4825A]" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFE8CC]/70 text-[#0D1F1A] text-xs font-mono font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-[#FF4D00]" />
               Processus Clair &amp; Sans Friction
             </span>
-            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight font-[family-name:var(--font-dm-sans)]">
+            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight font-[family-name:var(--font-syne)]">
               Votre projet livré en{" "}
-              <span className="italic font-normal text-[#F4825A] font-[family-name:var(--font-instrument-serif)]">
+              <span className="font-extrabold text-[#FF4D00] font-[family-name:var(--font-syne)]">
                 4 étapes maîtrisées.
               </span>
             </h2>
@@ -294,10 +294,10 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
           <button
             type="button"
             onClick={() => setWizardOpen(true)}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#1E2347] hover:bg-[#4C5FD7] text-white text-xs font-bold transition-all self-start md:self-auto cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0D1F1A] hover:bg-[#00A86B] text-white text-xs font-bold transition-all self-start md:self-auto cursor-pointer"
           >
             <span>Démarrer l&apos;étape 1 gratuitement</span>
-            <ArrowUpRight className="w-4 h-4 text-[#F4825A]" />
+            <ArrowUpRight className="w-4 h-4 text-[#FF4D00]" />
           </button>
         </div>
 
@@ -310,32 +310,32 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
                 ref={(el) => {
                   if (el) methodStepsRef.current[idx] = el;
                 }}
-                className="bg-white rounded-[24px] border border-[#E2DFF5] p-6 flex flex-col justify-between space-y-5 shadow-xs hover:shadow-xl hover:border-[#4C5FD7]/50 transition-all"
+                className="bg-white rounded-[24px] border border-[#E6DEC8] p-6 flex flex-col justify-between space-y-5 shadow-xs hover:shadow-xl hover:border-[#00A86B]/50 transition-all"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-3xl font-extrabold font-mono text-[#F4825A]">
+                    <span className="text-3xl font-extrabold font-mono text-[#FF4D00]">
                       {step.num}
                     </span>
-                    <div className="w-10 h-10 rounded-2xl bg-[#F6F4FF] text-[#4C5FD7] flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-2xl bg-[#FFFBF5] text-[#00A86B] flex items-center justify-center">
                       <Icon className="w-5 h-5" />
                     </div>
                   </div>
 
                   <div>
-                    <span className="text-[11px] font-mono text-[#5C6394] font-semibold">
+                    <span className="text-[11px] font-mono text-[#4A635B] font-semibold">
                       {step.timing}
                     </span>
-                    <h3 className="text-lg font-bold text-[#1E2347] mt-0.5">
+                    <h3 className="text-lg font-bold text-[#0D1F1A] mt-0.5">
                       {step.title}
                     </h3>
-                    <p className="text-xs text-[#434975] mt-2 leading-relaxed">
+                    <p className="text-xs text-[#2D423B] mt-2 leading-relaxed">
                       {step.desc}
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-[#F6F4FF] flex items-center gap-1.5 text-[11px] font-bold text-[#1E2347]">
+                <div className="pt-3 border-t border-[#FFFBF5] flex items-center gap-1.5 text-[11px] font-bold text-[#0D1F1A]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                   <span>{step.deliverable}</span>
                 </div>
@@ -348,14 +348,14 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
       {/* =====================================================================
           3. SECTION FAQ ACCORDÉON & CTA FINAL (PRD §4 & §11)
          ===================================================================== */}
-      <section id="faq" className="max-w-4xl mx-auto px-4 sm:px-6 pb-8 space-y-8 text-[#1E2347]">
+      <section id="faq" className="max-w-4xl mx-auto px-4 sm:px-6 pb-8 space-y-8 text-[#0D1F1A]">
         <div className="text-center space-y-2">
-          <span className="text-xs font-mono uppercase tracking-wider text-[#4C5FD7] font-bold">
+          <span className="text-xs font-mono uppercase tracking-wider text-[#00A86B] font-bold">
             Questions Fréquentes
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-dm-sans)]">
+          <h2 className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-syne)]">
             Tout savoir avant de{" "}
-            <span className="italic font-normal text-[#F4825A] font-[family-name:var(--font-instrument-serif)]">
+            <span className="font-extrabold text-[#FF4D00] font-[family-name:var(--font-syne)]">
               démarrer ensemble
             </span>
           </h2>
@@ -367,25 +367,25 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
             return (
               <div
                 key={faq.id}
-                className="bg-white rounded-[20px] border border-[#E2DFF5] overflow-hidden transition-all"
+                className="bg-white rounded-[20px] border border-[#E6DEC8] overflow-hidden transition-all"
               >
                 <button
                   type="button"
                   onClick={() => setOpenFaqId(isOpen ? null : faq.id)}
                   aria-expanded={isOpen}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#F6F4FF]/50 transition-colors"
+                  className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#FFFBF5]/50 transition-colors"
                 >
-                  <span className="font-bold text-sm sm:text-base text-[#1E2347]">
+                  <span className="font-bold text-sm sm:text-base text-[#0D1F1A]">
                     {faq.question}
                   </span>
                   <ChevronDown
-                    className={`w-5 h-5 text-[#F4825A] shrink-0 transition-transform duration-200 ${
+                    className={`w-5 h-5 text-[#FF4D00] shrink-0 transition-transform duration-200 ${
                       isOpen ? "rotate-180" : ""
                     }`}
                   />
                 </button>
                 {isOpen && (
-                  <div className="px-6 pb-5 text-xs sm:text-sm text-[#434975] leading-relaxed border-t border-[#F6F4FF] pt-3">
+                  <div className="px-6 pb-5 text-xs sm:text-sm text-[#2D423B] leading-relaxed border-t border-[#FFFBF5] pt-3">
                     {faq.reponse}
                   </div>
                 )}

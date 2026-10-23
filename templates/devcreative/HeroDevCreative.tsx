@@ -150,24 +150,24 @@ export function HeroDevCreative({
       <section
         ref={sectionRef}
         id="hero"
-        className="relative pt-24 pb-6 sm:pt-28 sm:pb-10 overflow-hidden bg-[#F6F4FF] text-[#1E2347]"
+        className="relative pt-24 pb-6 sm:pt-28 sm:pb-10 overflow-hidden bg-[#FFFBF5] text-[#0D1F1A]"
       >
         {/* Halo doux éditorial Pêche & Indigo */}
-        <div className="absolute top-12 right-1/4 w-96 h-96 rounded-full bg-[#F7D5C5]/45 blur-[120px] pointer-events-none -z-10" />
-        <div className="absolute bottom-12 left-10 w-80 h-80 rounded-full bg-[#4C5FD7]/10 blur-[110px] pointer-events-none -z-10" />
+        <div className="absolute top-12 right-1/4 w-96 h-96 rounded-full bg-[#FFE8CC]/45 blur-[120px] pointer-events-none -z-10" />
+        <div className="absolute bottom-12 left-10 w-80 h-80 rounded-full bg-[#00A86B]/10 blur-[110px] pointer-events-none -z-10" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* COLONNE GAUCHE : Titre Éditorial, Preuves Chiffrées & Double CTA */}
             <div className="lg:col-span-6 space-y-6">
               {/* Badge de disponibilité Abidjan & International */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E2DFF5] shadow-2xs text-xs font-medium text-[#1E2347]">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#E6DEC8] shadow-2xs text-xs font-medium text-[#0D1F1A]">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Disponible pour missions · Abidjan &amp; International</span>
               </div>
 
               {/* Grand Titre Éditorial DM Sans 700 + Instrument Serif Italique Orange */}
-              <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold tracking-tight leading-[1.06] text-[#1E2347] font-[family-name:var(--font-dm-sans)]">
+              <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold tracking-tight leading-[1.06] text-[#0D1F1A] font-[family-name:var(--font-syne)]">
                 <span ref={(el) => setWordRef(el, 0)} className="inline-block mr-2.5">
                   Je
                 </span>
@@ -176,7 +176,7 @@ export function HeroDevCreative({
                 </span>
                 <span
                   ref={(el) => setWordRef(el, 2)}
-                  className="inline-block mr-2.5 italic font-normal text-[#F4825A] font-[family-name:var(--font-instrument-serif)] text-[1.12em]"
+                  className="inline-block mr-2.5 font-extrabold text-[#FF4D00] underline decoration-[#00A86B] decoration-4 underline-offset-4"
                 >
                   l&apos;architecture digitale
                 </span>
@@ -191,28 +191,28 @@ export function HeroDevCreative({
                 </span>
                 <span
                   ref={(el) => setWordRef(el, 6)}
-                  className="inline-block italic font-normal text-[#F4825A] font-[family-name:var(--font-instrument-serif)] text-[1.12em]"
+                  className="inline-block px-3 py-0.5 rounded-2xl bg-[#00A86B] text-white font-extrabold shadow-md shadow-[#00A86B]/25"
                 >
                   croissance.
                 </span>
               </h1>
 
               {/* Sous-titre orienté apport client */}
-              <p className="text-sm sm:text-base text-[#434975] max-w-xl leading-relaxed">
+              <p className="text-sm sm:text-base text-[#2D423B] max-w-xl leading-relaxed">
                 {hero?.subline ||
                   "Conception d'identités de marque, sites vitrines haute conversion et plateformes web & mobiles sur-mesure. Transformez chaque visite en demande de devis qualifiée."}
               </p>
 
               {/* Pilules de preuves chiffrées (Style référence) */}
               <div className="flex flex-wrap items-center gap-2.5 pt-1">
-                <div className="px-4 py-2 rounded-full bg-white border border-[#E2DFF5] text-xs font-medium text-[#434975] shadow-2xs">
-                  <strong className="text-[#1E2347] font-bold">{projectsCount}+</strong> réalisations
+                <div className="px-4 py-2 rounded-full bg-white border border-[#E6DEC8] text-xs font-medium text-[#2D423B] shadow-2xs">
+                  <strong className="text-[#0D1F1A] font-bold">{projectsCount}+</strong> réalisations
                 </div>
-                <div className="px-4 py-2 rounded-full bg-white border border-[#E2DFF5] text-xs font-medium text-[#434975] shadow-2xs">
-                  <strong className="text-[#1E2347] font-bold">dès 100k FCFA</strong> · tarifs clairs
+                <div className="px-4 py-2 rounded-full bg-white border border-[#E6DEC8] text-xs font-medium text-[#2D423B] shadow-2xs">
+                  <strong className="text-[#0D1F1A] font-bold">dès 100k FCFA</strong> · tarifs clairs
                 </div>
-                <div className="px-4 py-2 rounded-full bg-white border border-[#E2DFF5] text-xs font-medium text-[#434975] shadow-2xs">
-                  <strong className="text-[#1E2347] font-bold">&lt; 24 h</strong> délai de réponse
+                <div className="px-4 py-2 rounded-full bg-white border border-[#E6DEC8] text-xs font-medium text-[#2D423B] shadow-2xs">
+                  <strong className="text-[#0D1F1A] font-bold">&lt; 24 h</strong> délai de réponse
                 </div>
               </div>
 
@@ -224,10 +224,10 @@ export function HeroDevCreative({
                     trackCtaClick("Démarrer un projet", "wizard_modal", "hero_devcreative");
                     setWizardOpen(true);
                   }}
-                  className="group inline-flex items-center gap-3.5 pl-6 pr-2.5 py-2.5 rounded-full bg-[#14172E] hover:bg-[#1E2347] text-white text-xs sm:text-sm font-bold shadow-xl shadow-[#14172E]/15 transition-all active:scale-95 cursor-pointer"
+                  className="group inline-flex items-center gap-3.5 pl-6 pr-2.5 py-2.5 rounded-full bg-[#091410] hover:bg-[#0D1F1A] text-white text-xs sm:text-sm font-bold shadow-xl shadow-[#091410]/15 transition-all active:scale-95 cursor-pointer"
                 >
                   <span>Démarrer un projet</span>
-                  <span className="w-9 h-9 rounded-full bg-[#F4825A] text-[#14172E] flex items-center justify-center group-hover:rotate-12 transition-transform">
+                  <span className="w-9 h-9 rounded-full bg-[#FF4D00] text-[#091410] flex items-center justify-center group-hover:rotate-12 transition-transform">
                     <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                   </span>
                 </button>
@@ -246,7 +246,7 @@ export function HeroDevCreative({
 
                 <Link
                   href="#offres-packs"
-                  className="text-xs font-bold text-[#4C5FD7] hover:underline px-2 py-2"
+                  className="text-xs font-bold text-[#00A86B] hover:underline px-2 py-2"
                 >
                   Voir les offres &amp; packs FCFA →
                 </Link>
@@ -260,7 +260,7 @@ export function HeroDevCreative({
                 {stackProjects.length > 2 && (
                   <div
                     aria-hidden="true"
-                    className="absolute inset-x-6 top-2 h-[320px] sm:h-[360px] rounded-[28px] bg-[#2B1810] border border-white/10 shadow-xl transform rotate-5 scale-[0.91] -translate-y-3 opacity-60 pointer-events-none transition-all duration-500"
+                    className="absolute inset-x-6 top-2 h-[320px] sm:h-[360px] rounded-[28px] bg-[#FFB800] border border-[#091410]/15 shadow-xl transform rotate-5 scale-[0.91] -translate-y-3 opacity-85 pointer-events-none transition-all duration-500"
                   />
                 )}
 
@@ -268,14 +268,14 @@ export function HeroDevCreative({
                 {stackProjects.length > 1 && (
                   <div
                     aria-hidden="true"
-                    className="absolute inset-x-4 top-4 h-[320px] sm:h-[360px] rounded-[28px] bg-[#1E2347] border border-white/15 shadow-xl transform rotate-2 scale-[0.95] -translate-y-1.5 opacity-80 pointer-events-none transition-all duration-500"
+                    className="absolute inset-x-4 top-4 h-[320px] sm:h-[360px] rounded-[28px] bg-[#FF4D00] border border-[#091410]/15 shadow-xl transform rotate-2 scale-[0.95] -translate-y-1.5 opacity-90 pointer-events-none transition-all duration-500"
                   />
                 )}
 
                 {/* Carte Principale au premier plan */}
                 <div
                   ref={activeCardRef}
-                  className="relative z-10 rounded-[28px] bg-[#14172E] p-3 sm:p-4 shadow-2xl border border-white/15 transform -rotate-1 hover:rotate-0 transition-transform duration-300"
+                  className="relative z-10 rounded-[28px] bg-[#091410] p-3 sm:p-4 shadow-2xl border border-white/15 transform -rotate-1 hover:rotate-0 transition-transform duration-300"
                 >
                   {/* Barre de fenêtre style macOS + badge statut */}
                   <div className="flex items-center justify-between px-2 pb-2.5">
@@ -292,7 +292,7 @@ export function HeroDevCreative({
                       onClick={() =>
                         trackProjectClick(currentProject.slug, currentProject.titre, "hero_stack")
                       }
-                      className="text-[11px] font-semibold text-[#F4825A] hover:underline flex items-center gap-1"
+                      className="text-[11px] font-semibold text-[#FF4D00] hover:underline flex items-center gap-1"
                     >
                       <span>Ouvrir</span>
                       <ExternalLink className="w-3 h-3" />
@@ -318,7 +318,7 @@ export function HeroDevCreative({
                       sizes="(max-width: 768px) 100vw, 470px"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#14172E] via-[#14172E]/20 to-transparent opacity-85" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#091410] via-[#091410]/20 to-transparent opacity-85" />
 
                     {/* Légende superposée en bas de la carte */}
                     <div className="absolute bottom-3 inset-x-3 flex items-end justify-between gap-2 text-white">
@@ -338,7 +338,7 @@ export function HeroDevCreative({
                         </h3>
                       </div>
 
-                      <span className="w-9 h-9 rounded-full bg-[#F4825A] text-[#14172E] flex items-center justify-center shrink-0 shadow-md">
+                      <span className="w-9 h-9 rounded-full bg-[#FF4D00] text-[#091410] flex items-center justify-center shrink-0 shadow-md">
                         <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                       </span>
                     </div>
@@ -360,18 +360,18 @@ export function HeroDevCreative({
                   type="button"
                   onClick={handlePrev}
                   aria-label="Projet précédent"
-                  className="w-10 h-10 rounded-full bg-white hover:bg-[#1E2347] text-[#1E2347] hover:text-white border border-[#E2DFF5] flex items-center justify-center shadow-xs transition-all cursor-pointer"
+                  className="w-10 h-10 rounded-full bg-white hover:bg-[#0D1F1A] text-[#0D1F1A] hover:text-white border border-[#E6DEC8] flex items-center justify-center shadow-xs transition-all cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
-                <span className="text-xs font-mono text-[#5C6394]">
+                <span className="text-xs font-mono text-[#4A635B]">
                   Glissez ou cliquez pour parcourir
                 </span>
                 <button
                   type="button"
                   onClick={handleNext}
                   aria-label="Projet suivant"
-                  className="w-10 h-10 rounded-full bg-white hover:bg-[#1E2347] text-[#1E2347] hover:text-white border border-[#E2DFF5] flex items-center justify-center shadow-xs transition-all cursor-pointer"
+                  className="w-10 h-10 rounded-full bg-white hover:bg-[#0D1F1A] text-[#0D1F1A] hover:text-white border border-[#E6DEC8] flex items-center justify-center shadow-xs transition-all cursor-pointer"
                 >
                   <ArrowRight className="w-4 h-4" />
                 </button>
@@ -381,17 +381,17 @@ export function HeroDevCreative({
         </div>
 
         {/* BANDEAU DÉFILANT DE TECHNOLOGIES (Style référence Aquilas Dev avec tuiles blanches) */}
-        <div className="mt-10 sm:mt-14 py-4 bg-white/75 border-y border-[#E2DFF5] overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+        <div className="mt-10 sm:mt-14 py-4 bg-white/75 border-y border-[#E6DEC8] overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
           <div className="animate-marquee flex items-center gap-4 sm:gap-6 px-4">
             {[...TECH_RIBBON_TOOLS, ...TECH_RIBBON_TOOLS].map((tool, idx) => (
               <div
                 key={`${tool}-${idx}`}
-                className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white border border-[#E2DFF5] shadow-2xs shrink-0 hover:border-[#4C5FD7] transition-colors"
+                className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-white border border-[#E6DEC8] shadow-2xs shrink-0 hover:border-[#00A86B] transition-colors"
               >
                 <div className="w-6 h-6 flex items-center justify-center">
                   <ToolIconRenderer name={tool} className="w-5 h-5" />
                 </div>
-                <span className="text-xs font-bold text-[#1E2347] whitespace-nowrap">
+                <span className="text-xs font-bold text-[#0D1F1A] whitespace-nowrap">
                   {tool}
                 </span>
               </div>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useTransition } from "react";
 import {
@@ -44,7 +44,7 @@ const STATUS_BADGES: Record<
 > = {
   NOUVEAU: {
     label: "Nouveau brief",
-    classes: "bg-orange-50 text-[#F4825A] border-orange-200",
+    classes: "bg-orange-50 text-[#FF4D00] border-orange-200",
   },
   CONTACTE: {
     label: "Contacté",
@@ -168,7 +168,7 @@ export default function LeadsAdminClient({
             onClick={() => setActiveTab("leads")}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === "leads"
-                ? "bg-[#14172E] text-white shadow-sm"
+                ? "bg-[#091410] text-white shadow-sm"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
@@ -179,7 +179,7 @@ export default function LeadsAdminClient({
             onClick={() => setActiveTab("waitlist")}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === "waitlist"
-                ? "bg-[#14172E] text-white shadow-sm"
+                ? "bg-[#091410] text-white shadow-sm"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
@@ -220,7 +220,7 @@ export default function LeadsAdminClient({
       {activeTab === "leads" ? (
         filteredLeads.length === 0 ? (
           <div className="bg-white rounded-2xl border border-slate-200/80 p-12 text-center space-y-3">
-            <Sparkles className="w-8 h-8 text-[#F4825A] mx-auto" />
+            <Sparkles className="w-8 h-8 text-[#FF4D00] mx-auto" />
             <h3 className="text-base font-bold text-[#0F172A]">
               Aucun brief qualifié dans cette vue
             </h3>
@@ -269,7 +269,7 @@ export default function LeadsAdminClient({
                           })}
                         </span>
                         <span>•</span>
-                        <span className="font-semibold text-[#14172E]">
+                        <span className="font-semibold text-[#091410]">
                           Budget : {lead.budgetTranche}
                         </span>
                         <span>•</span>
@@ -330,7 +330,7 @@ export default function LeadsAdminClient({
 
                   {/* Tag besoin */}
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-lg bg-[#14172E]/5 text-[#14172E] text-xs font-semibold">
+                    <span className="px-2.5 py-1 rounded-lg bg-[#091410]/5 text-[#091410] text-xs font-semibold">
                       Projet : {lead.typeProjet}
                     </span>
                   </div>
@@ -432,7 +432,7 @@ export default function LeadsAdminClient({
               <tbody className="divide-y divide-slate-100">
                 {waitlistEntries.map((entry) => (
                   <tr key={entry.id} className="hover:bg-slate-50/60">
-                    <td className="py-3.5 px-5 font-bold text-[#14172E]">
+                    <td className="py-3.5 px-5 font-bold text-[#091410]">
                       {entry.offreVisee}
                     </td>
                     <td className="py-3.5 px-4 text-[#2563EB] font-medium">

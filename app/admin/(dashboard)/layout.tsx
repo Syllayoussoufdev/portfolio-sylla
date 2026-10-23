@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { logoutAction } from "../actions/auth";
@@ -130,7 +130,7 @@ export default async function AdminDashboardLayout({
               href="/admin/leads"
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-[#475569] hover:bg-slate-100/80 hover:text-[#2563EB] transition-colors"
             >
-              <Briefcase className="w-4 h-4 text-[#F4825A]" />
+              <Briefcase className="w-4 h-4 text-[#FF4D00]" />
               <span>Leads &amp; Briefs (CRM)</span>
             </Link>
 
@@ -138,7 +138,7 @@ export default async function AdminDashboardLayout({
               href="/admin/offres"
               className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-[#475569] hover:bg-slate-100/80 hover:text-[#2563EB] transition-colors"
             >
-              <Package className="w-4 h-4 text-[#4C5FD7]" />
+              <Package className="w-4 h-4 text-[#00A86B]" />
               <span>Offres &amp; Packs FCFA</span>
             </Link>
 

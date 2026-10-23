@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -69,7 +69,7 @@ export function ServicesPacksDevCreative({
   return (
     <section
       id="offres-packs"
-      className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 scroll-mt-20 space-y-16 text-[#1E2347]"
+      className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 scroll-mt-20 space-y-16 text-[#0D1F1A]"
     >
       {/* =====================================================================
           PARTIE A : LES 4 PACKS CLÉS EN MAIN (PRD §3 & §11)
@@ -77,24 +77,24 @@ export function ServicesPacksDevCreative({
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2 max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F7D5C5]/70 text-[#1E2347] text-xs font-mono font-bold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-[#F4825A]" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFE8CC]/70 text-[#0D1F1A] text-xs font-mono font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-[#FF4D00]" />
               Offres Packagées · Tarifs Transparents
             </span>
-            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight font-[family-name:var(--font-dm-sans)]">
+            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight font-[family-name:var(--font-syne)]">
               Des packs conçus pour votre{" "}
-              <span className="italic font-normal text-[#F4825A] font-[family-name:var(--font-instrument-serif)]">
+              <span className="font-extrabold text-[#FF4D00] font-[family-name:var(--font-syne)]">
                 retour sur investissement.
               </span>
             </h2>
-            <p className="text-sm sm:text-base text-[#434975]">
+            <p className="text-sm sm:text-base text-[#2D423B]">
               Chaque pack regroupe les briques essentielles avec un livrable clair, un délai annoncé et un tarif connu d&apos;avance.
             </p>
           </div>
 
           <Link
             href="/services"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#4C5FD7] hover:underline self-start md:self-auto"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#00A86B] hover:underline self-start md:self-auto"
           >
             <span>Voir la grille détaillée des services</span>
             <ArrowUpRight className="w-4 h-4" />
@@ -112,8 +112,8 @@ export function ServicesPacksDevCreative({
                 key={pack.id}
                 className={`rounded-[28px] p-6 flex flex-col justify-between transition-all duration-300 border-2 ${
                   isFeatured
-                    ? "bg-[#14172E] text-white border-[#F4825A] shadow-2xl lg:-translate-y-2"
-                    : "bg-white text-[#1E2347] border-[#E2DFF5] hover:border-[#4C5FD7]/50 shadow-sm"
+                    ? "bg-[#091410] text-white border-[#FF4D00] shadow-2xl lg:-translate-y-2"
+                    : "bg-white text-[#0D1F1A] border-[#E6DEC8] hover:border-[#00A86B]/50 shadow-sm"
                 }`}
               >
                 <div className="space-y-4">
@@ -133,8 +133,8 @@ export function ServicesPacksDevCreative({
                       <span
                         className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
                           isFeatured
-                            ? "bg-[#F4825A] text-[#14172E]"
-                            : "bg-[#F7D5C5]/60 text-[#1E2347]"
+                            ? "bg-[#FF4D00] text-[#091410]"
+                            : "bg-[#FFE8CC]/60 text-[#0D1F1A]"
                         }`}
                       >
                         {pack.economie}
@@ -144,13 +144,13 @@ export function ServicesPacksDevCreative({
 
                   {/* Titre & Prix FCFA */}
                   <div>
-                    <h3 className="text-xl font-bold font-[family-name:var(--font-dm-sans)]">
+                    <h3 className="text-xl font-bold font-[family-name:var(--font-syne)]">
                       {pack.titre}
                     </h3>
                     <div className="mt-2 flex items-baseline gap-1">
                       <span
-                        className={`text-2xl sm:text-3xl font-extrabold font-[family-name:var(--font-dm-sans)] ${
-                          isFeatured ? "text-[#F4825A]" : "text-[#1E2347]"
+                        className={`text-2xl sm:text-3xl font-extrabold font-[family-name:var(--font-syne)] ${
+                          isFeatured ? "text-[#FF4D00]" : "text-[#0D1F1A]"
                         }`}
                       >
                         {formatFCFA(pack.prix)}
@@ -159,7 +159,7 @@ export function ServicesPacksDevCreative({
                     {pack.sousTitre && (
                       <p
                         className={`text-xs mt-2 leading-relaxed ${
-                          isFeatured ? "text-white/75" : "text-[#434975]"
+                          isFeatured ? "text-white/75" : "text-[#2D423B]"
                         }`}
                       >
                         {pack.sousTitre}
@@ -172,10 +172,10 @@ export function ServicesPacksDevCreative({
                     className={`flex items-center gap-1.5 text-xs font-mono py-2 border-y ${
                       isFeatured
                         ? "border-white/10 text-white/80"
-                        : "border-[#E2DFF5] text-[#5C6394]"
+                        : "border-[#E6DEC8] text-[#4A635B]"
                     }`}
                   >
-                    <Clock className="w-3.5 h-3.5 text-[#F4825A]" />
+                    <Clock className="w-3.5 h-3.5 text-[#FF4D00]" />
                     <span>Délai : {pack.delai}</span>
                   </div>
 
@@ -185,10 +185,10 @@ export function ServicesPacksDevCreative({
                       <li key={idx} className="flex items-start gap-2">
                         <CheckCircle2
                           className={`w-4 h-4 shrink-0 mt-0.5 ${
-                            isFeatured ? "text-[#F4825A]" : "text-[#4C5FD7]"
+                            isFeatured ? "text-[#FF4D00]" : "text-[#00A86B]"
                           }`}
                         />
-                        <span className={isFeatured ? "text-white/90" : "text-[#1E2347]"}>
+                        <span className={isFeatured ? "text-white/90" : "text-[#0D1F1A]"}>
                           {item}
                         </span>
                       </li>
@@ -206,8 +206,8 @@ export function ServicesPacksDevCreative({
                       }
                       className={`w-full py-3.5 px-4 rounded-full text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer ${
                         isFeatured
-                          ? "bg-[#F4825A] hover:bg-[#ff936e] text-[#14172E] shadow-lg"
-                          : "bg-[#1E2347] hover:bg-[#4C5FD7] text-white"
+                          ? "bg-[#FF4D00] hover:bg-[#ff936e] text-[#091410] shadow-lg"
+                          : "bg-[#0D1F1A] hover:bg-[#00A86B] text-white"
                       }`}
                     >
                       <span>Choisir ce pack</span>
@@ -217,9 +217,9 @@ export function ServicesPacksDevCreative({
                     <button
                       type="button"
                       onClick={() => handleOpenWaitlist(pack.titre)}
-                      className="w-full py-3 px-4 rounded-full border border-[#E2DFF5] bg-[#F6F4FF] hover:bg-[#E2DFF5]/60 text-[#1E2347] text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
+                      className="w-full py-3 px-4 rounded-full border border-[#E6DEC8] bg-[#FFFBF5] hover:bg-[#E6DEC8]/60 text-[#0D1F1A] text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
                     >
-                      <Bell className="w-3.5 h-3.5 text-[#F4825A]" />
+                      <Bell className="w-3.5 h-3.5 text-[#FF4D00]" />
                       <span>Rejoindre la liste d&apos;attente</span>
                     </button>
                   )}
@@ -233,13 +233,13 @@ export function ServicesPacksDevCreative({
       {/* =====================================================================
           PARTIE B : LES 5 FAMILLES D'OFFRES À LA CARTE (PRD §3)
          ===================================================================== */}
-      <div id="competences" className="space-y-8 pt-6 border-t border-[#E2DFF5] scroll-mt-20">
+      <div id="competences" className="space-y-8 pt-6 border-t border-[#E6DEC8] scroll-mt-20">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
           <div>
-            <span className="text-xs font-mono uppercase tracking-wider text-[#4C5FD7] font-bold">
+            <span className="text-xs font-mono uppercase tracking-wider text-[#00A86B] font-bold">
               Prestations par famille · Règle « Apport Réel »
             </span>
-            <h3 className="text-2xl sm:text-4xl font-bold mt-1 font-[family-name:var(--font-dm-sans)]">
+            <h3 className="text-2xl sm:text-4xl font-bold mt-1 font-[family-name:var(--font-syne)]">
               Catalogue des 5 familles de services
             </h3>
           </div>
@@ -251,8 +251,8 @@ export function ServicesPacksDevCreative({
               onClick={() => setSelectedFamily("all")}
               className={`px-3.5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 selectedFamily === "all"
-                  ? "bg-[#14172E] text-white"
-                  : "bg-white text-[#434975] border border-[#E2DFF5] hover:border-[#4C5FD7]"
+                  ? "bg-[#091410] text-white"
+                  : "bg-white text-[#2D423B] border border-[#E6DEC8] hover:border-[#00A86B]"
               }`}
             >
               Toutes (5 familles)
@@ -264,8 +264,8 @@ export function ServicesPacksDevCreative({
                 onClick={() => setSelectedFamily(fam.id)}
                 className={`px-3.5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   selectedFamily === fam.id
-                    ? "bg-[#4C5FD7] text-white shadow-xs"
-                    : "bg-white text-[#434975] border border-[#E2DFF5] hover:border-[#4C5FD7]"
+                    ? "bg-[#00A86B] text-white shadow-xs"
+                    : "bg-white text-[#2D423B] border border-[#E6DEC8] hover:border-[#00A86B]"
                 }`}
               >
                 {fam.shortLabel}
@@ -283,11 +283,11 @@ export function ServicesPacksDevCreative({
             return (
               <div
                 key={offer.id}
-                className="bg-white rounded-[24px] border border-[#E2DFF5] p-6 flex flex-col justify-between hover:border-[#4C5FD7]/50 hover:shadow-lg transition-all"
+                className="bg-white rounded-[24px] border border-[#E6DEC8] p-6 flex flex-col justify-between hover:border-[#00A86B]/50 hover:shadow-lg transition-all"
               >
                 <div className="space-y-3.5">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[11px] font-mono font-semibold text-[#4C5FD7] bg-[#F6F4FF] px-2.5 py-1 rounded-full">
+                    <span className="text-[11px] font-mono font-semibold text-[#00A86B] bg-[#FFFBF5] px-2.5 py-1 rounded-full">
                       {familyObj?.shortLabel || offer.famille}
                     </span>
                     <span
@@ -302,21 +302,21 @@ export function ServicesPacksDevCreative({
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-bold text-[#1E2347]">{offer.titre}</h4>
-                    <p className="text-xs text-[#434975] mt-1 leading-relaxed">
+                    <h4 className="text-lg font-bold text-[#0D1F1A]">{offer.titre}</h4>
+                    <p className="text-xs text-[#2D423B] mt-1 leading-relaxed">
                       {offer.accroche}
                     </p>
                   </div>
 
                   {/* Livrables mesurables */}
-                  <div className="p-3.5 rounded-2xl bg-[#F6F4FF]/80 space-y-1.5">
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#5C6394] font-bold">
+                  <div className="p-3.5 rounded-2xl bg-[#FFFBF5]/80 space-y-1.5">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#4A635B] font-bold">
                       Livrables inclus :
                     </div>
-                    <ul className="space-y-1.5 text-xs text-[#1E2347]">
+                    <ul className="space-y-1.5 text-xs text-[#0D1F1A]">
                       {offer.livrables.map((liv, i) => (
                         <li key={i} className="flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#F4825A] shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#FF4D00] shrink-0 mt-0.5" />
                           <span>{liv}</span>
                         </li>
                       ))}
@@ -325,21 +325,21 @@ export function ServicesPacksDevCreative({
                 </div>
 
                 {/* Pied de carte : Tarif FCFA, Délai & Action */}
-                <div className="pt-4 mt-4 border-t border-[#E2DFF5] space-y-3">
+                <div className="pt-4 mt-4 border-t border-[#E6DEC8] space-y-3">
                   <div className="flex items-center justify-between text-xs">
                     <div>
-                      <span className="text-[#5C6394] block text-[10px] font-mono">
+                      <span className="text-[#4A635B] block text-[10px] font-mono">
                         INVESTISSEMENT
                       </span>
-                      <strong className="text-sm font-extrabold text-[#1E2347]">
+                      <strong className="text-sm font-extrabold text-[#0D1F1A]">
                         {offer.prixLabel || formatFCFA(offer.prixDepuis)}
                       </strong>
                     </div>
                     <div className="text-right">
-                      <span className="text-[#5C6394] block text-[10px] font-mono">
+                      <span className="text-[#4A635B] block text-[10px] font-mono">
                         DÉLAI MOYEN
                       </span>
-                      <strong className="text-xs font-bold text-[#434975]">
+                      <strong className="text-xs font-bold text-[#2D423B]">
                         {offer.delai}
                       </strong>
                     </div>
@@ -349,18 +349,18 @@ export function ServicesPacksDevCreative({
                     <button
                       type="button"
                       onClick={() => handleOrderOffer(offer.titre)}
-                      className="w-full py-2.5 px-4 rounded-full bg-[#1E2347] hover:bg-[#4C5FD7] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      className="w-full py-2.5 px-4 rounded-full bg-[#0D1F1A] hover:bg-[#00A86B] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <span>Demander un devis pour cette offre</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#F4825A]" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#FF4D00]" />
                     </button>
                   ) : (
                     <button
                       type="button"
                       onClick={() => handleOpenWaitlist(offer.titre)}
-                      className="w-full py-2.5 px-4 rounded-full border border-[#E2DFF5] bg-slate-50 hover:bg-[#F6F4FF] text-[#434975] text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      className="w-full py-2.5 px-4 rounded-full border border-[#E6DEC8] bg-slate-50 hover:bg-[#FFFBF5] text-[#2D423B] text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                     >
-                      <Bell className="w-3.5 h-3.5 text-[#F4825A]" />
+                      <Bell className="w-3.5 h-3.5 text-[#FF4D00]" />
                       <span>Être prévenu à l&apos;ouverture (Phase {offer.phase})</span>
                     </button>
                   )}

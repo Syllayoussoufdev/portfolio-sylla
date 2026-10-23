@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -252,20 +252,20 @@ export function BriefWizardModal({
 
   const wizardCard = (
     <div
-      className={`bg-white text-[#1E2347] rounded-[24px] border border-[#E2DFF5] shadow-2xl overflow-hidden w-full ${
+      className={`bg-white text-[#0D1F1A] rounded-[24px] border border-[#E6DEC8] shadow-2xl overflow-hidden w-full ${
         inline ? "max-w-3xl mx-auto" : "max-w-2xl max-h-[92vh] flex flex-col"
       }`}
     >
       {/* En-tête du Wizard avec progression */}
-      <div className="bg-[#14172E] text-white px-6 py-5 flex items-center justify-between">
+      <div className="bg-[#091410] text-white px-6 py-5 flex items-center justify-between">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono text-[#F4825A] uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-mono text-[#FF4D00] uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
             <span>
               {step < 5 ? `Brief Rapide · Étape ${step} sur 4` : "Brief Validé & Enregistré"}
             </span>
           </div>
-          <h3 className="text-lg sm:text-xl font-bold mt-0.5 font-[family-name:var(--font-dm-sans)]">
+          <h3 className="text-lg sm:text-xl font-bold mt-0.5 font-[family-name:var(--font-syne)]">
             {step === 1 && "Quel type de projet souhaitez-vous lancer ?"}
             {step === 2 && "Quel est votre objectif principal ?"}
             {step === 3 && "Quel budget et quel délai envisagez-vous ?"}
@@ -288,12 +288,12 @@ export function BriefWizardModal({
 
       {/* Barre de progression 4 étapes */}
       {step < 5 && (
-        <div className="grid grid-cols-4 gap-1 bg-[#F6F4FF] px-6 py-2.5 border-b border-[#E2DFF5]">
+        <div className="grid grid-cols-4 gap-1 bg-[#FFFBF5] px-6 py-2.5 border-b border-[#E6DEC8]">
           {[1, 2, 3, 4].map((num) => (
             <div key={num} className="flex items-center gap-2">
               <div
                 className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
-                  step >= num ? "bg-[#F4825A]" : "bg-[#E2DFF5]"
+                  step >= num ? "bg-[#FF4D00]" : "bg-[#E6DEC8]"
                 }`}
               />
             </div>
@@ -324,27 +324,27 @@ export function BriefWizardModal({
                     onClick={() => setProjectType(item.id)}
                     className={`text-left p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between gap-2 ${
                       selected
-                        ? "border-[#4C5FD7] bg-[#F6F4FF] shadow-sm"
-                        : "border-[#E2DFF5] hover:border-[#4C5FD7]/50 bg-white"
+                        ? "border-[#00A86B] bg-[#FFFBF5] shadow-sm"
+                        : "border-[#E6DEC8] hover:border-[#00A86B]/50 bg-white"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div
                         className={`w-9 h-9 rounded-xl flex items-center justify-center ${
                           selected
-                            ? "bg-[#4C5FD7] text-white"
-                            : "bg-[#F6F4FF] text-[#1E2347]"
+                            ? "bg-[#00A86B] text-white"
+                            : "bg-[#FFFBF5] text-[#0D1F1A]"
                         }`}
                       >
                         <Icon className="w-4 h-4" />
                       </div>
-                      <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-[#F7D5C5]/60 text-[#1E2347]">
+                      <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-[#FFE8CC]/60 text-[#0D1F1A]">
                         {item.priceHint}
                       </span>
                     </div>
                     <div>
-                      <div className="font-bold text-sm text-[#1E2347]">{item.label}</div>
-                      <div className="text-xs text-[#434975] mt-0.5 leading-snug">
+                      <div className="font-bold text-sm text-[#0D1F1A]">{item.label}</div>
+                      <div className="text-xs text-[#2D423B] mt-0.5 leading-snug">
                         {item.desc}
                       </div>
                     </div>
@@ -357,10 +357,10 @@ export function BriefWizardModal({
               <button
                 type="button"
                 onClick={() => goNextStep(2)}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#1E2347] hover:bg-[#4C5FD7] text-white text-xs font-bold transition-all cursor-pointer shadow-md"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0D1F1A] hover:bg-[#00A86B] text-white text-xs font-bold transition-all cursor-pointer shadow-md"
               >
                 <span>Continuer vers l&apos;objectif</span>
-                <ArrowRight className="w-4 h-4 text-[#F4825A]" />
+                <ArrowRight className="w-4 h-4 text-[#FF4D00]" />
               </button>
             </div>
           </div>
@@ -370,7 +370,7 @@ export function BriefWizardModal({
         {step === 2 && (
           <div className="space-y-5">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#434975] mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#2D423B] mb-2">
                 Suggestions rapides (cliquez pour pré-remplir)
               </label>
               <div className="flex flex-wrap gap-2">
@@ -381,8 +381,8 @@ export function BriefWizardModal({
                     onClick={() => setGoal(q)}
                     className={`text-xs px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
                       goal === q
-                        ? "bg-[#4C5FD7] text-white border-[#4C5FD7]"
-                        : "bg-[#F6F4FF] text-[#1E2347] border-[#E2DFF5] hover:border-[#4C5FD7]"
+                        ? "bg-[#00A86B] text-white border-[#00A86B]"
+                        : "bg-[#FFFBF5] text-[#0D1F1A] border-[#E6DEC8] hover:border-[#00A86B]"
                     }`}
                   >
                     + {q}
@@ -394,7 +394,7 @@ export function BriefWizardModal({
             <div>
               <label
                 htmlFor="wizard-goal"
-                className="block text-xs font-bold uppercase tracking-wider text-[#1E2347] mb-2"
+                className="block text-xs font-bold uppercase tracking-wider text-[#0D1F1A] mb-2"
               >
                 Décrivez votre besoin et le résultat attendu *
               </label>
@@ -404,7 +404,7 @@ export function BriefWizardModal({
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
                 placeholder="Ex : J'ai une marque de cosmétiques à Abidjan et je souhaite un site vitrine rapide avec prise de commande directe sur WhatsApp..."
-                className="w-full p-4 rounded-2xl border border-[#E2DFF5] bg-[#F6F4FF]/50 text-sm text-[#1E2347] focus:outline-none focus:ring-2 focus:ring-[#4C5FD7] focus:bg-white"
+                className="w-full p-4 rounded-2xl border border-[#E6DEC8] bg-[#FFFBF5]/50 text-sm text-[#0D1F1A] focus:outline-none focus:ring-2 focus:ring-[#00A86B] focus:bg-white"
               />
             </div>
 
@@ -412,7 +412,7 @@ export function BriefWizardModal({
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E2DFF5] text-xs font-semibold text-[#434975] hover:bg-slate-50 cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E6DEC8] text-xs font-semibold text-[#2D423B] hover:bg-slate-50 cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Retour</span>
@@ -421,10 +421,10 @@ export function BriefWizardModal({
               <button
                 type="button"
                 onClick={() => goNextStep(3)}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#1E2347] hover:bg-[#4C5FD7] text-white text-xs font-bold transition-all cursor-pointer shadow-md"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0D1F1A] hover:bg-[#00A86B] text-white text-xs font-bold transition-all cursor-pointer shadow-md"
               >
                 <span>Continuer vers budget &amp; délai</span>
-                <ArrowRight className="w-4 h-4 text-[#F4825A]" />
+                <ArrowRight className="w-4 h-4 text-[#FF4D00]" />
               </button>
             </div>
           </div>
@@ -434,7 +434,7 @@ export function BriefWizardModal({
         {step === 3 && (
           <div className="space-y-6">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#1E2347] mb-2.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#0D1F1A] mb-2.5">
                 Enveloppe budgétaire envisagée (FCFA) *
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -447,12 +447,12 @@ export function BriefWizardModal({
                       onClick={() => setBudgetRange(b.id)}
                       className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer ${
                         selected
-                          ? "border-[#F4825A] bg-[#F7D5C5]/25"
-                          : "border-[#E2DFF5] hover:border-[#F4825A]/50 bg-white"
+                          ? "border-[#FF4D00] bg-[#FFE8CC]/25"
+                          : "border-[#E6DEC8] hover:border-[#FF4D00]/50 bg-white"
                       }`}
                     >
-                      <div className="font-bold text-sm text-[#1E2347]">{b.label}</div>
-                      <div className="text-[11px] text-[#434975] mt-0.5">{b.sub}</div>
+                      <div className="font-bold text-sm text-[#0D1F1A]">{b.label}</div>
+                      <div className="text-[11px] text-[#2D423B] mt-0.5">{b.sub}</div>
                     </button>
                   );
                 })}
@@ -460,7 +460,7 @@ export function BriefWizardModal({
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#1E2347] mb-2.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#0D1F1A] mb-2.5">
                 Délai de mise en ligne souhaité *
               </label>
               <div className="grid grid-cols-2 gap-2.5">
@@ -473,8 +473,8 @@ export function BriefWizardModal({
                       onClick={() => setDeadline(d.id)}
                       className={`p-3 rounded-xl border text-xs font-semibold text-left transition-all cursor-pointer ${
                         selected
-                          ? "border-[#4C5FD7] bg-[#4C5FD7] text-white"
-                          : "border-[#E2DFF5] bg-[#F6F4FF]/60 text-[#1E2347] hover:border-[#4C5FD7]"
+                          ? "border-[#00A86B] bg-[#00A86B] text-white"
+                          : "border-[#E6DEC8] bg-[#FFFBF5]/60 text-[#0D1F1A] hover:border-[#00A86B]"
                       }`}
                     >
                       {d.label}
@@ -488,7 +488,7 @@ export function BriefWizardModal({
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E2DFF5] text-xs font-semibold text-[#434975] hover:bg-slate-50 cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E6DEC8] text-xs font-semibold text-[#2D423B] hover:bg-slate-50 cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Retour</span>
@@ -497,10 +497,10 @@ export function BriefWizardModal({
               <button
                 type="button"
                 onClick={() => goNextStep(4)}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#1E2347] hover:bg-[#4C5FD7] text-white text-xs font-bold transition-all cursor-pointer shadow-md"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0D1F1A] hover:bg-[#00A86B] text-white text-xs font-bold transition-all cursor-pointer shadow-md"
               >
                 <span>Dernière étape : Coordonnées</span>
-                <ArrowRight className="w-4 h-4 text-[#F4825A]" />
+                <ArrowRight className="w-4 h-4 text-[#FF4D00]" />
               </button>
             </div>
           </div>
@@ -523,7 +523,7 @@ export function BriefWizardModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#1E2347] mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#0D1F1A] mb-1.5">
                   Votre nom complet *
                 </label>
                 <input
@@ -532,12 +532,12 @@ export function BriefWizardModal({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ex : Awa Koné"
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#E2DFF5] text-sm focus:outline-none focus:ring-2 focus:ring-[#4C5FD7]"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[#E6DEC8] text-sm focus:outline-none focus:ring-2 focus:ring-[#00A86B]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#1E2347] mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#0D1F1A] mb-1.5">
                   Numéro WhatsApp *
                 </label>
                 <input
@@ -546,13 +546,13 @@ export function BriefWizardModal({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Ex : +225 07 00 00 00 00"
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#E2DFF5] text-sm focus:outline-none focus:ring-2 focus:ring-[#4C5FD7]"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[#E6DEC8] text-sm focus:outline-none focus:ring-2 focus:ring-[#00A86B]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#1E2347] mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#0D1F1A] mb-1.5">
                 Adresse e-mail professionnelle *
               </label>
               <input
@@ -561,12 +561,12 @@ export function BriefWizardModal({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Ex : contact@entreprise.ci"
-                className="w-full px-4 py-2.5 rounded-xl border border-[#E2DFF5] text-sm focus:outline-none focus:ring-2 focus:ring-[#4C5FD7]"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E6DEC8] text-sm focus:outline-none focus:ring-2 focus:ring-[#00A86B]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#434975] mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#2D423B] mb-1.5">
                 Lien existant ou précision utile (optionnel)
               </label>
               <input
@@ -574,17 +574,17 @@ export function BriefWizardModal({
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Ex : Lien vers votre page Instagram, site actuel ou référence appréciée"
-                className="w-full px-4 py-2.5 rounded-xl border border-[#E2DFF5] text-sm focus:outline-none focus:ring-2 focus:ring-[#4C5FD7]"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E6DEC8] text-sm focus:outline-none focus:ring-2 focus:ring-[#00A86B]"
               />
             </div>
 
             {/* Consentement explicite RGPD / ARTCI */}
-            <label className="flex items-start gap-2.5 pt-1 cursor-pointer text-xs text-[#434975]">
+            <label className="flex items-start gap-2.5 pt-1 cursor-pointer text-xs text-[#2D423B]">
               <input
                 type="checkbox"
                 checked={consent}
                 onChange={(e) => setConsent(e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded text-[#4C5FD7] focus:ring-[#4C5FD7]"
+                className="mt-0.5 w-4 h-4 rounded text-[#00A86B] focus:ring-[#00A86B]"
               />
               <span>
                 J&apos;accepte que mes informations soient utilisées uniquement par Sylla Youssouf pour étudier mon brief et me recontacter.
@@ -592,13 +592,13 @@ export function BriefWizardModal({
             </label>
 
             {/* Bandeau de réassurance PRD §11 */}
-            <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-2xl bg-[#F6F4FF] border border-[#E2DFF5] text-[11px] font-medium text-[#1E2347]">
+            <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-2xl bg-[#FFFBF5] border border-[#E6DEC8] text-[11px] font-medium text-[#0D1F1A]">
               <span className="inline-flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-[#F4825A]" />
+                <Clock className="w-3.5 h-3.5 text-[#FF4D00]" />
                 Réponse sous 24 h garantie
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#4C5FD7]" />
+                <ShieldCheck className="w-3.5 h-3.5 text-[#00A86B]" />
                 Devis gratuit · Aucun engagement
               </span>
             </div>
@@ -607,7 +607,7 @@ export function BriefWizardModal({
               <button
                 type="button"
                 onClick={() => setStep(3)}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E2DFF5] text-xs font-semibold text-[#434975] hover:bg-slate-50 cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E6DEC8] text-xs font-semibold text-[#2D423B] hover:bg-slate-50 cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Retour</span>
@@ -616,7 +616,7 @@ export function BriefWizardModal({
               <button
                 type="submit"
                 disabled={submitting}
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#F4825A] hover:bg-[#e06d44] text-[#14172E] text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-lg disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#FF4D00] hover:bg-[#E04300] text-[#091410] text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-lg disabled:opacity-50"
               >
                 {submitting ? (
                   <>
@@ -642,27 +642,27 @@ export function BriefWizardModal({
             </div>
 
             <div className="space-y-2 max-w-md mx-auto">
-              <h4 className="text-2xl font-bold text-[#1E2347] font-[family-name:var(--font-dm-sans)]">
+              <h4 className="text-2xl font-bold text-[#0D1F1A] font-[family-name:var(--font-syne)]">
                 Merci {name} ! Votre brief est bien enregistré.
               </h4>
-              <p className="text-sm text-[#434975] leading-relaxed">
+              <p className="text-sm text-[#2D423B] leading-relaxed">
                 J&apos;ai reçu votre demande par e-mail et vous réponds sous <strong>24 heures</strong>. Pour gagner encore plus de temps, cliquez ci-dessous pour m&apos;envoyer directement le récapitulatif sur WhatsApp :
               </p>
             </div>
 
             {/* Récapitulatif compact */}
-            <div className="text-left p-4 rounded-2xl bg-[#F6F4FF] border border-[#E2DFF5] max-w-md mx-auto text-xs space-y-1.5 text-[#1E2347]">
+            <div className="text-left p-4 rounded-2xl bg-[#FFFBF5] border border-[#E6DEC8] max-w-md mx-auto text-xs space-y-1.5 text-[#0D1F1A]">
               <div>
-                <span className="text-[#5C6394]">Projet :</span>{" "}
+                <span className="text-[#4A635B]">Projet :</span>{" "}
                 <strong>{PROJECT_TYPES.find((t) => t.id === projectType)?.label || projectType}</strong>
               </div>
               <div>
-                <span className="text-[#5C6394]">Budget :</span>{" "}
-                <strong className="text-[#F4825A]">{budgetRange}</strong> · <span className="text-[#5C6394]">Délai :</span>{" "}
+                <span className="text-[#4A635B]">Budget :</span>{" "}
+                <strong className="text-[#FF4D00]">{budgetRange}</strong> · <span className="text-[#4A635B]">Délai :</span>{" "}
                 <strong>{deadline}</strong>
               </div>
               <div className="line-clamp-2">
-                <span className="text-[#5C6394]">Objectif :</span> {goal}
+                <span className="text-[#4A635B]">Objectif :</span> {goal}
               </div>
             </div>
 
@@ -684,7 +684,7 @@ export function BriefWizardModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-5 py-3.5 rounded-full border border-[#E2DFF5] text-xs font-semibold text-[#434975] hover:bg-slate-50 cursor-pointer"
+                  className="px-5 py-3.5 rounded-full border border-[#E6DEC8] text-xs font-semibold text-[#2D423B] hover:bg-slate-50 cursor-pointer"
                 >
                   Revenir au site
                 </button>
@@ -705,7 +705,7 @@ export function BriefWizardModal({
       role="dialog"
       aria-modal="true"
       aria-label="Démarrer un projet avec Sylla Youssouf"
-      className="fixed inset-0 z-50 bg-[#14172E]/75 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 bg-[#091410]/75 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200"
     >
       {wizardCard}
     </div>
@@ -753,15 +753,15 @@ export function WaitlistModal({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-[#14172E]/75 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-[#091410]/75 backdrop-blur-sm flex items-center justify-center p-4"
     >
-      <div className="bg-white rounded-[24px] border border-[#E2DFF5] max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-5 text-[#1E2347]">
+      <div className="bg-white rounded-[24px] border border-[#E6DEC8] max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-5 text-[#0D1F1A]">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#F7D5C5] text-[#1E2347]">
+            <span className="text-[11px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#FFE8CC] text-[#0D1F1A]">
               Ouverture Prochaine · Liste Prioritaire
             </span>
-            <h3 className="text-xl font-bold mt-2 font-[family-name:var(--font-dm-sans)]">
+            <h3 className="text-xl font-bold mt-2 font-[family-name:var(--font-syne)]">
               {offerTitle}
             </h3>
           </div>
@@ -777,20 +777,20 @@ export function WaitlistModal({
         {done ? (
           <div className="space-y-4 py-2 text-center">
             <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
-            <p className="text-sm text-[#434975]">
+            <p className="text-sm text-[#2D423B]">
               Vous êtes inscrit sur la liste d&apos;attente pour <strong>{offerTitle}</strong>. Vous serez prévenu en priorité dès l&apos;ouverture des prochains créneaux.
             </p>
             <button
               type="button"
               onClick={onClose}
-              className="w-full py-3 rounded-full bg-[#1E2347] text-white text-xs font-bold cursor-pointer"
+              className="w-full py-3 rounded-full bg-[#0D1F1A] text-white text-xs font-bold cursor-pointer"
             >
               Fermer
             </button>
           </div>
         ) : (
           <form onSubmit={handleWaitlist} className="space-y-4">
-            <p className="text-xs text-[#434975] leading-relaxed">
+            <p className="text-xs text-[#2D423B] leading-relaxed">
               Cette prestation ouvre en phase suivante afin de garantir une qualité maximale sur les projets en cours. Laissez votre e-mail pour réserver votre place en priorité :
             </p>
             {err && <p className="text-xs text-red-600 font-medium">{err}</p>}
@@ -800,12 +800,12 @@ export function WaitlistModal({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="votre@email.com"
-              className="w-full px-4 py-3 rounded-xl border border-[#E2DFF5] text-sm focus:outline-none focus:ring-2 focus:ring-[#4C5FD7]"
+              className="w-full px-4 py-3 rounded-xl border border-[#E6DEC8] text-sm focus:outline-none focus:ring-2 focus:ring-[#00A86B]"
             />
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-full bg-[#4C5FD7] hover:bg-[#3b4ec4] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+              className="w-full py-3.5 rounded-full bg-[#00A86B] hover:bg-[#3b4ec4] text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
             >
               {loading ? "Inscription..." : "Me prévenir en priorité"}
             </button>

@@ -179,7 +179,7 @@ export function ProjectsDevCreative({
           {/* Guillemet géant orange en haut à gauche */}
           <div
             aria-hidden="true"
-            className="text-7xl sm:text-8xl font-serif leading-none text-[#FF4D00] select-none mb-2 font-[family-name:var(--font-syne)]"
+            className="text-7xl sm:text-8xl font-serif leading-none text-[#E83F25] select-none mb-2 font-[family-name:var(--font-dev-serif)]"
           >
             “
           </div>
@@ -203,8 +203,8 @@ export function ProjectsDevCreative({
                     title={`Témoignage de ${t.auteur}`}
                     className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-xs transition-all cursor-pointer border-2 ${
                       isActive
-                        ? "border-[#FF4D00] bg-[#091410] text-white scale-110 shadow-md"
-                        : "border-[#E6DEC8] bg-white text-[#2D423B] opacity-70 hover:opacity-100"
+                        ? "border-[#E83F25] bg-[#16121E] text-white scale-110 shadow-md"
+                        : "border-[#E5D9C5] bg-white text-[#3E3552] opacity-70 hover:opacity-100"
                     }`}
                   >
                     {initials}
@@ -217,13 +217,13 @@ export function ProjectsDevCreative({
             <div className="lg:col-span-9 relative order-1 lg:order-2">
               <div
                 ref={quoteCardRef}
-                className="bg-white rounded-[28px] p-7 sm:p-10 shadow-xl border border-[#E6DEC8] transform -rotate-1"
+                className="bg-white rounded-[28px] p-7 sm:p-10 shadow-xl border border-[#E5D9C5] transform -rotate-1"
               >
-                <blockquote className="text-xl sm:text-3xl text-[#0D1F1A] leading-snug font-[family-name:var(--font-syne)] italic">
+                <blockquote className="text-xl sm:text-3xl text-[#1F192B] leading-snug font-[family-name:var(--font-dev-script)] not-italic text-[1.08em]">
                   « {currentTestimonial.citation} »
                 </blockquote>
-                <div className="mt-4 flex items-center gap-2 text-xs text-[#4A635B] font-medium">
-                  <strong className="text-[#0D1F1A]">{currentTestimonial.auteur}</strong>
+                <div className="mt-4 flex items-center gap-2 text-xs text-[#62567A] font-medium">
+                  <strong className="text-[#1F192B]">{currentTestimonial.auteur}</strong>
                   <span>·</span>
                   <span>{currentTestimonial.role}</span>
                   <span>({currentTestimonial.entreprise})</span>
@@ -231,7 +231,7 @@ export function ProjectsDevCreative({
               </div>
 
               {/* Badge Noir Flottant en bas à droite (Style Référence) */}
-              <div className="mt-4 sm:mt-0 sm:absolute sm:-bottom-6 sm:right-6 bg-[#091410] text-white px-5 py-3.5 rounded-2xl shadow-xl border border-white/10 flex items-center justify-between gap-6 max-w-md ml-auto transform rotate-1">
+              <div className="mt-4 sm:mt-0 sm:absolute sm:-bottom-6 sm:right-6 bg-[#16121E] text-white px-5 py-3.5 rounded-2xl shadow-xl border border-white/10 flex items-center justify-between gap-6 max-w-md ml-auto transform rotate-1">
                 <div>
                   <div className="text-xs font-bold text-white"> Approche Orientée Résultats</div>
                   <div className="text-[11px] text-white/70">
@@ -241,7 +241,7 @@ export function ProjectsDevCreative({
                 <button
                   type="button"
                   onClick={() => handleSelectProjectType("presence-en-ligne")}
-                  className="text-xs font-bold text-[#FF4D00] hover:underline shrink-0 cursor-pointer"
+                  className="text-xs font-bold text-[#E83F25] hover:underline shrink-0 cursor-pointer"
                 >
                   Lancer un brief →
                 </button>
@@ -257,7 +257,7 @@ export function ProjectsDevCreative({
       <section className="max-w-7xl mx-auto px-3 sm:px-6">
         <div
           ref={orangeBlockRef}
-          className="rounded-[32px] sm:rounded-[40px] bg-gradient-to-br from-[#FF4D00] via-[#EE602A] to-[#E04F1A] text-[#091410] p-6 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden"
+          className="rounded-[32px] sm:rounded-[40px] bg-gradient-to-br from-[#E83F25] via-[#EE602A] to-[#E04F1A] text-[#16121E] p-6 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Titre gauche : "Et le vôtre ?" */}
@@ -265,14 +265,14 @@ export function ProjectsDevCreative({
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/15 text-white text-xs font-mono uppercase tracking-wider">
                 Configurateur de projet
               </span>
-              <h2 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#091410] font-[family-name:var(--font-syne)] leading-none">
+              <h2 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#16121E] font-[family-name:var(--font-dev-serif)] leading-none">
                 Et le{" "}
-                <span className="font-extrabold underline decoration-[#091410] decoration-2 underline-offset-8 font-[family-name:var(--font-syne)]">
+                <span className="font-normal underline decoration-[#16121E] decoration-2 underline-offset-8 font-[family-name:var(--font-dev-script)] text-[1.08em]">
                   vôtre
                 </span>{" "}
                 ?
               </h2>
-              <p className="text-sm sm:text-base text-[#091410]/85 font-medium leading-relaxed">
+              <p className="text-sm sm:text-base text-[#16121E]/85 font-medium leading-relaxed">
                 Cliquez sur le type de projet que vous souhaitez développer pour ouvrir votre brief guidé en 4 étapes et obtenir votre estimation sous 24 h.
               </p>
             </div>
@@ -287,7 +287,7 @@ export function ProjectsDevCreative({
                       key={`${card.title}-${i}`}
                       type="button"
                       onClick={() => handleSelectProjectType(card.id)}
-                      className="group text-left p-4 sm:p-5 rounded-[24px] bg-white/15 hover:bg-[#091410] text-[#091410] hover:text-white border border-black/10 hover:border-white/20 transition-all duration-300 flex flex-col justify-between min-h-[125px] sm:min-h-[145px] cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1"
+                      className="group text-left p-4 sm:p-5 rounded-[24px] bg-white/15 hover:bg-[#16121E] text-[#16121E] hover:text-white border border-black/10 hover:border-white/20 transition-all duration-300 flex flex-col justify-between min-h-[125px] sm:min-h-[145px] cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1"
                     >
                       <div className="flex items-start justify-between gap-2 w-full">
                         <div>
@@ -304,8 +304,8 @@ export function ProjectsDevCreative({
                       </div>
 
                       <div className="mt-4 flex items-center justify-between">
-                        <Icon className="w-6 h-6 stroke-[1.75] group-hover:text-[#FF4D00] transition-colors" />
-                        <span className="text-[10px] font-mono uppercase tracking-wider opacity-0 group-hover:opacity-100 text-[#FF4D00] transition-opacity">
+                        <Icon className="w-6 h-6 stroke-[1.75] group-hover:text-[#E83F25] transition-colors" />
+                        <span className="text-[10px] font-mono uppercase tracking-wider opacity-0 group-hover:opacity-100 text-[#E83F25] transition-opacity">
                           Choisir →
                         </span>
                       </div>
@@ -314,7 +314,7 @@ export function ProjectsDevCreative({
                 })}
               </div>
 
-              <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-[#091410]/80">
+              <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-[#16121E]/80">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Un seul interlocuteur de la conception graphique jusqu&apos;au déploiement serveur.</span>
               </div>
@@ -329,12 +329,12 @@ export function ProjectsDevCreative({
       <section id="projets" className="max-w-7xl mx-auto px-4 sm:px-6 scroll-mt-20 space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <span className="text-xs font-mono uppercase tracking-wider text-[#00A86B] font-bold">
+            <span className="text-xs font-mono uppercase tracking-wider text-[#1D4ED8] font-bold">
               Preuves par l&apos;exemple
             </span>
-            <h2 className="text-3xl sm:text-5xl font-bold text-[#0D1F1A] mt-1 font-[family-name:var(--font-syne)]">
+            <h2 className="text-3xl sm:text-5xl font-bold text-[#1F192B] mt-1 font-[family-name:var(--font-dev-serif)]">
               Études de cas &amp;{" "}
-              <span className="font-extrabold text-[#FF4D00] font-[family-name:var(--font-syne)]">
+              <span className="font-normal text-[#E83F25] font-[family-name:var(--font-dev-script)] text-[1.08em]">
                 livrables réels
               </span>
             </h2>
@@ -357,8 +357,8 @@ export function ProjectsDevCreative({
                 }}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   selectedFilter === tab.id
-                    ? "bg-[#0D1F1A] text-white shadow-sm"
-                    : "bg-white text-[#2D423B] border border-[#E6DEC8] hover:border-[#00A86B]"
+                    ? "bg-[#1F192B] text-white shadow-sm"
+                    : "bg-white text-[#3E3552] border border-[#E5D9C5] hover:border-[#1D4ED8]"
                 }`}
               >
                 {tab.label}
@@ -377,7 +377,7 @@ export function ProjectsDevCreative({
             return (
               <article
                 key={project.id}
-                className="group bg-white rounded-[24px] border border-[#E6DEC8] overflow-hidden shadow-xs hover:shadow-xl hover:border-[#00A86B]/50 transition-all duration-300 flex flex-col justify-between"
+                className="group bg-white rounded-[24px] border border-[#E5D9C5] overflow-hidden shadow-xs hover:shadow-xl hover:border-[#1D4ED8]/50 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
                   <Link
@@ -385,7 +385,7 @@ export function ProjectsDevCreative({
                     onClick={() =>
                       trackProjectClick(project.slug, project.titre, "devcreative_grid")
                     }
-                    className="block relative aspect-16/10 bg-[#091410] overflow-hidden"
+                    className="block relative aspect-16/10 bg-[#16121E] overflow-hidden"
                   >
                     <Image
                       src={imgUrl}
@@ -398,7 +398,7 @@ export function ProjectsDevCreative({
                       {project.tags.slice(0, 2).map((tag) => (
                         <span
                           key={tag}
-                          className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#091410]/85 text-white backdrop-blur-xs"
+                          className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#16121E]/85 text-white backdrop-blur-xs"
                         >
                           {tag}
                         </span>
@@ -407,22 +407,22 @@ export function ProjectsDevCreative({
                   </Link>
 
                   <div className="p-5 sm:p-6 space-y-2.5">
-                    <h3 className="text-lg font-bold text-[#0D1F1A] group-hover:text-[#00A86B] transition-colors">
+                    <h3 className="text-lg font-bold text-[#1F192B] group-hover:text-[#1D4ED8] transition-colors">
                       <Link href={`/projets/${project.slug}`}>{project.titre}</Link>
                     </h3>
-                    <p className="text-xs text-[#2D423B] line-clamp-3 leading-relaxed">
+                    <p className="text-xs text-[#3E3552] line-clamp-3 leading-relaxed">
                       {project.description}
                     </p>
                   </div>
                 </div>
 
-                <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-[#FFFBF5] flex items-center justify-between">
+                <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-[#FBF7F0] flex items-center justify-between">
                   <Link
                     href={`/projets/${project.slug}`}
                     onClick={() =>
                       trackProjectClick(project.slug, project.titre, "devcreative_grid")
                     }
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#00A86B] hover:underline"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1D4ED8] hover:underline"
                   >
                     <span>Lire l&apos;étude de cas</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
@@ -431,7 +431,7 @@ export function ProjectsDevCreative({
                   <button
                     type="button"
                     onClick={() => handleSelectProjectType("presence-en-ligne")}
-                    className="text-[11px] font-semibold text-[#FF4D00] hover:underline cursor-pointer"
+                    className="text-[11px] font-semibold text-[#E83F25] hover:underline cursor-pointer"
                   >
                     Projet similaire ?
                   </button>

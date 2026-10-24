@@ -52,8 +52,8 @@ export const TEMPLATES_REGISTRY: Record<TemplateId, TemplateDefinition> = {
       "Direction artistique éditoriale inspirée d'Aquilas Dev : cartes projets empilées 3D GSAP, catalogue 5 offres & 4 packs FCFA, wizard 4 étapes.",
     defaultAccent: "default",
     availableAccents: [
-      { id: "default", label: "Lavande, Encre Nuit & Orange Vif", value: "#FF4D00" },
-      { id: "indigo", label: "Indigo Électrique & Corail", value: "#00A86B" },
+      { id: "default", label: "Lavande, Encre Nuit & Orange Vif", value: "#E83F25" },
+      { id: "indigo", label: "Indigo Électrique & Corail", value: "#1D4ED8" },
     ],
   },
 };

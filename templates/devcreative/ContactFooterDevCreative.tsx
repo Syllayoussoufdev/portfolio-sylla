@@ -72,19 +72,19 @@ export function ContactFooterDevCreative({ settings }: ContactFooterDevCreativeP
           {/* Rangée Supérieure : Appel final à la conversion + Gros Bouton Rond Magnétique Orange « Discutons ↗ » */}
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 border-b border-white/10 pb-12">
             <div className="space-y-4 max-w-2xl">
-              <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 text-[#E83F25] text-xs font-mono uppercase tracking-wider">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 text-[#0EA5E9] text-xs font-mono uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" />
                 Prêt à passer à l&apos;action ?
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-none font-[family-name:var(--font-dm-sans)]">
                 Transformons votre vision en{" "}
-                <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
+                <span className="italic font-normal text-[#0EA5E9] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
                   résultats mesurables.
                 </span>
               </h2>
               <div className="flex flex-wrap items-center gap-4 text-xs text-white/75 pt-1">
                 <span className="inline-flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-[#E83F25]" />
+                  <Clock className="w-3.5 h-3.5 text-[#0EA5E9]" />
                   Réponse sous 24 h
                 </span>
                 <span className="inline-flex items-center gap-1.5">
@@ -110,14 +110,14 @@ export function ContactFooterDevCreative({ settings }: ContactFooterDevCreativeP
                     href={`mailto:${settings.emailPublic}`}
                     className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-all"
                   >
-                    <Mail className="w-4 h-4 text-[#E83F25]" />
+                    <Mail className="w-4 h-4 text-[#0EA5E9]" />
                     <span>{settings.emailPublic}</span>
                   </a>
                 )}
 
                 <Link
                   href="/services"
-                  className="inline-flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-white/80 hover:text-[#E83F25] transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-white/80 hover:text-[#0EA5E9] transition-colors"
                 >
                   <span>Consulter tous les tarifs FCFA →</span>
                 </Link>
@@ -133,7 +133,7 @@ export function ContactFooterDevCreative({ settings }: ContactFooterDevCreativeP
                   trackCtaClick("Discutons Circle", "wizard_modal", "footer_devcreative");
                   setWizardOpen(true);
                 }}
-                className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-[#E83F25] hover:bg-[#ff946e] text-[#16121E] flex flex-col items-center justify-center gap-1 shadow-2xl shadow-[#E83F25]/30 cursor-pointer transition-colors group"
+                className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-[#0EA5E9] hover:bg-[#ff946e] text-[#061326] flex flex-col items-center justify-center gap-1 shadow-2xl shadow-[#0EA5E9]/30 cursor-pointer transition-colors group"
               >
                 <ArrowUpRight className="w-6 h-6 stroke-[2.5] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 <span className="text-sm sm:text-base font-extrabold tracking-tight font-[family-name:var(--font-dm-sans)]">
@@ -147,7 +147,7 @@ export function ContactFooterDevCreative({ settings }: ContactFooterDevCreativeP
           {/* Signature Typographique Monumentale Pleine Largeur (Style Référence Bas de Page) */}
           <div className="pt-2 select-none overflow-hidden">
             <div className="flex items-center justify-center gap-3 sm:gap-5">
-              <span className="inline-flex items-center justify-center px-3 py-1 sm:px-5 sm:py-2 rounded-2xl bg-[#E83F25] text-[#16121E] font-mono font-black text-2xl sm:text-5xl lg:text-6xl">
+              <span className="inline-flex items-center justify-center px-3 py-1 sm:px-5 sm:py-2 rounded-2xl bg-[#0EA5E9] text-[#061326] font-mono font-black text-2xl sm:text-5xl lg:text-6xl">
                 &lt;/&gt;
               </span>
               <span className="text-[11vw] sm:text-[9vw] font-extrabold tracking-tighter leading-none text-white font-[family-name:var(--font-dm-sans)]">

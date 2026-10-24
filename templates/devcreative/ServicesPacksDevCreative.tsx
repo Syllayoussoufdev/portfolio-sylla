@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -103,7 +103,7 @@ export function ServicesPacksDevCreative({
     <section
       id="offres-packs"
       ref={sectionRef}
-      className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 scroll-mt-20 space-y-16 text-[#1F192B]"
+      className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 scroll-mt-20 space-y-16 text-[#0A1D37]"
     >
       {/* =====================================================================
           PARTIE A : LES 4 PACKS CLÉS EN MAIN (PRD §3 & §11)
@@ -111,24 +111,24 @@ export function ServicesPacksDevCreative({
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2 max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FCE7D2]/70 text-[#1F192B] text-xs font-mono font-bold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-[#E83F25]" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E0F2FE]/70 text-[#0A1D37] text-xs font-mono font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-[#0EA5E9]" />
               Offres Packagées · Tarifs Transparents
             </span>
             <h2 className="text-3xl sm:text-5xl font-bold tracking-tight font-[family-name:var(--font-dm-sans)]">
               Des packs conçus pour votre{" "}
-              <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
+              <span className="italic font-normal text-[#0EA5E9] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
                 retour sur investissement.
               </span>
             </h2>
-            <p className="text-sm sm:text-base text-[#3E3552]">
+            <p className="text-sm sm:text-base text-[#334E68]">
               Chaque pack regroupe les briques essentielles avec un livrable clair, un délai annoncé et un tarif connu d&apos;avance.
             </p>
           </div>
 
           <Link
             href="/services"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1D4ED8] hover:underline self-start md:self-auto"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#2563EB] hover:underline self-start md:self-auto"
           >
             <span>Voir la grille détaillée des services</span>
             <ArrowUpRight className="w-4 h-4" />
@@ -146,8 +146,8 @@ export function ServicesPacksDevCreative({
                 key={pack.id}
                 className={`rounded-[28px] p-6 flex flex-col justify-between transition-all duration-300 border-2 ${
                   isFeatured
-                    ? "bg-[#16121E] text-white border-[#E83F25] shadow-2xl lg:-translate-y-2"
-                    : "bg-white text-[#1F192B] border-[#E5D9C5] hover:border-[#1D4ED8]/50 shadow-sm"
+                    ? "bg-[#061326] text-white border-[#0EA5E9] shadow-2xl lg:-translate-y-2"
+                    : "bg-white text-[#0A1D37] border-[#CBE2FF] hover:border-[#2563EB]/50 shadow-sm"
                 }`}
               >
                 <div className="space-y-4">
@@ -167,8 +167,8 @@ export function ServicesPacksDevCreative({
                       <span
                         className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
                           isFeatured
-                            ? "bg-[#E83F25] text-[#16121E]"
-                            : "bg-[#FCE7D2]/60 text-[#1F192B]"
+                            ? "bg-[#0EA5E9] text-[#061326]"
+                            : "bg-[#E0F2FE]/60 text-[#0A1D37]"
                         }`}
                       >
                         {pack.economie}
@@ -184,7 +184,7 @@ export function ServicesPacksDevCreative({
                     <div className="mt-2 flex items-baseline gap-1">
                       <span
                         className={`text-2xl sm:text-3xl font-extrabold font-[family-name:var(--font-dm-sans)] ${
-                          isFeatured ? "text-[#E83F25]" : "text-[#1F192B]"
+                          isFeatured ? "text-[#0EA5E9]" : "text-[#0A1D37]"
                         }`}
                       >
                         {formatFCFA(pack.prix)}
@@ -193,7 +193,7 @@ export function ServicesPacksDevCreative({
                     {pack.sousTitre && (
                       <p
                         className={`text-xs mt-2 leading-relaxed ${
-                          isFeatured ? "text-white/75" : "text-[#3E3552]"
+                          isFeatured ? "text-white/75" : "text-[#334E68]"
                         }`}
                       >
                         {pack.sousTitre}
@@ -206,10 +206,10 @@ export function ServicesPacksDevCreative({
                     className={`flex items-center gap-1.5 text-xs font-mono py-2 border-y ${
                       isFeatured
                         ? "border-white/10 text-white/80"
-                        : "border-[#E5D9C5] text-[#62567A]"
+                        : "border-[#CBE2FF] text-[#526D82]"
                     }`}
                   >
-                    <Clock className="w-3.5 h-3.5 text-[#E83F25]" />
+                    <Clock className="w-3.5 h-3.5 text-[#0EA5E9]" />
                     <span>Délai : {pack.delai}</span>
                   </div>
 
@@ -219,10 +219,10 @@ export function ServicesPacksDevCreative({
                       <li key={idx} className="flex items-start gap-2">
                         <CheckCircle2
                           className={`w-4 h-4 shrink-0 mt-0.5 ${
-                            isFeatured ? "text-[#E83F25]" : "text-[#1D4ED8]"
+                            isFeatured ? "text-[#0EA5E9]" : "text-[#2563EB]"
                           }`}
                         />
-                        <span className={isFeatured ? "text-white/90" : "text-[#1F192B]"}>
+                        <span className={isFeatured ? "text-white/90" : "text-[#0A1D37]"}>
                           {item}
                         </span>
                       </li>
@@ -240,8 +240,8 @@ export function ServicesPacksDevCreative({
                       }
                       className={`w-full py-3.5 px-4 rounded-full text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer ${
                         isFeatured
-                          ? "bg-[#E83F25] hover:bg-[#ff936e] text-[#16121E] shadow-lg"
-                          : "bg-[#1F192B] hover:bg-[#1D4ED8] text-white"
+                          ? "bg-[#0EA5E9] hover:bg-[#ff936e] text-[#061326] shadow-lg"
+                          : "bg-[#0A1D37] hover:bg-[#2563EB] text-white"
                       }`}
                     >
                       <span>Choisir ce pack</span>
@@ -251,9 +251,9 @@ export function ServicesPacksDevCreative({
                     <button
                       type="button"
                       onClick={() => handleOpenWaitlist(pack.titre)}
-                      className="w-full py-3 px-4 rounded-full border border-[#E5D9C5] bg-[#FBF7F0] hover:bg-[#E5D9C5]/60 text-[#1F192B] text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
+                      className="w-full py-3 px-4 rounded-full border border-[#CBE2FF] bg-[#F0F7FF] hover:bg-[#CBE2FF]/60 text-[#0A1D37] text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
                     >
-                      <Bell className="w-3.5 h-3.5 text-[#E83F25]" />
+                      <Bell className="w-3.5 h-3.5 text-[#0EA5E9]" />
                       <span>Rejoindre la liste d&apos;attente</span>
                     </button>
                   )}
@@ -267,10 +267,10 @@ export function ServicesPacksDevCreative({
       {/* =====================================================================
           PARTIE B : LES 5 FAMILLES D'OFFRES À LA CARTE (PRD §3)
          ===================================================================== */}
-      <div id="competences" className="space-y-8 pt-6 border-t border-[#E5D9C5] scroll-mt-20">
+      <div id="competences" className="space-y-8 pt-6 border-t border-[#CBE2FF] scroll-mt-20">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
           <div>
-            <span className="text-xs font-mono uppercase tracking-wider text-[#1D4ED8] font-bold">
+            <span className="text-xs font-mono uppercase tracking-wider text-[#2563EB] font-bold">
               Prestations par famille · Règle « Apport Réel »
             </span>
             <h3 className="text-2xl sm:text-4xl font-bold mt-1 font-[family-name:var(--font-dm-sans)]">
@@ -285,8 +285,8 @@ export function ServicesPacksDevCreative({
               onClick={() => setSelectedFamily("all")}
               className={`px-3.5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 selectedFamily === "all"
-                  ? "bg-[#16121E] text-white"
-                  : "bg-white text-[#3E3552] border border-[#E5D9C5] hover:border-[#1D4ED8]"
+                  ? "bg-[#061326] text-white"
+                  : "bg-white text-[#334E68] border border-[#CBE2FF] hover:border-[#2563EB]"
               }`}
             >
               Toutes (5 familles)
@@ -298,8 +298,8 @@ export function ServicesPacksDevCreative({
                 onClick={() => setSelectedFamily(fam.id)}
                 className={`px-3.5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   selectedFamily === fam.id
-                    ? "bg-[#1D4ED8] text-white shadow-xs"
-                    : "bg-white text-[#3E3552] border border-[#E5D9C5] hover:border-[#1D4ED8]"
+                    ? "bg-[#2563EB] text-white shadow-xs"
+                    : "bg-white text-[#334E68] border border-[#CBE2FF] hover:border-[#2563EB]"
                 }`}
               >
                 {fam.shortLabel}
@@ -317,11 +317,11 @@ export function ServicesPacksDevCreative({
             return (
               <div
                 key={offer.id}
-                className="bg-white rounded-[24px] border border-[#E5D9C5] p-6 flex flex-col justify-between hover:border-[#1D4ED8]/50 hover:shadow-lg transition-all"
+                className="bg-white rounded-[24px] border border-[#CBE2FF] p-6 flex flex-col justify-between hover:border-[#2563EB]/50 hover:shadow-lg transition-all"
               >
                 <div className="space-y-3.5">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[11px] font-mono font-semibold text-[#1D4ED8] bg-[#FBF7F0] px-2.5 py-1 rounded-full">
+                    <span className="text-[11px] font-mono font-semibold text-[#2563EB] bg-[#F0F7FF] px-2.5 py-1 rounded-full">
                       {familyObj?.shortLabel || offer.famille}
                     </span>
                     <span
@@ -336,21 +336,21 @@ export function ServicesPacksDevCreative({
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-bold text-[#1F192B]">{offer.titre}</h4>
-                    <p className="text-xs text-[#3E3552] mt-1 leading-relaxed">
+                    <h4 className="text-lg font-bold text-[#0A1D37]">{offer.titre}</h4>
+                    <p className="text-xs text-[#334E68] mt-1 leading-relaxed">
                       {offer.accroche}
                     </p>
                   </div>
 
                   {/* Livrables mesurables */}
-                  <div className="p-3.5 rounded-2xl bg-[#FBF7F0]/80 space-y-1.5">
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#62567A] font-bold">
+                  <div className="p-3.5 rounded-2xl bg-[#F0F7FF]/80 space-y-1.5">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#526D82] font-bold">
                       Livrables inclus :
                     </div>
-                    <ul className="space-y-1.5 text-xs text-[#1F192B]">
+                    <ul className="space-y-1.5 text-xs text-[#0A1D37]">
                       {offer.livrables.map((liv, i) => (
                         <li key={i} className="flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#E83F25] shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#0EA5E9] shrink-0 mt-0.5" />
                           <span>{liv}</span>
                         </li>
                       ))}
@@ -359,21 +359,21 @@ export function ServicesPacksDevCreative({
                 </div>
 
                 {/* Pied de carte : Tarif FCFA, Délai & Action */}
-                <div className="pt-4 mt-4 border-t border-[#E5D9C5] space-y-3">
+                <div className="pt-4 mt-4 border-t border-[#CBE2FF] space-y-3">
                   <div className="flex items-center justify-between text-xs">
                     <div>
-                      <span className="text-[#62567A] block text-[10px] font-mono">
+                      <span className="text-[#526D82] block text-[10px] font-mono">
                         INVESTISSEMENT
                       </span>
-                      <strong className="text-sm font-extrabold text-[#1F192B]">
+                      <strong className="text-sm font-extrabold text-[#0A1D37]">
                         {offer.prixLabel || formatFCFA(offer.prixDepuis)}
                       </strong>
                     </div>
                     <div className="text-right">
-                      <span className="text-[#62567A] block text-[10px] font-mono">
+                      <span className="text-[#526D82] block text-[10px] font-mono">
                         DÉLAI MOYEN
                       </span>
-                      <strong className="text-xs font-bold text-[#3E3552]">
+                      <strong className="text-xs font-bold text-[#334E68]">
                         {offer.delai}
                       </strong>
                     </div>
@@ -383,18 +383,18 @@ export function ServicesPacksDevCreative({
                     <button
                       type="button"
                       onClick={() => handleOrderOffer(offer.titre)}
-                      className="w-full py-2.5 px-4 rounded-full bg-[#1F192B] hover:bg-[#1D4ED8] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      className="w-full py-2.5 px-4 rounded-full bg-[#0A1D37] hover:bg-[#2563EB] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <span>Demander un devis pour cette offre</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#E83F25]" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#0EA5E9]" />
                     </button>
                   ) : (
                     <button
                       type="button"
                       onClick={() => handleOpenWaitlist(offer.titre)}
-                      className="w-full py-2.5 px-4 rounded-full border border-[#E5D9C5] bg-slate-50 hover:bg-[#FBF7F0] text-[#3E3552] text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      className="w-full py-2.5 px-4 rounded-full border border-[#CBE2FF] bg-slate-50 hover:bg-[#F0F7FF] text-[#334E68] text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                     >
-                      <Bell className="w-3.5 h-3.5 text-[#E83F25]" />
+                      <Bell className="w-3.5 h-3.5 text-[#0EA5E9]" />
                       <span>Être prévenu à l&apos;ouverture (Phase {offer.phase})</span>
                     </button>
                   )}

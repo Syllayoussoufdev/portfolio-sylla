@@ -23,22 +23,22 @@ export default async function ServicesCatalogPage() {
   return (
     <div
       data-template="devcreative"
-      className="min-h-screen bg-[#FBF7F0] text-[#1F192B] flex flex-col justify-between"
+      className="min-h-screen bg-[#F0F7FF] text-[#0A1D37] flex flex-col justify-between"
     >
       <header className="max-w-7xl w-full mx-auto px-4 sm:px-6 pt-8 pb-2 flex items-center justify-between">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#E5D9C5] text-xs font-bold text-[#1F192B] hover:border-[#1D4ED8] transition-all shadow-2xs"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#CBE2FF] text-xs font-bold text-[#0A1D37] hover:border-[#2563EB] transition-all shadow-2xs"
         >
-          <ArrowLeft className="w-3.5 h-3.5 text-[#E83F25]" />
+          <ArrowLeft className="w-3.5 h-3.5 text-[#0EA5E9]" />
           <span>Retour au portfolio</span>
         </Link>
 
         <Link
           href="/demarrer"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#16121E] hover:bg-[#1D4ED8] text-white text-xs font-bold transition-all shadow-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#061326] hover:bg-[#2563EB] text-white text-xs font-bold transition-all shadow-sm"
         >
-          <Sparkles className="w-3.5 h-3.5 text-[#E83F25]" />
+          <Sparkles className="w-3.5 h-3.5 text-[#0EA5E9]" />
           <span>Démarrer un brief en 4 étapes</span>
         </Link>
       </header>

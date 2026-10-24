@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -229,7 +229,7 @@ export function ProjectsDevCreative({
         <div className="relative py-6 sm:py-10">
           <div
             aria-hidden="true"
-            className="text-7xl sm:text-8xl font-serif leading-none text-[#E83F25] select-none mb-2 font-[family-name:var(--font-dm-sans)]"
+            className="text-7xl sm:text-8xl font-serif leading-none text-[#0EA5E9] select-none mb-2 font-[family-name:var(--font-dm-sans)]"
           >
             “
           </div>
@@ -253,8 +253,8 @@ export function ProjectsDevCreative({
                     title={`Témoignage de ${t.auteur}`}
                     className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-xs transition-all cursor-pointer border-2 ${
                       isActive
-                        ? "border-[#E83F25] bg-[#16121E] text-white scale-110 shadow-md"
-                        : "border-[#E5D9C5] bg-white text-[#3E3552] opacity-70 hover:opacity-100"
+                        ? "border-[#0EA5E9] bg-[#061326] text-white scale-110 shadow-md"
+                        : "border-[#CBE2FF] bg-white text-[#334E68] opacity-70 hover:opacity-100"
                     }`}
                   >
                     {initials}
@@ -267,13 +267,13 @@ export function ProjectsDevCreative({
             <div className="lg:col-span-9 relative order-1 lg:order-2">
               <div
                 ref={quoteCardRef}
-                className="bg-white rounded-[28px] p-7 sm:p-10 shadow-xl border border-[#E5D9C5] transform -rotate-1"
+                className="bg-white rounded-[28px] p-7 sm:p-10 shadow-xl border border-[#CBE2FF] transform -rotate-1"
               >
-                <blockquote className="text-xl sm:text-3xl text-[#1F192B] leading-snug italic font-[family-name:var(--font-instrument-serif)] text-[1.08em]">
+                <blockquote className="text-xl sm:text-3xl text-[#0A1D37] leading-snug italic font-[family-name:var(--font-instrument-serif)] text-[1.08em]">
                   « {currentTestimonial.citation} »
                 </blockquote>
-                <div className="mt-4 flex items-center gap-2 text-xs text-[#62567A] font-medium">
-                  <strong className="text-[#1F192B]">{currentTestimonial.auteur}</strong>
+                <div className="mt-4 flex items-center gap-2 text-xs text-[#526D82] font-medium">
+                  <strong className="text-[#0A1D37]">{currentTestimonial.auteur}</strong>
                   <span>·</span>
                   <span>{currentTestimonial.role}</span>
                   <span>({currentTestimonial.entreprise})</span>
@@ -281,7 +281,7 @@ export function ProjectsDevCreative({
               </div>
 
               {/* Badge Noir Flottant en bas à droite */}
-              <div className="mt-4 sm:mt-0 sm:absolute sm:-bottom-6 sm:right-6 bg-[#16121E] text-white px-5 py-3.5 rounded-2xl shadow-xl border border-white/10 flex items-center justify-between gap-6 max-w-md ml-auto transform rotate-1">
+              <div className="mt-4 sm:mt-0 sm:absolute sm:-bottom-6 sm:right-6 bg-[#061326] text-white px-5 py-3.5 rounded-2xl shadow-xl border border-white/10 flex items-center justify-between gap-6 max-w-md ml-auto transform rotate-1">
                 <div>
                   <div className="text-xs font-bold text-white">Approche Orientée Résultats</div>
                   <div className="text-[11px] text-white/70">
@@ -291,7 +291,7 @@ export function ProjectsDevCreative({
                 <button
                   type="button"
                   onClick={() => handleSelectProjectType("presence-en-ligne")}
-                  className="text-xs font-bold text-[#E83F25] hover:underline shrink-0 cursor-pointer"
+                  className="text-xs font-bold text-[#0EA5E9] hover:underline shrink-0 cursor-pointer"
                 >
                   Lancer un brief →
                 </button>
@@ -307,19 +307,19 @@ export function ProjectsDevCreative({
       <section className="max-w-7xl mx-auto px-3 sm:px-6">
         <div
           ref={orangeBlockRef}
-          className="rounded-[32px] sm:rounded-[44px] bg-[#F04E1A] text-[#141210] p-6 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden"
+          className="rounded-[32px] sm:rounded-[44px] bg-gradient-to-br from-[#38BDF8] via-[#0EA5E9] to-[#0284C7] text-[#061326] p-6 sm:p-12 lg:p-16 shadow-2xl relative overflow-hidden"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Titre gauche : "Et le vôtre ?" */}
             <div className="lg:col-span-5 space-y-4">
-              <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#141210] font-[family-name:var(--font-dm-sans)] leading-none">
+              <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#061326] font-[family-name:var(--font-dm-sans)] leading-none">
                 Et le{" "}
                 <span className="relative inline-block italic font-normal font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
                   vôtre
                   <svg
                     viewBox="0 0 180 20"
                     fill="none"
-                    className="absolute -bottom-2 left-0 w-full h-4 text-[#141210]"
+                    className="absolute -bottom-2 left-0 w-full h-4 text-[#061326]"
                     aria-hidden="true"
                   >
                     <path
@@ -364,7 +364,7 @@ export function ProjectsDevCreative({
                           ? "rgba(20, 18, 16, 0.08)"
                           : "rgba(255, 255, 255, 0.05)",
                       }}
-                      className="group relative overflow-hidden text-left p-4 sm:p-5 rounded-[24px] text-[#141210] border border-[#141210]/15 hover:border-[#141210]/35 transition-all duration-300 flex flex-col justify-between min-h-[155px] sm:min-h-[180px] cursor-pointer"
+                      className="group relative overflow-hidden text-left p-4 sm:p-5 rounded-[24px] text-[#061326] border border-[#061326]/15 hover:border-[#061326]/35 transition-all duration-300 flex flex-col justify-between min-h-[155px] sm:min-h-[180px] cursor-pointer"
                     >
                       {/* En-tête de la carte : Titre + Cercle radio */}
                       <div className="flex items-start justify-between gap-2 w-full relative z-10">
@@ -373,9 +373,9 @@ export function ProjectsDevCreative({
                         </div>
                         <span
                           style={{
-                            backgroundColor: isHovered ? "#141210" : "transparent",
+                            backgroundColor: isHovered ? "#061326" : "transparent",
                           }}
-                          className="w-4 h-4 rounded-full border border-[#141210]/40 transition-colors shrink-0 mt-0.5"
+                          className="w-4 h-4 rounded-full border border-[#061326]/40 transition-colors shrink-0 mt-0.5"
                         />
                       </div>
 
@@ -384,7 +384,7 @@ export function ProjectsDevCreative({
                         style={{ opacity: isHovered ? 0.2 : 1 }}
                         className="mt-4 flex items-center justify-between relative z-10 transition-opacity duration-200"
                       >
-                        <Icon className="w-6 h-6 sm:w-7 sm:h-7 stroke-[1.75] text-[#141210]" />
+                        <Icon className="w-6 h-6 sm:w-7 sm:h-7 stroke-[1.75] text-[#061326]" />
                       </div>
 
                       {/* Mini fenêtre navigateur inclinée qui surgit au survol (Pilotée en inline style pour 100% de visibilité) */}
@@ -398,7 +398,7 @@ export function ProjectsDevCreative({
                           transition:
                             "transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease",
                         }}
-                        className="absolute right-2.5 bottom-0 w-[76%] h-[112px] rounded-t-2xl bg-[#FBF7F0] p-1.5 shadow-2xl border border-[#141210]/10 pointer-events-none z-20"
+                        className="absolute right-2.5 bottom-0 w-[76%] h-[112px] rounded-t-2xl bg-[#F0F7FF] p-1.5 shadow-2xl border border-[#061326]/10 pointer-events-none z-20"
                       >
                         <div className="flex items-center justify-between px-1.5 pb-1">
                           <div className="flex items-center gap-1">
@@ -406,7 +406,7 @@ export function ProjectsDevCreative({
                             <span className="w-1.5 h-1.5 rounded-full bg-[#FFBD2E]" />
                             <span className="w-1.5 h-1.5 rounded-full bg-[#27C93F]" />
                           </div>
-                          <span className="text-[8px] font-mono text-[#141210]/65 bg-black/5 px-2 py-0.5 rounded-full truncate max-w-[75px]">
+                          <span className="text-[8px] font-mono text-[#061326]/65 bg-black/5 px-2 py-0.5 rounded-full truncate max-w-[75px]">
                             {card.domain}
                           </span>
                         </div>
@@ -425,7 +425,7 @@ export function ProjectsDevCreative({
                 })}
               </div>
 
-              <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-[#141210]/80">
+              <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-[#061326]/80">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Survolez une catégorie et cliquez pour configurer votre projet en 4 étapes.</span>
               </div>
@@ -440,12 +440,12 @@ export function ProjectsDevCreative({
       <section id="projets" className="max-w-7xl mx-auto px-4 sm:px-6 scroll-mt-20 space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <span className="text-xs font-mono uppercase tracking-wider text-[#1D4ED8] font-bold">
+            <span className="text-xs font-mono uppercase tracking-wider text-[#2563EB] font-bold">
               Preuves par l&apos;exemple
             </span>
-            <h2 className="text-3xl sm:text-5xl font-bold text-[#1F192B] mt-1 font-[family-name:var(--font-dm-sans)]">
+            <h2 className="text-3xl sm:text-5xl font-bold text-[#0A1D37] mt-1 font-[family-name:var(--font-dm-sans)]">
               Études de cas &amp;{" "}
-              <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
+              <span className="italic font-normal text-[#0EA5E9] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
                 livrables réels
               </span>
             </h2>
@@ -468,8 +468,8 @@ export function ProjectsDevCreative({
                 }}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   selectedFilter === tab.id
-                    ? "bg-[#1F192B] text-white shadow-sm"
-                    : "bg-white text-[#3E3552] border border-[#E5D9C5] hover:border-[#1D4ED8]"
+                    ? "bg-[#0A1D37] text-white shadow-sm"
+                    : "bg-white text-[#334E68] border border-[#CBE2FF] hover:border-[#2563EB]"
                 }`}
               >
                 {tab.label}
@@ -492,10 +492,10 @@ export function ProjectsDevCreative({
                   if (el) projectCardsRef.current[idx] = el;
                 }}
                 onClick={() => setActiveProjectPrompt(project)}
-                className="group bg-white rounded-[24px] border border-[#E5D9C5] overflow-hidden shadow-xs hover:shadow-xl hover:border-[#E83F25]/50 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer"
+                className="group bg-white rounded-[24px] border border-[#CBE2FF] overflow-hidden shadow-xs hover:shadow-xl hover:border-[#0EA5E9]/50 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer"
               >
                 <div>
-                  <div className="block relative aspect-16/10 bg-[#16121E] overflow-hidden">
+                  <div className="block relative aspect-16/10 bg-[#061326] overflow-hidden">
                     <Image
                       src={imgUrl}
                       alt={project.titre}
@@ -507,7 +507,7 @@ export function ProjectsDevCreative({
                       {project.tags.slice(0, 2).map((tag) => (
                         <span
                           key={tag}
-                          className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#16121E]/85 text-white backdrop-blur-xs"
+                          className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#061326]/85 text-white backdrop-blur-xs"
                         >
                           {tag}
                         </span>
@@ -516,23 +516,23 @@ export function ProjectsDevCreative({
                   </div>
 
                   <div className="p-5 sm:p-6 space-y-2.5">
-                    <h3 className="text-lg font-bold text-[#1F192B] group-hover:text-[#E83F25] transition-colors">
+                    <h3 className="text-lg font-bold text-[#0A1D37] group-hover:text-[#0EA5E9] transition-colors">
                       {project.titre}
                     </h3>
-                    <p className="text-xs text-[#3E3552] line-clamp-3 leading-relaxed">
+                    <p className="text-xs text-[#334E68] line-clamp-3 leading-relaxed">
                       {project.description}
                     </p>
                   </div>
                 </div>
 
-                <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-[#FBF7F0] flex items-center justify-between">
+                <div className="px-5 sm:px-6 pb-5 pt-3 border-t border-[#F0F7FF] flex items-center justify-between">
                   <Link
                     href={`/projets/${project.slug}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       trackProjectClick(project.slug, project.titre, "devcreative_grid");
                     }}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#16121E] hover:text-[#1D4ED8] hover:underline"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#061326] hover:text-[#2563EB] hover:underline"
                   >
                     <span>Voir l&apos;étude de cas</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />
@@ -544,7 +544,7 @@ export function ProjectsDevCreative({
                       e.stopPropagation();
                       setActiveProjectPrompt(project);
                     }}
-                    className="px-3 py-1 rounded-full bg-[#FCE7D2] group-hover:bg-[#E83F25] text-[#E83F25] group-hover:text-white text-[11px] font-bold transition-colors cursor-pointer"
+                    className="px-3 py-1 rounded-full bg-[#E0F2FE] group-hover:bg-[#0EA5E9] text-[#0EA5E9] group-hover:text-white text-[11px] font-bold transition-colors cursor-pointer"
                   >
                     Je veux le même ↗
                   </button>
@@ -558,14 +558,14 @@ export function ProjectsDevCreative({
       {/* MODALE QUESTION CTA AU CLIC SUR UNE CARTE PROJET (« Je veux le même ») */}
       {activeProjectPrompt && (
         <div
-          className="fixed inset-0 z-[120] bg-[#16121E]/75 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
+          className="fixed inset-0 z-[120] bg-[#061326]/75 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
           onClick={() => setActiveProjectPrompt(null)}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-2xl rounded-[32px] bg-[#FBF7F0] text-[#16121E] border border-[#E5D9C5] shadow-2xl overflow-hidden"
+            className="relative w-full max-w-2xl rounded-[32px] bg-[#F0F7FF] text-[#061326] border border-[#CBE2FF] shadow-2xl overflow-hidden"
           >
-            <div className="relative aspect-16/9 w-full bg-[#16121E]">
+            <div className="relative aspect-16/9 w-full bg-[#061326]">
               <Image
                 src={
                   activeProjectPrompt.coverMedia?.url ||
@@ -577,13 +577,13 @@ export function ProjectsDevCreative({
                 sizes="(max-width: 768px) 100vw, 680px"
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#16121E] via-[#16121E]/25 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#061326] via-[#061326]/25 to-transparent" />
 
               <button
                 type="button"
                 onClick={() => setActiveProjectPrompt(null)}
                 aria-label="Fermer"
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#16121E]/80 hover:bg-[#E83F25] text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#061326]/80 hover:bg-[#0EA5E9] text-white flex items-center justify-center transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -606,18 +606,18 @@ export function ProjectsDevCreative({
             </div>
 
             <div className="p-6 sm:p-8 space-y-6">
-              <p className="text-sm sm:text-base text-[#3E3552] leading-relaxed">
+              <p className="text-sm sm:text-base text-[#334E68] leading-relaxed">
                 {activeProjectPrompt.description}
               </p>
 
-              <div className="rounded-2xl bg-[#FCE7D2]/70 border border-[#E83F25]/25 p-5 sm:p-6 space-y-4">
+              <div className="rounded-2xl bg-[#E0F2FE]/70 border border-[#0EA5E9]/25 p-5 sm:p-6 space-y-4">
                 <div>
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider font-bold text-[#E83F25]">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider font-bold text-[#0EA5E9]">
                     <Sparkles className="w-3.5 h-3.5" /> Ce projet vous inspire ?
                   </span>
-                  <h4 className="text-xl sm:text-2xl font-bold text-[#16121E] mt-1 font-[family-name:var(--font-dm-sans)]">
+                  <h4 className="text-xl sm:text-2xl font-bold text-[#061326] mt-1 font-[family-name:var(--font-dm-sans)]">
                     Vous souhaitez{" "}
-                    <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
+                    <span className="italic font-normal text-[#0EA5E9] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
                       le même projet
                     </span>{" "}
                     pour votre activité ?
@@ -637,7 +637,7 @@ export function ProjectsDevCreative({
                       );
                       handleSelectProjectType("presence-en-ligne");
                     }}
-                    className="inline-flex items-center gap-2.5 px-5 py-3 rounded-full bg-[#E83F25] hover:bg-[#16121E] text-white text-xs sm:text-sm font-bold shadow-lg shadow-[#E83F25]/25 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2.5 px-5 py-3 rounded-full bg-[#0EA5E9] hover:bg-[#061326] text-white text-xs sm:text-sm font-bold shadow-lg shadow-[#0EA5E9]/25 transition-all cursor-pointer"
                   >
                     <span>Je veux le même projet</span>
                     <ArrowUpRight className="w-4 h-4" />
@@ -652,7 +652,7 @@ export function ProjectsDevCreative({
                     onClick={() =>
                       trackWhatsappClick("grid_modal_same_project", activeProjectPrompt.slug)
                     }
-                    className="inline-flex items-center gap-2 px-4 py-3 rounded-full bg-[#25D366] hover:bg-[#1ebe5d] text-[#16121E] text-xs sm:text-sm font-bold transition-all"
+                    className="inline-flex items-center gap-2 px-4 py-3 rounded-full bg-[#25D366] hover:bg-[#1ebe5d] text-[#061326] text-xs sm:text-sm font-bold transition-all"
                   >
                     <MessageCircle className="w-4 h-4" />
                     <span>Demander sur WhatsApp</span>
@@ -661,7 +661,7 @@ export function ProjectsDevCreative({
                   <Link
                     href={`/projets/${activeProjectPrompt.slug}`}
                     onClick={() => setActiveProjectPrompt(null)}
-                    className="inline-flex items-center gap-1.5 px-4 py-3 rounded-full bg-white border border-[#E5D9C5] hover:border-[#16121E] text-xs font-bold text-[#16121E] transition-all"
+                    className="inline-flex items-center gap-1.5 px-4 py-3 rounded-full bg-white border border-[#CBE2FF] hover:border-[#061326] text-xs font-bold text-[#061326] transition-all"
                   >
                     <span>Étude de cas complète</span>
                     <ExternalLink className="w-3.5 h-3.5" />

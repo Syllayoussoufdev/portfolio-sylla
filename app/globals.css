@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
   --bg: #F8FAFC;
@@ -60,18 +60,18 @@
 
 /* Template DevCreative : éditorial freelance premium (PRD Section 10 — Indigo, Orange & Surface Pêche) */
 [data-template="devcreative"] {
-  --bg: #FBF7F0;
+  --bg: #F0F7FF;
   --surface: #FFFFFF;
-  --surface-warm: #FCE7D2;
-  --bg-dark: #16121E;
-  --ink: #1F192B;
-  --accent: #1D4ED8;
-  --accent-2: #E83F25;
-  --muted: #3E3552;
-  --subtle: #62567A;
-  --border: #E5D9C5;
-  --glass: rgba(255, 251, 245, 0.92);
-  --glass-border: rgba(230, 222, 200, 0.9);
+  --surface-warm: #E0F2FE;
+  --bg-dark: #061326;
+  --ink: #0A1D37;
+  --accent: #2563EB;
+  --accent-2: #0EA5E9;
+  --muted: #334E68;
+  --subtle: #526D82;
+  --border: #CBE2FF;
+  --glass: rgba(240, 247, 255, 0.92);
+  --glass-border: rgba(203, 226, 255, 0.9);
   --radius-md: 24px;
   --radius-pill: 999px;
   font-family: var(--font-dm-sans), var(--font-sans), system-ui, sans-serif;

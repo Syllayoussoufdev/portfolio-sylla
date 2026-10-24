@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -70,16 +70,16 @@ export function DevCreativeCursor() {
         return {
           width: 92,
           height: 92,
-          backgroundColor: "#E83F25",
-          color: "#16121E",
+          backgroundColor: "#0EA5E9",
+          color: "#061326",
           mixBlendMode: "normal",
-          boxShadow: "0 14px 34px rgba(232, 63, 37, 0.4)",
+          boxShadow: "0 14px 34px rgba(14, 165, 233, 0.45)",
         };
       case "cta":
         return {
           width: 92,
           height: 92,
-          backgroundColor: "#16121E",
+          backgroundColor: "#061326",
           color: "#FFFFFF",
           mixBlendMode: "normal",
           boxShadow: "0 14px 34px rgba(22, 18, 30, 0.45)",
@@ -104,7 +104,7 @@ export function DevCreativeCursor() {
         return {
           width: 14,
           height: 14,
-          backgroundColor: "#16121E",
+          backgroundColor: "#061326",
           mixBlendMode: "normal",
         };
     }
@@ -123,7 +123,7 @@ export function DevCreativeCursor() {
       className="fixed top-0 left-0 z-[99999] pointer-events-none rounded-full flex items-center justify-center select-none"
     >
       {mode === "drag" && (
-        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#16121E]">
+        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#061326]">
           GLISSER
         </span>
       )}

@@ -214,19 +214,29 @@ export function BriefWizardModal({
       const selectedTypeLabel =
         PROJECT_TYPES.find((t) => t.id === projectType)?.label || projectType;
 
-      const res = await submitProjectLeadAction({
-        projectType: selectedTypeLabel,
-        goal,
-        budgetRange,
-        deadline,
-        name,
-        email,
-        phone,
-        message,
-        consent: true,
-        utm,
-        company_website: honeypot,
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          projectType: selectedTypeLabel,
+          goal: goal.trim().length >= 5 ? goal.trim() : "Lancer et développer mon projet digital",
+          budgetRange: budgetRange || "250k-500k FCFA",
+          deadline: deadline || "2 à 4 semaines",
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          message: message.trim(),
+          consent: true,
+          utm,
+          company_website: honeypot,
+        }),
       });
+      const resData = await response.json().catch(() => ({}));
+      const res = {
+        success: response.ok,
+        error: resData.error,
+        whatsappUrl: resData.whatsappUrl,
+      };
 
       if (!res.success) {
         setError(res.error || "Impossible d'envoyer le brief.");
@@ -244,7 +254,19 @@ export function BriefWizardModal({
         // Ignorer
       }
     } catch {
-      setError("Une erreur réseau est survenue. Veuillez réessayer.");
+      const fallbackWaLines = [
+        `Bonjour Sylla 👋, je viens de remplir un brief sur votre site :`,
+        ``,
+        `• *Projet :* ${PROJECT_TYPES.find((t) => t.id === projectType)?.label || projectType}`,
+        `• *Objectif :* ${goal || "Développer ma présence digitale"}`,
+        `• *Budget estimé :* ${budgetRange}`,
+        `• *Délai souhaité :* ${deadline}`,
+        `• *Contact :* ${name} (${phone} / ${email})`,
+      ];
+      if (message) fallbackWaLines.push(`• *Précisions :* ${message}`);
+      const fallbackUrl = `https://wa.me/2250594564993?text=${encodeURIComponent(fallbackWaLines.join("\n"))}`;
+      setWhatsappUrl(fallbackUrl);
+      setStep(5);
     } finally {
       setSubmitting(false);
     }
@@ -265,7 +287,7 @@ export function BriefWizardModal({
               {step < 5 ? `Brief Rapide · Étape ${step} sur 4` : "Brief Validé & Enregistré"}
             </span>
           </div>
-          <h3 className="text-lg sm:text-xl font-bold mt-0.5 font-[family-name:var(--font-dev-serif)]">
+          <h3 className="text-lg sm:text-xl font-bold mt-0.5 font-[family-name:var(--font-dm-sans)]">
             {step === 1 && "Quel type de projet souhaitez-vous lancer ?"}
             {step === 2 && "Quel est votre objectif principal ?"}
             {step === 3 && "Quel budget et quel délai envisagez-vous ?"}
@@ -642,7 +664,7 @@ export function BriefWizardModal({
             </div>
 
             <div className="space-y-2 max-w-md mx-auto">
-              <h4 className="text-2xl font-bold text-[#0A1D37] font-[family-name:var(--font-dev-serif)]">
+              <h4 className="text-2xl font-bold text-[#0A1D37] font-[family-name:var(--font-dm-sans)]">
                 Merci {name} ! Votre brief est bien enregistré.
               </h4>
               <p className="text-sm text-[#334E68] leading-relaxed">
@@ -761,7 +783,7 @@ export function WaitlistModal({
             <span className="text-[11px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#E0F2FE] text-[#0A1D37]">
               Ouverture Prochaine · Liste Prioritaire
             </span>
-            <h3 className="text-xl font-bold mt-2 font-[family-name:var(--font-dev-serif)]">
+            <h3 className="text-xl font-bold mt-2 font-[family-name:var(--font-dm-sans)]">
               {offerTitle}
             </h3>
           </div>

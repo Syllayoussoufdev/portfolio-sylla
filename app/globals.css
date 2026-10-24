@@ -77,6 +77,11 @@
   font-family: var(--font-dm-sans), var(--font-sans), system-ui, sans-serif;
 }
 
+html.devcreative-cursor-ready [data-template="devcreative"],
+html.devcreative-cursor-ready [data-template="devcreative"] * {
+  cursor: none !important;
+}
+
 @media (hover: hover) and (pointer: fine) {
   [data-template="devcreative"],
   [data-template="devcreative"] a,

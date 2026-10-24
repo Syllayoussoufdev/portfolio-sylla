@@ -1,7 +1,9 @@
-﻿"use client";
+"use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   CheckCircle2,
   Clock,
@@ -32,6 +34,37 @@ export function ServicesPacksDevCreative({
   packs = [],
 }: ServicesPacksDevCreativeProps) {
   const [selectedFamily, setSelectedFamily] = useState<string>("all");
+  const sectionRef = useRef<HTMLElement>(null);
+  const packsGridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isReduced) return;
+
+    const ctx = gsap.context(() => {
+      if (packsGridRef.current) {
+        gsap.fromTo(
+          packsGridRef.current.children,
+          { y: 45, opacity: 0, scale: 0.96 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.75,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: packsGridRef.current,
+              start: "top 86%",
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
   const [wizardOpen, setWizardOpen] = useState(false);
   const [wizardType, setWizardType] = useState<string>("pack-lancement");
   const [waitlistOpen, setWaitlistOpen] = useState(false);
@@ -69,6 +102,7 @@ export function ServicesPacksDevCreative({
   return (
     <section
       id="offres-packs"
+      ref={sectionRef}
       className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 scroll-mt-20 space-y-16 text-[#1F192B]"
     >
       {/* =====================================================================
@@ -102,7 +136,7 @@ export function ServicesPacksDevCreative({
         </div>
 
         {/* Grille des 4 Packs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div ref={packsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {displayPacks.map((pack) => {
             const isAvailable = pack.statut === "DISPONIBLE";
             const isFeatured = pack.misEnAvant;

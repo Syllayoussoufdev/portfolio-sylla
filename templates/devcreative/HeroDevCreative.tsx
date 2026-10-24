@@ -4,12 +4,17 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight,
   ArrowLeft,
   ArrowRight,
   MessageCircle,
   Hand,
+  X,
+  Sparkles,
+  ExternalLink,
+  CheckCircle2,
 } from "lucide-react";
 import { ToolIconRenderer } from "@/components/tools/ToolIconRenderer";
 import { BriefWizardModal } from "@/components/devcreative/BriefWizardModal";
@@ -53,12 +58,17 @@ export function HeroDevCreative({
   settings,
 }: HeroDevCreativeProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const stackWrapRef = useRef<HTMLDivElement>(null);
   const titleWordsRef = useRef<HTMLSpanElement[]>([]);
   const activeCardRef = useRef<HTMLDivElement>(null);
   const dragStartXRef = useRef<number | null>(null);
+  const didDragRef = useRef<boolean>(false);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardPresetType, setWizardPresetType] = useState<string>("pack-lancement");
+  const [selectedProjectModal, setSelectedProjectModal] = useState<ProjectData | null>(null);
 
   const stackProjects: ProjectData[] =
     projects.length > 0
@@ -78,6 +88,9 @@ export function HeroDevCreative({
           },
         ];
 
+  // La pile contient tous les projets + 1 dernière carte spéciale CTA « Le vôtre ? »
+  const totalSlides = stackProjects.length + 1;
+  const isLastCtaCard = activeIndex === stackProjects.length;
   const currentProject = stackProjects[activeIndex % stackProjects.length];
   const nextProject1 = stackProjects[(activeIndex + 1) % stackProjects.length];
   const nextProject2 = stackProjects[(activeIndex + 2) % stackProjects.length];
@@ -91,8 +104,9 @@ export function HeroDevCreative({
     "Bonjour Sylla 👋, je visite votre site et je souhaite discuter d'un projet digital."
   )}`;
 
-  // Animation d'entrée GSAP (Révélation du titre mot par mot — PRD §10 : 0.8s, power3.out, stagger 0.05s)
+  // Animations GSAP d'entrée + Effet Parallaxe au Scroll sur le Hero
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
     const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (isReduced) return;
 
@@ -100,22 +114,64 @@ export function HeroDevCreative({
       if (titleWordsRef.current.length > 0) {
         gsap.fromTo(
           titleWordsRef.current,
-          { y: 28, opacity: 0 },
+          { y: 32, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.8,
+            duration: 0.85,
             ease: "power3.out",
             stagger: 0.05,
           }
         );
+      }
+
+      if (stackWrapRef.current) {
+        gsap.fromTo(
+          stackWrapRef.current,
+          { y: 40, opacity: 0, scale: 0.94, rotate: 3 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            rotate: 0,
+            duration: 0.95,
+            delay: 0.15,
+            ease: "expo.out",
+          }
+        );
+
+        // Effet parallaxe fluide au scroll sur la pile de cartes 3D
+        gsap.to(stackWrapRef.current, {
+          yPercent: -10,
+          rotate: -1.5,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.6,
+          },
+        });
+      }
+
+      if (leftColRef.current) {
+        gsap.to(leftColRef.current, {
+          yPercent: -5,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.6,
+          },
+        });
       }
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  // Animation GSAP de changement de carte empilée (0.6s, expo.out)
+  // Animation GSAP de changement de carte empilée (0.65s, expo.out)
   const animateCardChange = (newIndex: number, direction: "next" | "prev" = "next") => {
     const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setActiveIndex(newIndex);
@@ -124,11 +180,11 @@ export function HeroDevCreative({
       gsap.fromTo(
         activeCardRef.current,
         {
-          scale: 0.92,
-          rotate: direction === "next" ? 4 : -4,
-          x: direction === "next" ? 36 : -36,
-          y: 16,
-          opacity: 0.65,
+          scale: 0.9,
+          rotate: direction === "next" ? 5 : -5,
+          x: direction === "next" ? 45 : -45,
+          y: 18,
+          opacity: 0.6,
         },
         {
           scale: 1,
@@ -144,18 +200,26 @@ export function HeroDevCreative({
   };
 
   const handlePrev = () => {
-    const prevIdx = (activeIndex - 1 + stackProjects.length) % stackProjects.length;
+    const prevIdx = (activeIndex - 1 + totalSlides) % totalSlides;
     animateCardChange(prevIdx, "prev");
   };
 
   const handleNext = () => {
-    const nextIdx = (activeIndex + 1) % stackProjects.length;
+    const nextIdx = (activeIndex + 1) % totalSlides;
     animateCardChange(nextIdx, "next");
   };
 
-  // Gestion du glisser-déposer (Drag & Swipe) sur la pile de cartes
+  // Gestion du glisser-déposer (Drag & Swipe) vs Clic sur la carte
   const handlePointerDown = (e: React.PointerEvent) => {
     dragStartXRef.current = e.clientX;
+    didDragRef.current = false;
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (dragStartXRef.current === null) return;
+    if (Math.abs(e.clientX - dragStartXRef.current) > 18) {
+      didDragRef.current = true;
+    }
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
@@ -163,12 +227,28 @@ export function HeroDevCreative({
     const deltaX = e.clientX - dragStartXRef.current;
     dragStartXRef.current = null;
 
-    if (Math.abs(deltaX) > 35) {
+    if (Math.abs(deltaX) > 30) {
+      didDragRef.current = true;
       if (deltaX < 0) {
         handleNext();
       } else {
         handlePrev();
       }
+    }
+  };
+
+  const handleCardClick = () => {
+    if (didDragRef.current) {
+      didDragRef.current = false;
+      return;
+    }
+    if (isLastCtaCard) {
+      trackCtaClick("Carte Hero Le vôtre ?", "wizard_modal", "hero_stack_last_card");
+      setWizardPresetType("presence-en-ligne");
+      setWizardOpen(true);
+    } else {
+      trackProjectClick(currentProject.slug, currentProject.titre, "hero_stack_modal");
+      setSelectedProjectModal(currentProject);
     }
   };
 
@@ -197,8 +277,7 @@ export function HeroDevCreative({
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* COLONNE GAUCHE : Titre Éditorial DM Sans + Instrument Serif, Preuves Chiffrées & Double CTA */}
-            <div className="lg:col-span-6 space-y-6">
-              {/* Grand Titre Éditorial DM Sans 700 + Instrument Serif Italique Orange (Style Capture 1 & 2) */}
+            <div ref={leftColRef} className="lg:col-span-6 space-y-6">
               <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-bold tracking-tight leading-[1.05] text-[#16121E] font-[family-name:var(--font-dm-sans)]">
                 <span ref={(el) => setWordRef(el, 0)} className="inline-block mr-2.5">
                   Je
@@ -239,7 +318,7 @@ export function HeroDevCreative({
                   "Conception d'identités de marque, sites vitrines haute conversion et plateformes web & mobiles sur-mesure à Abidjan & à l'international."}
               </p>
 
-              {/* Pilules de preuves chiffrées (Style exact Capture 1 & 2) */}
+              {/* Pilules de preuves chiffrées */}
               <div className="flex flex-wrap items-center gap-2.5 pt-1">
                 <div className="px-4 py-2.5 rounded-full bg-transparent border border-[#16121E]/15 text-xs sm:text-sm font-normal text-[#3E3552]">
                   <strong className="text-[#16121E] font-bold">{projectsCount}</strong> projets
@@ -252,13 +331,14 @@ export function HeroDevCreative({
                 </div>
               </div>
 
-              {/* Double CTA : "Démarrer un projet" (bascule Noir -> Orange au survol comme Capture 2) + Bouton WhatsApp vert */}
+              {/* Double CTA : "Démarrer un projet" (bascule Noir -> Orange au survol) + Bouton WhatsApp vert */}
               <div className="flex flex-wrap items-center gap-3.5 pt-2">
                 <button
                   type="button"
                   data-cursor="invert"
                   onClick={() => {
                     trackCtaClick("Démarrer un projet", "wizard_modal", "hero_devcreative");
+                    setWizardPresetType("pack-lancement");
                     setWizardOpen(true);
                   }}
                   className="group inline-flex items-center gap-4 pl-6 pr-2.5 py-2.5 rounded-full bg-[#16121E] hover:bg-[#E83F25] text-white text-xs sm:text-sm font-bold shadow-xl shadow-[#16121E]/15 transition-colors duration-300 active:scale-95 cursor-pointer"
@@ -283,154 +363,192 @@ export function HeroDevCreative({
               </div>
             </div>
 
-            {/* COLONNE DROITE : Carrousel de Projets en Cartes Empilées 3D avec Curseur "GLISSER" (Capture 1 & 2) */}
-            <div className="lg:col-span-6 flex flex-col items-center">
+            {/* COLONNE DROITE : Carrousel de Projets en Cartes Empilées 3D + Dernière Carte « Le vôtre ? » */}
+            <div ref={stackWrapRef} className="lg:col-span-6 flex flex-col items-center">
               <div
-                data-cursor="drag"
+                data-cursor={isLastCtaCard ? "cta" : "drag"}
                 onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
                 className="relative w-full max-w-[490px] pt-6 pb-4 px-4 sm:px-6 select-none touch-pan-y"
               >
-                {/* Carte Arrière 2 (Inclinée à droite +6deg, déborde à droite comme Capture 1) */}
-                {stackProjects.length > 2 && (
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-x-6 top-6 h-[340px] sm:h-[380px] rounded-[28px] bg-gradient-to-br from-[#2A1810] to-[#140E0C] border border-white/10 shadow-2xl transform rotate-6 translate-x-4 translate-y-2 opacity-90 pointer-events-none transition-all duration-500 overflow-hidden p-3"
-                  >
-                    <div className="w-full h-full rounded-[20px] opacity-35 relative overflow-hidden">
-                      <Image
-                        src={
-                          nextProject2.coverMedia?.url ||
-                          nextProject2.coverImage ||
-                          "/images/projects/portfolio-cv-personnel.jpg"
-                        }
-                        alt=""
-                        fill
-                        sizes="400px"
-                        className="object-cover"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Carte Arrière 1 (Inclinée à gauche -5deg, déborde à gauche comme Capture 1) */}
-                {stackProjects.length > 1 && (
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-x-5 top-5 h-[340px] sm:h-[380px] rounded-[28px] bg-gradient-to-br from-[#4A2010] via-[#26140E] to-[#140E0C] border border-white/15 shadow-2xl transform -rotate-5 -translate-x-4 translate-y-2 opacity-95 pointer-events-none transition-all duration-500 overflow-hidden p-3"
-                  >
-                    <div className="w-full h-full rounded-[20px] opacity-45 relative overflow-hidden">
-                      <Image
-                        src={
-                          nextProject1.coverMedia?.url ||
-                          nextProject1.coverImage ||
-                          "/images/projects/portfolio-cv-personnel.jpg"
-                        }
-                        alt=""
-                        fill
-                        sizes="400px"
-                        className="object-cover"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Carte Principale au premier plan (Style Capture 1 & 2) */}
+                {/* Carte Arrière 2 (Inclinée à droite +5deg) */}
                 <div
-                  ref={activeCardRef}
-                  onClick={handleNext}
-                  className="relative z-10 rounded-[28px] bg-gradient-to-br from-[#4E2210] via-[#23140E] to-[#14100E] p-3.5 sm:p-4 shadow-[0_28px_60px_-15px_rgba(22,18,30,0.55)] border border-white/15 transition-transform duration-300"
+                  aria-hidden="true"
+                  className="absolute inset-x-6 top-6 h-[340px] sm:h-[380px] rounded-[28px] bg-gradient-to-br from-[#2A1810] to-[#140E0C] border border-white/10 shadow-2xl transform rotate-5 translate-x-3 translate-y-2 opacity-90 pointer-events-none transition-all duration-500 overflow-hidden p-3"
                 >
-                  {/* Barre supérieure macOS + pilule URL centrée */}
-                  <div className="relative flex items-center justify-center px-2 pb-3 pt-0.5">
-                    <div className="absolute left-2 flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
-                    </div>
-
-                    <span className="text-[11px] font-mono text-white/85 bg-white/10 px-4 py-1 rounded-full tracking-wide">
-                      {projectDomain}
-                    </span>
-
-                    <Link
-                      href={`/projets/${currentProject.slug}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        trackProjectClick(currentProject.slug, currentProject.titre, "hero_stack");
-                      }}
-                      className="absolute right-2 text-[11px] font-semibold text-[#E83F25] hover:underline"
-                    >
-                      Voir ↗
-                    </Link>
-                  </div>
-
-                  {/* Aperçu Visuel du Projet (Écran blanc/clair dans le cadre sombre) */}
-                  <div className="relative aspect-16/10 w-full rounded-[18px] overflow-hidden bg-white border border-white/10 group">
+                  <div className="w-full h-full rounded-[20px] opacity-30 relative overflow-hidden">
                     <Image
                       src={
-                        currentProject.coverMedia?.url ||
-                        currentProject.coverImage ||
+                        nextProject2.coverMedia?.url ||
+                        nextProject2.coverImage ||
                         "/images/projects/portfolio-cv-personnel.jpg"
                       }
-                      alt={currentProject.titre}
+                      alt=""
                       fill
-                      draggable={false}
-                      sizes="(max-width: 768px) 100vw, 470px"
-                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500 select-none"
+                      sizes="400px"
+                      className="object-cover"
                     />
                   </div>
+                </div>
 
-                  {/* Bas de la carte sombre : Catégorie espacée + Grand Titre Blanc (Style exact Capture 1 & 2) */}
-                  <div className="pt-3.5 pb-1 px-2 flex items-end justify-between gap-3">
-                    <div>
-                      <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-white/60">
-                        {currentProject.tags[0] || "ARCHITECTURE WEB & DESIGN"}
-                      </div>
-                      <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight mt-0.5 truncate max-w-[320px]">
-                        {currentProject.titre}
-                      </h3>
-                    </div>
-
-                    <Link
-                      href={`/projets/${currentProject.slug}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        trackProjectClick(currentProject.slug, currentProject.titre, "hero_stack");
-                      }}
-                      className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#E83F25] text-white flex items-center justify-center shrink-0 transition-colors"
-                      title="Ouvrir l'étude de cas"
-                    >
-                      <ArrowUpRight className="w-4 h-4" />
-                    </Link>
+                {/* Carte Arrière 1 (Inclinée à gauche -4deg) */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-5 top-4 h-[340px] sm:h-[380px] rounded-[28px] bg-gradient-to-br from-[#4A2010] via-[#26140E] to-[#140E0C] border border-white/15 shadow-2xl transform -rotate-4 -translate-x-3 translate-y-1 opacity-95 pointer-events-none transition-all duration-500 overflow-hidden p-3"
+                >
+                  <div className="w-full h-full rounded-[20px] opacity-40 relative overflow-hidden">
+                    <Image
+                      src={
+                        nextProject1.coverMedia?.url ||
+                        nextProject1.coverImage ||
+                        "/images/projects/portfolio-cv-personnel.jpg"
+                      }
+                      alt=""
+                      fill
+                      sizes="400px"
+                      className="object-cover"
+                    />
                   </div>
+                </div>
+
+                {/* CARTE AU PREMIER PLAN : Soit un Projet, soit la Dernière Carte Orange « Le vôtre ? » */}
+                <div ref={activeCardRef} onClick={handleCardClick} className="relative z-10">
+                  {isLastCtaCard ? (
+                    /* DERNIÈRE CARTE DU CARROUSEL : « Le vôtre ? » (Style exact de la Capture envoyée) */
+                    <div className="group relative h-[350px] sm:h-[395px] w-full rounded-[30px] bg-[#F04E1A] p-7 sm:p-10 shadow-[0_28px_60px_-15px_rgba(240,78,26,0.45)] flex flex-col justify-between overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-[1.01]">
+                      {/* Point d'interrogation géant dessiné en arrière-plan à droite */}
+                      <svg
+                        viewBox="0 0 220 340"
+                        fill="none"
+                        aria-hidden="true"
+                        className="absolute -right-6 top-6 w-52 sm:w-60 h-auto text-[#141210]/20 pointer-events-none select-none"
+                      >
+                        <path
+                          d="M42 84C42 40 78 14 124 14C172 14 204 44 204 88C204 126 178 148 146 168C118 186 108 204 106 236"
+                          stroke="currentColor"
+                          strokeWidth="3.5"
+                          strokeLinecap="round"
+                        />
+                        <circle
+                          cx="104"
+                          cy="296"
+                          r="24"
+                          stroke="currentColor"
+                          strokeWidth="3.5"
+                        />
+                      </svg>
+
+                      {/* Haut : Espace vide à gauche + Grand cercle noir avec flèche orange ↗ à droite */}
+                      <div className="flex items-start justify-between relative z-10">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/10 text-[#141210] text-xs font-mono uppercase tracking-wider">
+                          Prochain projet
+                        </span>
+
+                        <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-full bg-[#141210] text-[#F04E1A] flex items-center justify-center shadow-2xl group-hover:scale-105 group-hover:rotate-12 transition-all duration-300">
+                          <ArrowUpRight className="w-8 h-8 sm:w-9 sm:h-9 stroke-[2.2]" />
+                        </div>
+                      </div>
+
+                      {/* Bas : Titre géant « Le vôtre ? » */}
+                      <div className="relative z-10 mt-auto">
+                        <div className="text-5xl sm:text-6xl font-bold tracking-tight text-[#141210] leading-none font-[family-name:var(--font-dm-sans)]">
+                          Le{" "}
+                          <span className="italic font-normal font-[family-name:var(--font-instrument-serif)] text-[1.08em]">
+                            vôtre
+                          </span>{" "}
+                          ?
+                        </div>
+                        <p className="text-xs sm:text-sm font-medium text-[#141210]/80 mt-2">
+                          Cliquez ici pour lancer votre brief en 4 étapes →
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    /* CARTE PROJET CLASSIQUE */
+                    <div className="rounded-[28px] bg-gradient-to-br from-[#4E2210] via-[#23140E] to-[#14100E] p-3.5 sm:p-4 shadow-[0_28px_60px_-15px_rgba(22,18,30,0.55)] border border-white/15 transition-transform duration-300 cursor-pointer">
+                      {/* Barre supérieure macOS + pilule URL centrée */}
+                      <div className="relative flex items-center justify-center px-2 pb-3 pt-0.5">
+                        <div className="absolute left-2 flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
+                        </div>
+
+                        <span className="text-[11px] font-mono text-white/85 bg-white/10 px-4 py-1 rounded-full tracking-wide">
+                          {projectDomain}
+                        </span>
+
+                        <span className="absolute right-2 text-[10px] font-mono text-[#E83F25]">
+                          {activeIndex + 1}/{stackProjects.length}
+                        </span>
+                      </div>
+
+                      {/* Aperçu Visuel du Projet */}
+                      <div className="relative aspect-16/10 w-full rounded-[18px] overflow-hidden bg-white border border-white/10 group">
+                        <Image
+                          src={
+                            currentProject.coverMedia?.url ||
+                            currentProject.coverImage ||
+                            "/images/projects/portfolio-cv-personnel.jpg"
+                          }
+                          alt={currentProject.titre}
+                          fill
+                          draggable={false}
+                          sizes="(max-width: 768px) 100vw, 470px"
+                          className="object-cover group-hover:scale-[1.03] transition-transform duration-500 select-none"
+                        />
+                      </div>
+
+                      {/* Bas de la carte sombre : Catégorie espacée + Grand Titre Blanc */}
+                      <div className="pt-3.5 pb-1 px-2 flex items-end justify-between gap-3">
+                        <div>
+                          <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-white/60">
+                            {currentProject.tags[0] || "ARCHITECTURE WEB & DESIGN"}
+                          </div>
+                          <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight mt-0.5 truncate max-w-[310px]">
+                            {currentProject.titre}
+                          </h3>
+                        </div>
+
+                        <span
+                          className="px-3 py-1.5 rounded-full bg-[#E83F25] text-white text-[11px] font-bold shrink-0 shadow-md"
+                          title="Cliquer pour voir les options"
+                        >
+                          Détails ↗
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Contrôles du Carrousel Empilé : ← | ✋ GLISSEZ | → (Style exact Capture 1 & 2) */}
+              {/* Contrôles du Carrousel Empilé : ← | ✋ GLISSEZ | → */}
               <div className="flex items-center gap-3 mt-4">
                 <button
                   type="button"
                   onClick={handlePrev}
-                  aria-label="Projet précédent"
+                  aria-label="Carte précédente"
                   className="w-11 h-11 rounded-full bg-transparent hover:bg-[#16121E] text-[#16121E] hover:text-white border border-[#16121E]/15 flex items-center justify-center transition-all cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#16121E] hover:bg-[#E83F25] text-white text-[11px] font-bold uppercase tracking-[0.18em] transition-colors cursor-pointer"
-                >
-                  <Hand className="w-3.5 h-3.5 text-[#E83F25] group-hover:text-white" />
-                  <span>GLISSEZ</span>
-                </button>
+                {!isLastCtaCard && (
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#16121E] hover:bg-[#E83F25] text-white text-[11px] font-bold uppercase tracking-[0.18em] transition-colors cursor-pointer"
+                  >
+                    <Hand className="w-3.5 h-3.5 text-[#E83F25]" />
+                    <span>GLISSEZ</span>
+                  </button>
+                )}
 
                 <button
                   type="button"
                   onClick={handleNext}
-                  aria-label="Projet suivant"
+                  aria-label="Carte suivante"
                   className="w-11 h-11 rounded-full bg-transparent hover:bg-[#16121E] text-[#16121E] hover:text-white border border-[#16121E]/15 flex items-center justify-center transition-all cursor-pointer"
                 >
                   <ArrowRight className="w-4 h-4" />
@@ -460,10 +578,136 @@ export function HeroDevCreative({
         </div>
       </section>
 
+      {/* MODALE INTERACTIVE AU CLIC SUR UNE CARTE PROJET (« Je veux le même ») */}
+      {selectedProjectModal && (
+        <div
+          className="fixed inset-0 z-[120] bg-[#16121E]/75 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto"
+          onClick={() => setSelectedProjectModal(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-2xl rounded-[32px] bg-[#FBF7F0] text-[#16121E] border border-[#E5D9C5] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+          >
+            {/* Aperçu image en haut */}
+            <div className="relative aspect-16/9 w-full bg-[#16121E]">
+              <Image
+                src={
+                  selectedProjectModal.coverMedia?.url ||
+                  selectedProjectModal.coverImage ||
+                  "/images/projects/portfolio-cv-personnel.jpg"
+                }
+                alt={selectedProjectModal.titre}
+                fill
+                sizes="(max-width: 768px) 100vw, 680px"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#16121E] via-[#16121E]/25 to-transparent" />
+
+              <button
+                type="button"
+                onClick={() => setSelectedProjectModal(null)}
+                aria-label="Fermer"
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#16121E]/80 hover:bg-[#E83F25] text-white flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="absolute bottom-4 inset-x-6 flex flex-wrap items-end justify-between gap-3 text-white">
+                <div>
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {selectedProjectModal.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-white/20 backdrop-blur-xs"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-bold leading-tight">
+                    {selectedProjectModal.titre}
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            {/* Contenu & Question d'Appel à l'Action (« Je veux le même ») */}
+            <div className="p-6 sm:p-8 space-y-6">
+              <p className="text-sm sm:text-base text-[#3E3552] leading-relaxed">
+                {selectedProjectModal.description}
+              </p>
+
+              {/* Encart Question CTA « Ce projet vous inspire ? Je veux le même » */}
+              <div className="rounded-2xl bg-[#FCE7D2]/70 border border-[#E83F25]/25 p-5 sm:p-6 space-y-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider font-bold text-[#E83F25]">
+                      <Sparkles className="w-3.5 h-3.5" /> Ce projet vous inspire ?
+                    </span>
+                    <h4 className="text-xl sm:text-2xl font-bold text-[#16121E] mt-1 font-[family-name:var(--font-dm-sans)]">
+                      Vous souhaitez{" "}
+                      <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
+                        le même résultat
+                      </span>{" "}
+                      pour votre activité ?
+                    </h4>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const projTitle = selectedProjectModal.titre;
+                      setSelectedProjectModal(null);
+                      trackCtaClick(
+                        `Je veux le même : ${projTitle}`,
+                        "wizard_modal",
+                        "project_card_modal"
+                      );
+                      setWizardPresetType("presence-en-ligne");
+                      setWizardOpen(true);
+                    }}
+                    className="inline-flex items-center gap-2.5 px-5 py-3 rounded-full bg-[#E83F25] hover:bg-[#16121E] text-white text-xs sm:text-sm font-bold shadow-lg shadow-[#E83F25]/25 transition-all cursor-pointer"
+                  >
+                    <span>Je veux le même projet</span>
+                    <ArrowUpRight className="w-4 h-4" />
+                  </button>
+
+                  <a
+                    href={`https://wa.me/${rawWhatsapp}?text=${encodeURIComponent(
+                      `Bonjour Sylla 👋, j'ai vu votre réalisation « ${selectedProjectModal.titre} » sur votre site et je voudrais concevoir un projet similaire pour mon activité.`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() =>
+                      trackWhatsappClick("project_modal_same_project", selectedProjectModal.slug)
+                    }
+                    className="inline-flex items-center gap-2 px-4 py-3 rounded-full bg-[#25D366] hover:bg-[#1ebe5d] text-[#16121E] text-xs sm:text-sm font-bold transition-all"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Demander sur WhatsApp</span>
+                  </a>
+
+                  <Link
+                    href={`/projets/${selectedProjectModal.slug}`}
+                    onClick={() => setSelectedProjectModal(null)}
+                    className="inline-flex items-center gap-1.5 px-4 py-3 rounded-full bg-white border border-[#E5D9C5] hover:border-[#16121E] text-xs font-bold text-[#16121E] transition-all"
+                  >
+                    <span>Voir l&apos;étude de cas</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <BriefWizardModal
         isOpen={wizardOpen}
         onClose={() => setWizardOpen(false)}
-        initialProjectType="pack-lancement"
+        initialProjectType={wizardPresetType}
       />
     </>
   );

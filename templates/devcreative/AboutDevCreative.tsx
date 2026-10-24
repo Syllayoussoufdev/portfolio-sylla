@@ -143,7 +143,7 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
           <div className="lg:col-span-5 space-y-6">
             <div className="flex items-baseline gap-8 sm:gap-12">
               <div>
-                <div className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white font-[family-name:var(--font-dev-serif)]">
+                <div className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white font-[family-name:var(--font-dm-sans)]">
                   23+
                 </div>
                 <div className="text-xs font-mono uppercase tracking-wider text-white/60 mt-1">
@@ -152,7 +152,7 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
               </div>
 
               <div>
-                <div className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#E83F25] font-[family-name:var(--font-dev-serif)]">
+                <div className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#E83F25] font-[family-name:var(--font-dm-sans)]">
                   100%
                 </div>
                 <div className="text-xs font-mono uppercase tracking-wider text-white/60 mt-1">
@@ -283,9 +283,9 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
               <Sparkles className="w-3.5 h-3.5 text-[#E83F25]" />
               Processus Clair &amp; Sans Friction
             </span>
-            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight font-[family-name:var(--font-dev-serif)]">
+            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight font-[family-name:var(--font-dm-sans)]">
               Votre projet livré en{" "}
-              <span className="font-normal text-[#E83F25] font-[family-name:var(--font-dev-script)] text-[1.08em]">
+              <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
                 4 étapes maîtrisées.
               </span>
             </h2>
@@ -353,9 +353,9 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
           <span className="text-xs font-mono uppercase tracking-wider text-[#1D4ED8] font-bold">
             Questions Fréquentes
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-dev-serif)]">
+          <h2 className="text-3xl sm:text-4xl font-bold font-[family-name:var(--font-dm-sans)]">
             Tout savoir avant de{" "}
-            <span className="font-normal text-[#E83F25] font-[family-name:var(--font-dev-script)] text-[1.08em]">
+            <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
               démarrer ensemble
             </span>
           </h2>

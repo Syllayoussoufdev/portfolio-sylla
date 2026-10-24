@@ -24,7 +24,7 @@ import type { TestimonialData } from "@/lib/devcreative-catalog";
 const SELECTOR_CARDS = [
   {
     id: "saas-plateforme",
-    title: "SaaS & App Web",
+    title: "SaaS",
     subtitle: "Plateforme métier & Back-office",
     icon: Layers,
   },
@@ -48,13 +48,13 @@ const SELECTOR_CARDS = [
   },
   {
     id: "missions-ponctuelles",
-    title: "IA & Automatisation",
+    title: "IA",
     subtitle: "Agents, workflows & API",
     icon: Sparkles,
   },
   {
     id: "conception-identite",
-    title: "Design & Marque",
+    title: "Design",
     subtitle: "Identité visuelle & UI/UX",
     icon: Palette,
   },
@@ -179,7 +179,7 @@ export function ProjectsDevCreative({
           {/* Guillemet géant orange en haut à gauche */}
           <div
             aria-hidden="true"
-            className="text-7xl sm:text-8xl font-serif leading-none text-[#E83F25] select-none mb-2 font-[family-name:var(--font-dev-serif)]"
+            className="text-7xl sm:text-8xl font-serif leading-none text-[#E83F25] select-none mb-2 font-[family-name:var(--font-dm-sans)]"
           >
             “
           </div>
@@ -219,7 +219,7 @@ export function ProjectsDevCreative({
                 ref={quoteCardRef}
                 className="bg-white rounded-[28px] p-7 sm:p-10 shadow-xl border border-[#E5D9C5] transform -rotate-1"
               >
-                <blockquote className="text-xl sm:text-3xl text-[#1F192B] leading-snug font-[family-name:var(--font-dev-script)] not-italic text-[1.08em]">
+                <blockquote className="text-xl sm:text-3xl text-[#1F192B] leading-snug italic font-[family-name:var(--font-instrument-serif)] text-[1.08em]">
                   « {currentTestimonial.citation} »
                 </blockquote>
                 <div className="mt-4 flex items-center gap-2 text-xs text-[#62567A] font-medium">
@@ -265,10 +265,23 @@ export function ProjectsDevCreative({
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/15 text-white text-xs font-mono uppercase tracking-wider">
                 Configurateur de projet
               </span>
-              <h2 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#16121E] font-[family-name:var(--font-dev-serif)] leading-none">
+              <h2 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#16121E] font-[family-name:var(--font-dm-sans)] leading-none">
                 Et le{" "}
-                <span className="font-normal underline decoration-[#16121E] decoration-2 underline-offset-8 font-[family-name:var(--font-dev-script)] text-[1.08em]">
+                <span className="relative inline-block italic font-normal font-[family-name:var(--font-instrument-serif)] text-[1.15em]">
                   vôtre
+                  <svg
+                    viewBox="0 0 180 18"
+                    fill="none"
+                    className="absolute -bottom-2 left-0 w-full h-3.5 text-[#16121E]"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M3 13C45 4 95 16 177 6"
+                      stroke="currentColor"
+                      strokeWidth="3.2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </span>{" "}
                 ?
               </h2>
@@ -279,35 +292,57 @@ export function ProjectsDevCreative({
 
             {/* Grille des 6 Cartes de Sélection (Style Référence) */}
             <div className="lg:col-span-8">
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-4">
                 {SELECTOR_CARDS.map((card, i) => {
                   const Icon = card.icon;
+                  const previewProject = projects[i % Math.max(projects.length, 1)];
+                  const previewImg =
+                    previewProject?.coverMedia?.url ||
+                    previewProject?.coverImage ||
+                    "/images/projects/portfolio-cv-personnel.jpg";
                   return (
                     <button
                       key={`${card.title}-${i}`}
                       type="button"
+                      data-cursor="dark"
                       onClick={() => handleSelectProjectType(card.id)}
-                      className="group text-left p-4 sm:p-5 rounded-[24px] bg-white/15 hover:bg-[#16121E] text-[#16121E] hover:text-white border border-black/10 hover:border-white/20 transition-all duration-300 flex flex-col justify-between min-h-[125px] sm:min-h-[145px] cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1"
+                      className="group relative overflow-hidden text-left p-4 sm:p-5 rounded-[24px] bg-black/5 hover:bg-black/10 text-[#16121E] border border-[#16121E]/15 hover:border-[#16121E]/35 transition-all duration-300 flex flex-col justify-between min-h-[150px] sm:min-h-[175px] cursor-pointer"
                     >
-                      <div className="flex items-start justify-between gap-2 w-full">
-                        <div>
-                          <div className="font-bold text-sm sm:text-base leading-tight">
-                            {card.title}
-                          </div>
-                          <div className="text-[11px] opacity-75 mt-0.5 line-clamp-1">
-                            {card.subtitle}
-                          </div>
+                      <div className="flex items-start justify-between gap-2 w-full relative z-10">
+                        <div className="font-bold text-base sm:text-lg leading-tight">
+                          {card.title}
                         </div>
-                        <span className="w-5 h-5 rounded-full border border-current opacity-50 group-hover:opacity-100 flex items-center justify-center text-[10px]">
-                          ↗
-                        </span>
+                        <span className="w-4 h-4 rounded-full border border-[#16121E]/35 group-hover:bg-[#16121E] transition-colors shrink-0" />
                       </div>
 
-                      <div className="mt-4 flex items-center justify-between">
-                        <Icon className="w-6 h-6 stroke-[1.75] group-hover:text-[#E83F25] transition-colors" />
-                        <span className="text-[10px] font-mono uppercase tracking-wider opacity-0 group-hover:opacity-100 text-[#E83F25] transition-opacity">
-                          Choisir →
-                        </span>
+                      <div className="mt-4 flex items-center justify-between relative z-10">
+                        <Icon className="w-6 h-6 stroke-[1.75] text-[#16121E] group-hover:opacity-25 transition-opacity" />
+                      </div>
+
+                      {/* Mini fenêtre navigateur inclinée qui surgit au survol (Style Capture 3) */}
+                      <div
+                        aria-hidden="true"
+                        className="absolute right-2 -bottom-2 w-[78%] h-[108px] rounded-t-2xl bg-[#FBF7F0] p-1.5 shadow-2xl border border-[#16121E]/10 transform -rotate-3 translate-y-[115%] group-hover:translate-y-0 transition-transform duration-300 ease-out pointer-events-none z-20"
+                      >
+                        <div className="flex items-center justify-between px-1.5 pb-1">
+                          <div className="flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#FF5F56]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#FFBD2E]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#27C93F]" />
+                          </div>
+                          <span className="text-[8px] font-mono text-[#16121E]/60 bg-black/5 px-2 py-0.5 rounded-full truncate max-w-[75px]">
+                            {card.title.toLowerCase()}
+                          </span>
+                        </div>
+                        <div className="relative w-full h-[78px] rounded-lg overflow-hidden bg-white">
+                          <Image
+                            src={previewImg}
+                            alt=""
+                            fill
+                            sizes="180px"
+                            className="object-cover"
+                          />
+                        </div>
                       </div>
                     </button>
                   );
@@ -332,9 +367,9 @@ export function ProjectsDevCreative({
             <span className="text-xs font-mono uppercase tracking-wider text-[#1D4ED8] font-bold">
               Preuves par l&apos;exemple
             </span>
-            <h2 className="text-3xl sm:text-5xl font-bold text-[#1F192B] mt-1 font-[family-name:var(--font-dev-serif)]">
+            <h2 className="text-3xl sm:text-5xl font-bold text-[#1F192B] mt-1 font-[family-name:var(--font-dm-sans)]">
               Études de cas &amp;{" "}
-              <span className="font-normal text-[#E83F25] font-[family-name:var(--font-dev-script)] text-[1.08em]">
+              <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
                 livrables réels
               </span>
             </h2>

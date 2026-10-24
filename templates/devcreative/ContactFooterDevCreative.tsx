@@ -76,9 +76,9 @@ export function ContactFooterDevCreative({ settings }: ContactFooterDevCreativeP
                 <Sparkles className="w-3.5 h-3.5" />
                 Prêt à passer à l&apos;action ?
               </span>
-              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-none font-[family-name:var(--font-dev-serif)]">
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-none font-[family-name:var(--font-dm-sans)]">
                 Transformons votre vision en{" "}
-                <span className="font-normal text-[#E83F25] font-[family-name:var(--font-dev-script)] text-[1.08em]">
+                <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
                   résultats mesurables.
                 </span>
               </h2>
@@ -136,7 +136,7 @@ export function ContactFooterDevCreative({ settings }: ContactFooterDevCreativeP
                 className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-[#E83F25] hover:bg-[#ff946e] text-[#16121E] flex flex-col items-center justify-center gap-1 shadow-2xl shadow-[#E83F25]/30 cursor-pointer transition-colors group"
               >
                 <ArrowUpRight className="w-6 h-6 stroke-[2.5] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                <span className="text-sm sm:text-base font-extrabold tracking-tight font-[family-name:var(--font-dev-serif)]">
+                <span className="text-sm sm:text-base font-extrabold tracking-tight font-[family-name:var(--font-dm-sans)]">
                   Discutons
                 </span>
                 <span className="text-[10px] font-mono opacity-75">Brief 2 min</span>
@@ -150,7 +150,7 @@ export function ContactFooterDevCreative({ settings }: ContactFooterDevCreativeP
               <span className="inline-flex items-center justify-center px-3 py-1 sm:px-5 sm:py-2 rounded-2xl bg-[#E83F25] text-[#16121E] font-mono font-black text-2xl sm:text-5xl lg:text-6xl">
                 &lt;/&gt;
               </span>
-              <span className="text-[11vw] sm:text-[9vw] font-extrabold tracking-tighter leading-none text-white font-[family-name:var(--font-dev-serif)]">
+              <span className="text-[11vw] sm:text-[9vw] font-extrabold tracking-tighter leading-none text-white font-[family-name:var(--font-dm-sans)]">
                 {displayName}
               </span>
             </div>

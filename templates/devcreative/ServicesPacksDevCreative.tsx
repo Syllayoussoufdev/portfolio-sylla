@@ -81,9 +81,9 @@ export function ServicesPacksDevCreative({
               <Sparkles className="w-3.5 h-3.5 text-[#E83F25]" />
               Offres Packagées · Tarifs Transparents
             </span>
-            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight font-[family-name:var(--font-dev-serif)]">
+            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight font-[family-name:var(--font-dm-sans)]">
               Des packs conçus pour votre{" "}
-              <span className="font-normal text-[#E83F25] font-[family-name:var(--font-dev-script)] text-[1.08em]">
+              <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
                 retour sur investissement.
               </span>
             </h2>
@@ -144,12 +144,12 @@ export function ServicesPacksDevCreative({
 
                   {/* Titre & Prix FCFA */}
                   <div>
-                    <h3 className="text-xl font-bold font-[family-name:var(--font-dev-serif)]">
+                    <h3 className="text-xl font-bold font-[family-name:var(--font-dm-sans)]">
                       {pack.titre}
                     </h3>
                     <div className="mt-2 flex items-baseline gap-1">
                       <span
-                        className={`text-2xl sm:text-3xl font-extrabold font-[family-name:var(--font-dev-serif)] ${
+                        className={`text-2xl sm:text-3xl font-extrabold font-[family-name:var(--font-dm-sans)] ${
                           isFeatured ? "text-[#E83F25]" : "text-[#1F192B]"
                         }`}
                       >
@@ -239,7 +239,7 @@ export function ServicesPacksDevCreative({
             <span className="text-xs font-mono uppercase tracking-wider text-[#1D4ED8] font-bold">
               Prestations par famille · Règle « Apport Réel »
             </span>
-            <h3 className="text-2xl sm:text-4xl font-bold mt-1 font-[family-name:var(--font-dev-serif)]">
+            <h3 className="text-2xl sm:text-4xl font-bold mt-1 font-[family-name:var(--font-dm-sans)]">
               Catalogue des 5 familles de services
             </h3>
           </div>

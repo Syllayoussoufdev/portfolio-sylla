@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Bebas_Neue, Caveat, Syne, Fraunces, Kaushan_Script } from "next/font/google";
+import { Geist, Geist_Mono, Bebas_Neue, Caveat, Syne, DM_Sans, Instrument_Serif } from "next/font/google";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { CookieBanner } from "@/components/analytics/CookieBanner";
@@ -33,16 +33,17 @@ const syne = Syne({
   weight: ["500", "700", "800"],
 });
 
-const devSerif = Fraunces({
-  variable: "--font-dev-serif",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "700"],
 });
 
-const devScript = Kaushan_Script({
-  variable: "--font-dev-script",
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
   subsets: ["latin"],
   weight: "400",
+  style: ["normal", "italic"],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://syllayoussouf.com";
@@ -109,7 +110,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${caveat.variable} ${syne.variable} ${devSerif.variable} ${devScript.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${caveat.variable} ${syne.variable} ${dmSans.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <head>
         <StructuredData />

@@ -32,9 +32,9 @@ export default function DemarrerProjetPage() {
         </div>
 
         <div className="text-center space-y-2 max-w-2xl mx-auto">
-          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#1F192B] font-[family-name:var(--font-dev-serif)]">
+          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#1F192B] font-[family-name:var(--font-dm-sans)]">
             Transformons votre idée en{" "}
-            <span className="font-normal text-[#E83F25] font-[family-name:var(--font-dev-script)] text-[1.08em]">
+            <span className="italic font-normal text-[#E83F25] font-[family-name:var(--font-instrument-serif)] text-[1.12em]">
               opportunité concrète.
             </span>
           </h1>

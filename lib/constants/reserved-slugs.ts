@@ -21,6 +21,8 @@ export const RESERVED_SLUGS = [
   "medias",
   "demarrer",
   "services",
+  "liens",
+  "links",
 ] as const;
 
 export type ReservedSlug = (typeof RESERVED_SLUGS)[number];

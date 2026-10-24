@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -117,9 +117,16 @@ export function ContactFooterDevCreative({ settings }: ContactFooterDevCreativeP
 
                 <Link
                   href="/services"
-                  className="inline-flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-white/80 hover:text-[#0EA5E9] transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-white/80 hover:text-[#38BDF8] transition-colors"
                 >
                   <span>Consulter tous les tarifs FCFA →</span>
+                </Link>
+
+                <Link
+                  href="/liens"
+                  className="inline-flex items-center gap-1.5 px-4 py-3 text-xs font-bold text-[#38BDF8] hover:text-white transition-colors"
+                >
+                  <span>Tous mes liens &amp; réseaux →</span>
                 </Link>
               </div>
             </div>

@@ -18,6 +18,7 @@ import {
   Trash2,
   ArrowUp,
   ArrowDown,
+  CheckSquare,
 } from "lucide-react";
 import { GithubIcon, FigmaIcon } from "@/components/icons";
 import { MediaPickerModal } from "@/components/admin/MediaPickerModal";
@@ -104,7 +105,7 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
   const [coverImageUrl, setCoverImageUrl] = useState(
     initialData?.coverImage || initialData?.coverMedia?.url || ""
   );
-  const [coverImageError, setCoverImageError] = useState(false);
+  const [coverImageError, setCoverImageError] = =State(false);
 
   // Gestion Galerie ordonnée (ProjectMedia)
   const [galleryItems, setGalleryItems] = useState<{
@@ -120,6 +121,9 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
         }))
       : []
   );
+
+  // Sélection multiple au sein de la galerie du projet
+  const [selectedGalleryIds, setSelectedGalleryIds] = useState<string[]>([]);
 
   // Modal sélecteur de média
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -145,10 +149,47 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
       setCoverImageUrl(media.url);
       setCoverImageError(false);
     } else {
-      if (!galleryItems.some((item) => item.id === media.id)) {
-        setGalleryItems([...galleryItems, { id: media.id, url: media.url, alt: media.alt }]);
-      }
+      setGalleryItems((prev) => {
+        if (prev.some((item) => item.id === media.id)) return prev;
+        return [...prev, { id: media.id, url: media.url, alt: media.alt }];
+      });
     }
+  };
+
+  const handleMultipleMediasSelected = (medias: UploadedMedia[]) => {
+    if (pickerTarget === "cover") {
+      const first = medias[0];
+      if (first) handleMediaSelected(first);
+      return;
+    }
+
+    setGalleryItems((prev) => {
+      const existingIds = new Set(prev.map((i) => i.id));
+      const newEntries = medias
+        .filter((m) => !existingIds.has(m.id))
+        .map((m) => ({ id: m.id, url: m.url, alt: m.alt }));
+      return [...prev, ...newEntries];
+    });
+  };
+
+  const toggleGallerySelect = (id: string) => {
+    setSelectedGalleryIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAllGallery = () => {
+    if (selectedGalleryIds.length === galleryItems.length) {
+      setSelectedGalleryIds([]);
+    } else {
+      setSelectedGalleryIds(galleryItems.map((i) => i.id));
+    }
+  };
+
+  const removeSelectedGalleryItems = () => {
+    if (selectedGalleryIds.length === 0) return;
+    setGalleryItems((prev) => prev.filter((item) => !selectedGalleryIds.includes(item.id)));
+    setSelectedGalleryIds([]);
   };
 
   const removeCover = () => {
@@ -169,6 +210,7 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
 
   const removeGalleryItem = (id: string) => {
     setGalleryItems(galleryItems.filter((item) => item.id !== id));
+    setSelectedGalleryIds((prev) => prev.filter((itemId) => itemId !== id));
   };
 
   const toggleTag = (t: string) => {
@@ -450,79 +492,145 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
           <input type="hidden" name="coverImage" value={coverMedia?.url || coverImageUrl} />
         </div>
 
-        {/* Galerie d'images ordonnée (ProjectMedia) */}
+        {/* Galerie d'images ordonnée (ProjectMedia) avec Sélection Multiple */}
         <div className="pt-4 border-t border-slate-100 space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider">
-                Galerie de visuels ordonnée (ProjectMedia)
+                Galerie de visuels ordonnée ({galleryItems.length} image{galleryItems.length > 1 ? "s" : ""})
               </label>
               <p className="text-[11px] text-slate-500">
-                Ajoutez des captures ou maquettes et ajustez leur ordre d&apos;affichage avec les flèches.
+                Sélectionnez ou importez plusieurs images d&apos;un coup, réordonnez-les ou supprimez en lot.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={openPickerForGallery}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#0F172A] text-xs font-semibold transition-colors cursor-pointer"
-            >
-              <Plus className="w-3.5 h-3.5 text-[#2563EB]" />
-              <span>Ajouter à la galerie</span>
-            </button>
+            <div className="flex items-center gap-2">
+              {galleryItems.length > 0 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={toggleSelectAllGallery}
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium cursor-pointer"
+                  >
+                    <CheckSquare className="w-3.5 h-3.5 text-[#2563EB]" />
+                    <span>
+                      {selectedGalleryIds.length === galleryItems.length
+                        ? "Tout décocher"
+                        : "Tout cocher"}
+                    </span>
+                  </button>
+                  {selectedGalleryIds.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={removeSelectedGalleryItems}
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Retirer ({selectedGalleryIds.length})</span>
+                    </button>
+                  )}
+                </>
+              )}
+              <button
+                type="button"
+                onClick={openPickerForGallery}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold transition-colors cursor-pointer shadow-sm"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Ajouter 1 ou plusieurs images</span>
+              </button>
+            </div>
           </div>
 
           {galleryItems.length === 0 ? (
-            <div className="border border-dashed border-slate-200 rounded-xl p-4 text-center text-xs text-slate-400 bg-slate-50/30">
-              Aucune image dans la galerie pour le moment.
+            <div
+              onClick={openPickerForGallery}
+              className="border border-dashed border-slate-200 rounded-xl p-5 text-center text-xs text-slate-400 bg-slate-50/30 hover:border-[#2563EB] hover:bg-blue-50/20 cursor-pointer transition-all"
+            >
+              Aucune image dans la galerie. Cliquez ici pour sélectionner ou importer plusieurs visuels à la fois.
             </div>
           ) : (
             <div className="space-y-2">
-              {galleryItems.map((item, index) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-white transition-all"
-                >
-                  <span className="w-5 text-center text-xs font-mono font-semibold text-slate-400">
-                    #{index + 1}
-                  </span>
-                  <div className="w-16 h-10 rounded-lg overflow-hidden bg-slate-900 shrink-0 border border-slate-200">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.url} alt={item.alt} className="w-full h-full object-cover" />
+              {galleryItems.map((item, index) => {
+                const isChecked = selectedGalleryIds.includes(item.id);
+                const isCurrentCover = coverMedia?.id === item.id || coverImageUrl === item.url;
+                return (
+                  <div
+                    key={item.id}
+                    className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
+                      isChecked
+                        ? "border-[#2563EB] bg-blue-50/30"
+                        : "border-slate-200 bg-slate-50/50 hover:bg-white"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => toggleGallerySelect(item.id)}
+                      className="w-4 h-4 rounded text-[#2563EB] focus:ring-blue-500 cursor-pointer shrink-0"
+                    />
+                    <span className="w-5 text-center text-xs font-mono font-semibold text-slate-400">
+                      #{index + 1}
+                    </span>
+                    <div className="w-16 h-10 rounded-lg overflow-hidden bg-slate-900 shrink-0 border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={item.url} alt={item.alt} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-medium text-[#0F172A] truncate">{item.alt}</p>
+                        {isCurrentCover && (
+                          <span className="px-1.5 py-0.5 rounded bg-blue-100 text-[#2563EB] text-[10px] font-bold shrink-0">
+                            Couverture
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[10px] font-mono text-slate-400 truncate">{item.url}</p>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      {!isCurrentCover && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCoverMedia({ id: item.id, url: item.url, alt: item.alt });
+                            setCoverImageUrl(item.url);
+                            setCoverImageError(false);
+                          }}
+                          className="hidden sm:inline-flex px-2 py-1 rounded-md text-[10px] font-semibold text-[#2563EB] hover:bg-blue-50 cursor-pointer"
+                          title="Utiliser cette image comme couverture principale"
+                        >
+                          Mettre en couverture
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        disabled={index === 0}
+                        onClick={() => moveGalleryItem(index, "up")}
+                        className="p-1 rounded-md text-slate-500 hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
+                        title="Monter"
+                      >
+                        <ArrowUp className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={index === galleryItems.length - 1}
+                        onClick={() => moveGalleryItem(index, "down")}
+                        className="p-1 rounded-md text-slate-500 hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
+                        title="Descendre"
+                      >
+                        <ArrowDown className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => removeGalleryItem(item.id)}
+                        className="p-1 rounded-md text-red-500 hover:bg-red-50 ml-1 cursor-pointer"
+                        title="Retirer de la galerie"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-[#0F172A] truncate">{item.alt}</p>
-                    <p className="text-[10px] font-mono text-slate-400 truncate">{item.url}</p>
-                  </div>
-                  <div className="flex items-center gap-1 shrink-0">
-                    <button
-                      type="button"
-                      disabled={index === 0}
-                      onClick={() => moveGalleryItem(index, "up")}
-                      className="p-1 rounded-md text-slate-500 hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent"
-                      title="Monter"
-                    >
-                      <ArrowUp className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      disabled={index === galleryItems.length - 1}
-                      onClick={() => moveGalleryItem(index, "down")}
-                      className="p-1 rounded-md text-slate-500 hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent"
-                      title="Descendre"
-                    >
-                      <ArrowDown className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => removeGalleryItem(item.id)}
-                      className="p-1 rounded-md text-red-500 hover:bg-red-50 ml-1"
-                      title="Retirer de la galerie"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -726,6 +834,7 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
           </div>
         </div>
       </div>
+
       {/* Barre d'action inférieure */}
       <div className="flex items-center justify-between pt-4 pb-8 border-t border-slate-200">
         <Link
@@ -759,10 +868,13 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
       isOpen={pickerOpen}
       onClose={() => setPickerOpen(false)}
       onSelect={handleMediaSelected}
+      onSelectMultiple={handleMultipleMediasSelected}
+      multiple={pickerTarget === "gallery"}
+      alreadySelectedIds={galleryItems.map((i) => i.id)}
       title={
         pickerTarget === "cover"
           ? "Choisir ou téléverser l'image de couverture"
-          : "Ajouter un visuel à la galerie ordonnée"
+          : "Ajouter un ou plusieurs visuels à la galerie ordonnée"
       }
     />
   </>

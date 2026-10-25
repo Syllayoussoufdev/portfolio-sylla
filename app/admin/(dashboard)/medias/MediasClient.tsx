@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import {
   Image as ImageIcon,
   Upload,
@@ -16,6 +15,9 @@ import {
   Link2,
   Plus,
   X,
+  Search,
+  CheckSquare,
+  Square,
 } from "lucide-react";
 import { MediaUploader, type UploadedMedia } from "@/components/admin/MediaUploader";
 import { normalizeImageUrl, isGoogleDriveUrl } from "@/lib/media-url";
@@ -44,45 +46,124 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
   const [medias, setMedias] = useState<MediaWithUsage[]>(initialMedias);
   const [showUploader, setShowUploader] = useState(false);
   const [showUrlAdder, setShowUrlAdder] = useState(false);
+
+  // Mode URL : unitaire ou lot
+  const [urlMode, setUrlMode] = useState<"single" | "batch">("batch");
   const [urlInput, setUrlInput] = useState("");
   const [urlAltInput, setUrlAltInput] = useState("");
+  const [batchUrlsText, setBatchUrlsText] = useState("");
+  const [batchBaseAlt, setBatchBaseAlt] = useState("");
   const [urlSubmitting, setUrlSubmitting] = useState(false);
+  const [urlImgError, setUrlImgError] = useState(false);
+
+  // Recherche, filtre et sélection multiple
+  const [search, setSearch] = useState("");
+  const [usageFilter, setUsageFilter] = useState<"all" | "used" | "unused">("all");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [urlImgError, setUrlImgError] = useState(false);
   const [errorNotice, setErrorNotice] = useState<string | null>(null);
   const [successNotice, setSuccessNotice] = useState<string | null>(null);
 
+  const isMediaUsed = (m: MediaWithUsage) =>
+    m.coverForProjects.length > 0 || m.projectGalleries.length > 0;
+
+  const filteredMedias = medias.filter((m) => {
+    const matchesSearch =
+      m.alt.toLowerCase().includes(search.toLowerCase()) ||
+      m.publicId.toLowerCase().includes(search.toLowerCase());
+    if (!matchesSearch) return false;
+    if (usageFilter === "used") return isMediaUsed(m);
+    if (usageFilter === "unused") return !isMediaUsed(m);
+    return true;
+  });
+
   const handleUrlAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanUrl = normalizeImageUrl(urlInput);
-    if (!cleanUrl || !urlAltInput.trim()) return;
-    setUrlSubmitting(true);
     setErrorNotice(null);
+
+    if (urlMode === "single") {
+      const cleanUrl = normalizeImageUrl(urlInput);
+      if (!cleanUrl || !urlAltInput.trim()) return;
+      setUrlSubmitting(true);
+      try {
+        const res = await fetch("/api/admin/media", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            url: cleanUrl,
+            alt: urlAltInput.trim(),
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Impossible d'ajouter l'image");
+        }
+        const formatted: MediaWithUsage = {
+          ...data.media,
+          coverForProjects: [],
+          projectGalleries: [],
+        };
+        setMedias((prev) => [formatted, ...prev]);
+        setUrlInput("");
+        setUrlAltInput("");
+        setShowUrlAdder(false);
+        setSuccessNotice("Image enregistrée avec succès dans la médiathèque.");
+        setTimeout(() => setSuccessNotice(null), 3500);
+      } catch (err) {
+        setErrorNotice(err instanceof Error ? err.message : "Erreur inattendue");
+      } finally {
+        setUrlSubmitting(false);
+      }
+      return;
+    }
+
+    // Mode Lot (Batch URLs)
+    const rawLines = batchUrlsText
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean);
+
+    if (rawLines.length === 0) return;
+
+    const baseAlt = batchBaseAlt.trim() || "Visuel réalisation";
+    const items = rawLines.map((line, index) => {
+      const [rawUrlPart, customAltPart] = line.split("|").map((s) => s.trim());
+      return {
+        url: normalizeImageUrl(rawUrlPart),
+        alt:
+          customAltPart ||
+          (rawLines.length > 1 ? `${baseAlt} — #${index + 1}` : baseAlt),
+      };
+    });
+
+    setUrlSubmitting(true);
     try {
       const res = await fetch("/api/admin/media", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url: cleanUrl,
-          alt: urlAltInput.trim(),
-        }),
+        body: JSON.stringify({ items }),
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Impossible d'ajouter l'image");
+        throw new Error(data.error || "Impossible d'importer le lot d'images");
       }
-      const formatted: MediaWithUsage = {
-        ...data.media,
+      const createdList: UploadedMedia[] = data.medias || (data.media ? [data.media] : []);
+      const formattedList: MediaWithUsage[] = createdList.map((m) => ({
+        ...m,
         coverForProjects: [],
         projectGalleries: [],
-      };
-      setMedias((prev) => [formatted, ...prev]);
-      setUrlInput("");
-      setUrlAltInput("");
+      }));
+      setMedias((prev) => [...formattedList, ...prev]);
+      setBatchUrlsText("");
+      setBatchBaseAlt("");
       setShowUrlAdder(false);
-      setSuccessNotice("Image enregistrée avec succès dans la base et la médiathèque.");
-      setTimeout(() => setSuccessNotice(null), 3000);
+      setSuccessNotice(
+        `${formattedList.length} image(s) importée(s) avec succès dans la médiathèque.`
+      );
+      setTimeout(() => setSuccessNotice(null), 3500);
     } catch (err) {
       setErrorNotice(err instanceof Error ? err.message : "Erreur inattendue");
     } finally {
@@ -96,25 +177,107 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleUploadSuccess = (newMedia: UploadedMedia) => {
-    const formatted: MediaWithUsage = {
-      ...newMedia,
+  const handleCopySelectedUrls = () => {
+    const urls = medias
+      .filter((m) => selectedIds.includes(m.id))
+      .map((m) => m.url)
+      .join("\n");
+    if (!urls) return;
+    navigator.clipboard.writeText(urls);
+    setSuccessNotice(`${selectedIds.length} URL(s) copiée(s) dans le presse-papiers.`);
+    setTimeout(() => setSuccessNotice(null), 3000);
+  };
+
+  const handleBatchUploadSuccess = (uploadedList: UploadedMedia[]) => {
+    const formattedList: MediaWithUsage[] = uploadedList.map((m) => ({
+      ...m,
       coverForProjects: [],
       projectGalleries: [],
-    };
-    setMedias((prev) => [formatted, ...prev]);
-    setSuccessNotice("Média ajouté avec succès à la médiathèque.");
-    setTimeout(() => setSuccessNotice(null), 3000);
+    }));
+    setMedias((prev) => [...formattedList, ...prev]);
+    setSuccessNotice(
+      uploadedList.length > 1
+        ? `${uploadedList.length} médias ajoutés avec succès à la médiathèque.`
+        : "Média ajouté avec succès à la médiathèque."
+    );
+    setTimeout(() => setSuccessNotice(null), 3500);
+  };
+
+  const toggleSelectMedia = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAllFiltered = () => {
+    const filteredIds = filteredMedias.map((m) => m.id);
+    const allSelected =
+      filteredIds.length > 0 && filteredIds.every((id) => selectedIds.includes(id));
+    if (allSelected) {
+      setSelectedIds((prev) => prev.filter((id) => !filteredIds.includes(id)));
+    } else {
+      setSelectedIds(Array.from(new Set([...selectedIds, ...filteredIds])));
+    }
+  };
+
+  const selectUnusedFiltered = () => {
+    const unusedIds = filteredMedias.filter((m) => !isMediaUsed(m)).map((m) => m.id);
+    setSelectedIds(unusedIds);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    setErrorNotice(null);
+    setSuccessNotice(null);
+
+    const selectedMedias = medias.filter((m) => selectedIds.includes(m.id));
+    const deletable = selectedMedias.filter((m) => !isMediaUsed(m));
+    const usedCount = selectedMedias.length - deletable.length;
+
+    if (deletable.length === 0) {
+      setErrorNotice(
+        "Tous les médias sélectionnés sont actuellement utilisés par des projets. Retirez-les d'abord des projets concernés."
+      );
+      return;
+    }
+
+    const confirmMsg =
+      usedCount > 0
+        ? `Supprimer définitivement ${deletable.length} image(s) non utilisée(s) ? (${usedCount} image(s) utilisée(s) par des projets seront conservées).`
+        : `Confirmez-vous la suppression définitive des ${deletable.length} image(s) sélectionnée(s) ?`;
+
+    if (!confirm(confirmMsg)) return;
+
+    setBulkDeleting(true);
+    try {
+      const res = await fetch("/api/admin/media", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: deletable.map((m) => m.id) }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Erreur lors de la suppression groupée");
+      }
+
+      const deletedSet = new Set<string>(data.deletedIds || []);
+      setMedias((prev) => prev.filter((m) => !deletedSet.has(m.id)));
+      setSelectedIds((prev) => prev.filter((id) => !deletedSet.has(id)));
+      setSuccessNotice(`${deletedSet.size} image(s) supprimée(s) avec succès.`);
+      setTimeout(() => setSuccessNotice(null), 3500);
+    } catch (err) {
+      setErrorNotice(err instanceof Error ? err.message : "Erreur inattendue");
+    } finally {
+      setBulkDeleting(false);
+    }
   };
 
   const handleDelete = async (media: MediaWithUsage) => {
     setErrorNotice(null);
     setSuccessNotice(null);
 
-    const isUsed =
-      media.coverForProjects.length > 0 || media.projectGalleries.length > 0;
-
-    if (isUsed) {
+    if (isMediaUsed(media)) {
       setErrorNotice(
         `Suppression impossible : ce média est utilisé dans des projets existants. Retirez-le d'abord de la couverture ou galerie.`
       );
@@ -137,6 +300,7 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
       }
 
       setMedias((prev) => prev.filter((m) => m.id !== media.id));
+      setSelectedIds((prev) => prev.filter((id) => id !== media.id));
       setSuccessNotice("Image supprimée avec succès.");
       setTimeout(() => setSuccessNotice(null), 3000);
     } catch (err: unknown) {
@@ -146,6 +310,11 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
     }
   };
 
+  const parsedBatchCount = batchUrlsText
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean).length;
+
   return (
     <div className="space-y-6">
       {/* En-tête */}
@@ -153,14 +322,14 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
         <div>
           <h1 className="font-bebas text-3xl tracking-wide text-[#0F172A] flex items-center gap-2">
             <ImageIcon className="w-7 h-7 text-[#2563EB]" />
-            MÉDIATHÈQUE CLOUDINARY
+            MÉDIATHÈQUE ({medias.length})
           </h1>
           <p className="text-xs text-[#64748B] mt-1">
-            Gestion centralisée des visuels haute fidélité, ratios et métadonnées d&apos;accessibilité (Alt).
+            Importation multiple, sélection groupée et gestion centralisée des visuels et métadonnées (Alt).
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => {
@@ -170,7 +339,7 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-[#0F172A] text-xs font-semibold shadow-sm transition-all cursor-pointer"
           >
             <Link2 className="w-4 h-4 text-[#2563EB]" />
-            <span>{showUrlAdder ? "Fermer URL" : "Ajouter par lien URL"}</span>
+            <span>{showUrlAdder ? "Fermer l'import URL" : "Importer par URL (1 ou lot)"}</span>
           </button>
 
           <button
@@ -182,7 +351,7 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold shadow-sm shadow-blue-500/20 transition-all cursor-pointer"
           >
             <Upload className="w-4 h-4" />
-            <span>{showUploader ? "Fermer l'envoi" : "Téléverser direct"}</span>
+            <span>{showUploader ? "Fermer l'envoi" : "Téléverser (1 ou plusieurs)"}</span>
           </button>
         </div>
       </div>
@@ -197,7 +366,7 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
           <button
             type="button"
             onClick={() => setErrorNotice(null)}
-            className="text-xs text-red-500 hover:text-red-800"
+            className="text-xs text-red-500 hover:text-red-800 cursor-pointer"
           >
             Fermer
           </button>
@@ -211,170 +380,383 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
         </div>
       )}
 
-      {/* Formulaire d'ajout rapide par URL */}
+      {/* Formulaire d'ajout par URL (Unitaire ou Lot Multiple) */}
       {showUrlAdder && (
         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div className="flex items-center gap-2">
               <Link2 className="w-4 h-4 text-[#2563EB]" />
               <h3 className="text-sm font-semibold text-[#0F172A]">
-                Ajouter une image par lien URL direct
+                Importer des images par liens URL / Google Drive
               </h3>
             </div>
-            <button
-              type="button"
-              onClick={() => setShowUrlAdder(false)}
-              className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
-            >
-              <X className="w-4 h-4" />
-            </button>
+
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setUrlMode("batch")}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    urlMode === "batch"
+                      ? "bg-white text-[#2563EB] shadow-sm"
+                      : "text-slate-600 hover:text-[#0F172A]"
+                  }`}
+                >
+                  Lot multiple (Plusieurs URLs)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUrlMode("single")}
+                  className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    urlMode === "single"
+                      ? "bg-white text-[#0F172A] shadow-sm"
+                      : "text-slate-600 hover:text-[#0F172A]"
+                  }`}
+                >
+                  Une seule URL
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowUrlAdder(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
-                  URL directe de l&apos;image *
-                </label>
-                <input
-                  type="url"
-                  value={urlInput}
-                  onChange={(e) => {
-                    setUrlInput(e.target.value);
-                    setUrlImgError(false);
-                  }}
-                  placeholder="https://images.unsplash.com/... ou URL d'image"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
-                  Texte alternatif descriptif (alt) *
-                </label>
-                <input
-                  type="text"
-                  value={urlAltInput}
-                  onChange={(e) => setUrlAltInput(e.target.value)}
-                  placeholder="Ex : Identité visuelle marque de café"
-                  className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowUrlAdder(false)}
-                  className="px-3.5 py-2 rounded-xl border border-slate-200 text-xs text-slate-600 hover:bg-slate-50"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="button"
-                  onClick={handleUrlAdd}
-                  disabled={urlSubmitting || !urlInput.trim() || !urlAltInput.trim()}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-                >
-                  {urlSubmitting ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Enregistrement...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Enregistrer dans la base</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Aperçu */}
-            <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-3 bg-slate-50/50 aspect-video max-h-48 overflow-hidden">
-              {urlInput.trim() ? (
-                urlImgError ? (
-                  <div className="p-3 text-center text-amber-700 flex flex-col items-center justify-center gap-1.5">
-                    <AlertCircle className="w-5 h-5 text-amber-600" />
-                    <p className="text-[11px] font-semibold">Image inaccessible</p>
-                    <p className="text-[10px] text-slate-500 leading-snug">
-                      {isGoogleDriveUrl(urlInput)
-                        ? "Vérifiez que ce fichier Google Drive est partagé sur « Tous les utilisateurs disposant du lien »."
-                        : "Le lien ne renvoie pas une image valide."}
-                    </p>
-                  </div>
-                ) : (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={normalizeImageUrl(urlInput.trim())}
-                    alt={urlAltInput || "Aperçu"}
-                    className="w-full h-full object-contain"
-                    onError={() => setUrlImgError(true)}
-                    onLoad={() => setUrlImgError(false)}
+          {urlMode === "single" ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
+                    URL directe de l&apos;image *
+                  </label>
+                  <input
+                    type="url"
+                    value={urlInput}
+                    onChange={(e) => {
+                      setUrlInput(e.target.value);
+                      setUrlImgError(false);
+                    }}
+                    placeholder="https://images.unsplash.com/... ou lien Google Drive"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
                   />
-                )
-              ) : (
-                <div className="text-center text-slate-400 text-xs">
-                  <ImageIcon className="w-6 h-6 mx-auto mb-1 opacity-50" />
-                  <span>Saisissez une URL pour voir l&apos;aperçu</span>
                 </div>
-              )}
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
+                    Texte alternatif descriptif (alt) *
+                  </label>
+                  <input
+                    type="text"
+                    value={urlAltInput}
+                    onChange={(e) => setUrlAltInput(e.target.value)}
+                    placeholder="Ex : Identité visuelle marque de café"
+                    className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowUrlAdder(false)}
+                    className="px-3.5 py-2 rounded-xl border border-slate-200 text-xs text-slate-600 hover:bg-slate-50 cursor-pointer"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleUrlAdd}
+                    disabled={urlSubmitting || !urlInput.trim() || !urlAltInput.trim()}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold disabled:opacity-50 cursor-pointer"
+                  >
+                    {urlSubmitting ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Enregistrement...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Enregistrer dans la médiathèque</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Aperçu */}
+              <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-3 bg-slate-50/50 aspect-video max-h-48 overflow-hidden">
+                {urlInput.trim() ? (
+                  urlImgError ? (
+                    <div className="p-3 text-center text-amber-700 flex flex-col items-center justify-center gap-1.5">
+                      <AlertCircle className="w-5 h-5 text-amber-600" />
+                      <p className="text-[11px] font-semibold">Image inaccessible</p>
+                      <p className="text-[10px] text-slate-500 leading-snug">
+                        {isGoogleDriveUrl(urlInput)
+                          ? "Vérifiez que ce fichier Google Drive est partagé sur « Tous les utilisateurs disposant du lien »."
+                          : "Le lien ne renvoie pas une image valide."}
+                      </p>
+                    </div>
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={normalizeImageUrl(urlInput.trim())}
+                      alt={urlAltInput || "Aperçu"}
+                      className="w-full h-full object-contain"
+                      onError={() => setUrlImgError(true)}
+                      onLoad={() => setUrlImgError(false)}
+                    />
+                  )
+                ) : (
+                  <div className="text-center text-slate-400 text-xs">
+                    <ImageIcon className="w-6 h-6 mx-auto mb-1 opacity-50" />
+                    <span>Saisissez une URL pour voir l&apos;aperçu</span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="md:col-span-1 space-y-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#0F172A] mb-1.5">
+                      Description (Alt) commune pour le lot
+                    </label>
+                    <input
+                      type="text"
+                      value={batchBaseAlt}
+                      onChange={(e) => setBatchBaseAlt(e.target.value)}
+                      placeholder="Ex : Campagne Branding (numéroté #1, #2...)"
+                      className="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                    />
+                  </div>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                    Astuce : vous pouvez aussi préciser un Alt spécifique sur une ligne avec le séparateur <code className="font-mono bg-slate-100 px-1 rounded">|</code> (ex: <code className="font-mono text-[10px]">https://... | Mon titre</code>).
+                  </p>
+                </div>
+
+                <div className="md:col-span-2 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-semibold text-[#0F172A]">
+                      Collez vos liens d&apos;images (1 URL par ligne) *
+                    </label>
+                    <span className="text-xs font-mono font-semibold text-[#2563EB]">
+                      {parsedBatchCount} image{parsedBatchCount > 1 ? "s" : ""} prête{parsedBatchCount > 1 ? "s" : ""}
+                    </span>
+                  </div>
+                  <textarea
+                    rows={5}
+                    value={batchUrlsText}
+                    onChange={(e) => setBatchUrlsText(e.target.value)}
+                    placeholder={`https://images.unsplash.com/photo-1...\nhttps://drive.google.com/file/d/...\nhttps://... | Texte alternatif personnalisé`}
+                    className="w-full px-3.5 py-2.5 text-xs font-mono rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+                  />
+                  <div className="flex items-center justify-end gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setShowUrlAdder(false)}
+                      className="px-3.5 py-2 rounded-xl border border-slate-200 text-xs text-slate-600 hover:bg-slate-50 cursor-pointer"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleUrlAdd}
+                      disabled={urlSubmitting || parsedBatchCount === 0}
+                      className="flex items-center gap-2 px-5 py-2 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold disabled:opacity-50 cursor-pointer"
+                    >
+                      {urlSubmitting ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          <span>Importation en cours...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>
+                            Importer les {parsedBatchCount > 0 ? parsedBatchCount : ""} image(s)
+                          </span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Uploader dépliable */}
+      {/* Uploader dépliable (Support Multi-Fichiers) */}
       {showUploader && (
         <MediaUploader
           folder="portfolio/projets"
-          onUploadSuccess={handleUploadSuccess}
+          onBatchUploadSuccess={handleBatchUploadSuccess}
           onCancel={() => setShowUploader(false)}
         />
       )}
 
+      {/* Barre de recherche, filtres et sélection multiple */}
+      {medias.length > 0 && (
+        <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm space-y-3">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            {/* Recherche */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Rechercher une image par description ou identifiant..."
+                className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+              />
+            </div>
+
+            {/* Filtres d'utilisation & boutons de sélection */}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center p-1 bg-slate-100 rounded-xl text-xs">
+                <button
+                  type="button"
+                  onClick={() => setUsageFilter("all")}
+                  className={`px-3 py-1 rounded-lg font-medium transition-all cursor-pointer ${
+                    usageFilter === "all"
+                      ? "bg-white text-[#0F172A] shadow-sm font-semibold"
+                      : "text-slate-600"
+                  }`}
+                >
+                  Tous ({medias.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUsageFilter("used")}
+                  className={`px-3 py-1 rounded-lg font-medium transition-all cursor-pointer ${
+                    usageFilter === "used"
+                      ? "bg-white text-[#2563EB] shadow-sm font-semibold"
+                      : "text-slate-600"
+                  }`}
+                >
+                  Utilisés ({medias.filter(isMediaUsed).length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUsageFilter("unused")}
+                  className={`px-3 py-1 rounded-lg font-medium transition-all cursor-pointer ${
+                    usageFilter === "unused"
+                      ? "bg-white text-amber-700 shadow-sm font-semibold"
+                      : "text-slate-600"
+                  }`}
+                >
+                  Non utilisés ({medias.filter((m) => !isMediaUsed(m)).length})
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={toggleSelectAllFiltered}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-[#0F172A] cursor-pointer"
+              >
+                <CheckSquare className="w-3.5 h-3.5 text-[#2563EB]" />
+                <span>
+                  {filteredMedias.length > 0 &&
+                  filteredMedias.every((m) => selectedIds.includes(m.id))
+                    ? "Tout décocher"
+                    : "Tout cocher"}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={selectUnusedFiltered}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-medium text-slate-600 cursor-pointer"
+                title="Sélectionner uniquement les médias qui ne sont utilisés par aucun projet"
+              >
+                <span>Cocher non-utilisés</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Barre d'actions groupées lorsque des images sont cochées */}
+          {selectedIds.length > 0 && (
+            <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-blue-50/60 -mx-4 -mb-4 px-4 py-3 rounded-b-2xl">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#2563EB]">
+                <CheckSquare className="w-4 h-4" />
+                <span>
+                  {selectedIds.length} image{selectedIds.length > 1 ? "s" : ""} sélectionnée{selectedIds.length > 1 ? "s" : ""}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedIds([])}
+                  className="text-slate-500 hover:text-slate-800 underline ml-2 font-normal cursor-pointer"
+                >
+                  Désélectionner
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleCopySelectedUrls}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-[#0F172A] shadow-sm cursor-pointer"
+                >
+                  <Copy className="w-3.5 h-3.5 text-[#2563EB]" />
+                  <span>Copier les {selectedIds.length} URL(s)</span>
+                </button>
+
+                <button
+                  type="button"
+                  disabled={bulkDeleting}
+                  onClick={handleBulkDelete}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-semibold shadow-sm disabled:opacity-50 cursor-pointer"
+                >
+                  {bulkDeleting ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-3.5 h-3.5" />
+                  )}
+                  <span>Supprimer la sélection ({selectedIds.length})</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Grille des médias */}
-      {medias.length === 0 ? (
+      {filteredMedias.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200/80 p-12 text-center">
           <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#2563EB] flex items-center justify-center mx-auto mb-4">
             <ImageIcon className="w-8 h-8" />
           </div>
           <h3 className="text-base font-semibold text-[#0F172A] mb-1">
-            Aucune image dans la médiathèque
+            {medias.length === 0
+              ? "Aucune image dans la médiathèque"
+              : "Aucun média ne correspond à ce filtre"}
           </h3>
           <p className="text-xs text-[#64748B] max-w-md mx-auto mb-6">
-            Ajoutez vos visuels de réalisations par lien URL direct ou téléversez-les vers Cloudinary.
+            Ajoutez vos visuels par lot d&apos;URLs ou téléversez plusieurs images simultanément vers Cloudinary.
           </p>
-          <div className="flex items-center justify-center gap-3">
-            <button
-              type="button"
-              onClick={() => setShowUrlAdder(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-[#0F172A] text-xs font-semibold shadow-sm transition-all cursor-pointer"
-            >
-              <Link2 className="w-4 h-4 text-[#2563EB]" />
-              <span>Ajouter par lien URL</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowUploader(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
-            >
-              <Upload className="w-4 h-4" />
-              <span>Téléverser direct</span>
-            </button>
-          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {medias.map((media) => {
+          {filteredMedias.map((media) => {
             const isUsedCover = media.coverForProjects.length > 0;
             const isUsedGallery = media.projectGalleries.length > 0;
             const isUsed = isUsedCover || isUsedGallery;
+            const isSelected = selectedIds.includes(media.id);
 
             return (
               <div
                 key={media.id}
-                className="group bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+                onClick={() => toggleSelectMedia(media.id)}
+                className={`group bg-white rounded-2xl border overflow-hidden transition-all flex flex-col justify-between cursor-pointer ${
+                  isSelected
+                    ? "ring-2 ring-[#2563EB] border-[#2563EB] shadow-md"
+                    : "border-slate-200/80 shadow-sm hover:shadow-md"
+                }`}
               >
                 {/* Image & Overlay */}
                 <div className="relative aspect-video bg-slate-900 overflow-hidden">
@@ -385,12 +767,33 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
-                  <div className="absolute top-2 right-2 flex items-center gap-1">
+
+                  {/* Case de sélection en haut à gauche */}
+                  <div className="absolute top-2 left-2">
+                    <div
+                      className={`w-6 h-6 rounded-lg flex items-center justify-center shadow transition-all ${
+                        isSelected
+                          ? "bg-[#2563EB] text-white"
+                          : "bg-black/55 text-white/80 hover:bg-black/80"
+                      }`}
+                    >
+                      {isSelected ? (
+                        <Check className="w-3.5 h-3.5" />
+                      ) : (
+                        <Square className="w-3.5 h-3.5" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div
+                    className="absolute top-2 right-2 flex items-center gap-1"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <button
                       type="button"
                       onClick={() => handleCopyUrl(media.id, media.url)}
-                      className="p-1.5 rounded-lg bg-black/60 hover:bg-black/80 text-white backdrop-blur-sm transition-colors text-[10px]"
-                      title="Copier l'URL Cloudinary"
+                      className="p-1.5 rounded-lg bg-black/60 hover:bg-black/80 text-white backdrop-blur-sm transition-colors text-[10px] cursor-pointer"
+                      title="Copier l'URL"
                     >
                       {copiedId === media.id ? (
                         <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -417,16 +820,16 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
                     <span className="bg-black/65 backdrop-blur-sm text-white px-2 py-0.5 rounded text-[10px] font-mono">
                       {media.width}×{media.height}
                     </span>
-                    <span className="bg-black/65 backdrop-blur-sm text-white px-2 py-0.5 rounded text-[10px] font-mono">
-                      {(media.bytes / 1024).toFixed(0)} Ko
-                    </span>
                   </div>
                 </div>
 
                 {/* Métadonnées & Utilisation */}
                 <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                   <div>
-                    <div className="text-xs font-semibold text-[#0F172A] line-clamp-2" title={media.alt}>
+                    <div
+                      className="text-xs font-semibold text-[#0F172A] line-clamp-2"
+                      title={media.alt}
+                    >
                       {media.alt}
                     </div>
                     <div className="text-[10px] font-mono text-slate-400 truncate mt-1">
@@ -478,7 +881,10 @@ export function MediasClient({ initialMedias }: MediasClientProps) {
                   </div>
 
                   {/* Actions */}
-                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <div
+                    className="pt-2 border-t border-slate-100 flex items-center justify-between"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <span className="text-[10px] font-mono text-slate-400">
                       {new Date(media.createdAt).toLocaleDateString("fr-FR")}
                     </span>

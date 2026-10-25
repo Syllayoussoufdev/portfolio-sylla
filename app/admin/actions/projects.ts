@@ -378,3 +378,37 @@ export async function toggleVisibilityAction(id: string, currentVisible: boolean
   revalidatePath("/admin/projets");
   revalidatePath("/projets");
 }
+
+
+/**
+ * Mise à jour groupée de la visibilité de plusieurs projets
+ */
+export async function bulkSetProjectsVisibilityAction(ids: string[], visible: boolean) {
+  const session = await getSession();
+  if (!session || !Array.isArray(ids) || ids.length === 0) return;
+
+  await prisma.project.updateMany({
+    where: { id: { in: ids } },
+    data: { visible },
+  });
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/projets");
+  revalidatePath("/projets");
+}
+
+/**
+ * Suppression groupée de plusieurs projets
+ */
+export async function bulkDeleteProjectsAction(ids: string[]) {
+  const session = await getSession();
+  if (!session || !Array.isArray(ids) || ids.length === 0) return;
+
+  await prisma.project.deleteMany({
+    where: { id: { in: ids } },
+  });
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/projets");
+  revalidatePath("/projets");
+}

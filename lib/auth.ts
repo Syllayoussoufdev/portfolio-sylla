@@ -2,7 +2,15 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 
-const COOKIE_NAME = "admin_session";
+export const COOKIE_NAME = "admin_session";
+
+/**
+ * Norme de sécurité Back-Office Admin (OWASP) :
+ * - Expiration après inactivité (Idle Timeout) : 24 heures sans manipulation
+ * - Durée maximale absolue (Absolute Timeout) : 48 heures depuis la connexion initiale
+ */
+export const SESSION_IDLE_MAX_AGE_SECONDS = 60 * 60 * 24; // 24 heures
+export const SESSION_ABSOLUTE_MAX_AGE_SECONDS = 60 * 60 * 48; // 48 heures
 
 function getJwtSecret(): Uint8Array {
   const secret = process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET;
@@ -23,29 +31,64 @@ function getJwtSecret(): Uint8Array {
 export interface AdminSession {
   email: string;
   role: "admin";
+  /** Timestamp Unix (secondes) de la connexion initiale pour l'expiration absolue à 48h */
+  loginAt?: number;
+  iat?: number;
   exp?: number;
 }
 
 /**
- * Signe un jeton de session JWT avec expiration à 7 jours
+ * Signe un jeton de session JWT avec expiration d'inactivité à 24 heures
+ * (plafonné par la limite absolue de 48 heures depuis loginAt)
  */
-export async function signSessionToken(payload: AdminSession): Promise<string> {
-  return new SignJWT({ ...payload })
+export async function signSessionToken(
+  payload: AdminSession,
+  customExpirationSeconds?: number
+): Promise<string> {
+  const nowSec = Math.floor(Date.now() / 1000);
+  const loginAt = payload.loginAt ?? nowSec;
+  const remainingAbsolute = Math.max(0, loginAt + SESSION_ABSOLUTE_MAX_AGE_SECONDS - nowSec);
+  const effectiveMaxAge =
+    customExpirationSeconds !== undefined
+      ? customExpirationSeconds
+      : Math.min(SESSION_IDLE_MAX_AGE_SECONDS, remainingAbsolute);
+
+  return new SignJWT({
+    email: payload.email,
+    role: payload.role,
+    loginAt,
+  })
     .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("7d")
+    .setIssuedAt(nowSec)
+    .setExpirationTime(nowSec + effectiveMaxAge)
     .sign(getJwtSecret());
 }
 
 /**
- * Vérifie l'intégrité d'un jeton JWT
+ * Vérifie l'intégrité, l'expiration d'inactivité (24h) et l'expiration absolue (48h) d'un jeton JWT
  */
 export async function verifySessionToken(token: string): Promise<AdminSession | null> {
   try {
     const { payload } = await jwtVerify(token, getJwtSecret(), {
       algorithms: ["HS256"],
     });
-    return payload as unknown as AdminSession;
+
+    const session = payload as unknown as AdminSession;
+    if (!session || session.role !== "admin" || !session.email) {
+      return null;
+    }
+
+    // Vérification de la limite absolue de 48 heures depuis la connexion initiale
+    // (et révocation immédiate des anciens jetons de 7 jours dépourvus de loginAt)
+    const nowSec = Math.floor(Date.now() / 1000);
+    if (
+      typeof session.loginAt !== "number" ||
+      nowSec - session.loginAt >= SESSION_ABSOLUTE_MAX_AGE_SECONDS
+    ) {
+      return null;
+    }
+
+    return session;
   } catch {
     return null;
   }
@@ -62,10 +105,15 @@ export async function getSession(): Promise<AdminSession | null> {
 }
 
 /**
- * Crée le cookie de session sécurisé HttpOnly
+ * Crée le cookie de session sécurisé HttpOnly (valide 24h sans activité, 48h max absolu)
  */
 export async function createSession(email: string) {
-  const token = await signSessionToken({ email, role: "admin" });
+  const nowSec = Math.floor(Date.now() / 1000);
+  const token = await signSessionToken({
+    email,
+    role: "admin",
+    loginAt: nowSec,
+  });
   const cookieStore = await cookies();
 
   cookieStore.set(COOKIE_NAME, token, {
@@ -73,7 +121,7 @@ export async function createSession(email: string) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 jours
+    maxAge: SESSION_IDLE_MAX_AGE_SECONDS, // 24 heures d'inactivité max
   });
 }
 

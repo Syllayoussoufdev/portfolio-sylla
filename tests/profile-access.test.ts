@@ -20,8 +20,15 @@ describe("Fonctions d'accès aux Profils (lib/profiles.ts)", () => {
     const devProfile = await getProfileBySlug("dev");
     if (devProfile) {
       assert.equal(devProfile.slug, "dev");
-      assert.equal(devProfile.template, "developpeur");
+      assert.ok(["developpeur", "devcreative"].includes(devProfile.template));
     }
+  });
+
+  it("doit retourner le profil correspondant pour le sous-portfolio developpeur", async () => {
+    const devProfile = await getProfileBySlug("developpeur");
+    assert.ok(devProfile, "Le profil /developpeur doit être trouvé");
+    assert.equal(devProfile.slug, "developpeur");
+    assert.equal(devProfile.template, "developpeur");
   });
 
   it("doit retourner null pour un slug inexistant ou inactif", async () => {

@@ -11,6 +11,10 @@ import {
   Sparkles,
   Check,
   FolderKanban,
+  Code,
+  Palette,
+  Film,
+  Zap,
 } from "lucide-react";
 
 interface SubPortfolioFormProps {
@@ -18,6 +22,7 @@ interface SubPortfolioFormProps {
     id: string;
     slug: string;
     label: string;
+    template?: string;
     description: string | null;
     actif: boolean;
     projects: { projectId: string; ordre: number }[];
@@ -36,6 +41,41 @@ interface SubPortfolioFormProps {
   isEditing?: boolean;
 }
 
+const TEMPLATES = [
+  {
+    id: "creatif",
+    label: "Créatif & Visuel",
+    badge: "Design & DA",
+    description: "Élégant, aéré, centré sur l'identité visuelle, les affiches et la création de marque.",
+    icon: Palette,
+    color: "from-amber-500/10 to-orange-500/10 border-orange-200 text-orange-600",
+  },
+  {
+    id: "developpeur",
+    label: "Développeur Web & Mobile",
+    badge: "Code & Tech",
+    description: "Cartes techniques, badge de stack (React, Next.js, Laravel) et focus architecture logicielle.",
+    icon: Code,
+    color: "from-blue-500/10 to-indigo-500/10 border-blue-200 text-blue-600",
+  },
+  {
+    id: "immersif",
+    label: "Immersif Vidéo & Motion",
+    badge: "Vidéo & Écran",
+    description: "Ambiance cinématique sombre, grand format, axé teasers, clips et montages rythmés.",
+    icon: Film,
+    color: "from-purple-500/10 to-pink-500/10 border-purple-200 text-purple-600",
+  },
+  {
+    id: "devcreative",
+    label: "DevCreative Freelance",
+    badge: "Offres & Business",
+    description: "Vitrine orientée conversion, packs de services, devis sur-mesure et propositions commerciales.",
+    icon: Zap,
+    color: "from-emerald-500/10 to-teal-500/10 border-emerald-200 text-emerald-600",
+  },
+];
+
 export function SubPortfolioForm({
   initialData,
   availableProjects,
@@ -50,6 +90,8 @@ export function SubPortfolioForm({
   const [label, setLabel] = useState(initialData?.label || "");
   const [slug, setSlug] = useState(initialData?.slug || "");
   const [autoSlug, setAutoSlug] = useState(!isEditing);
+  const [template, setTemplate] = useState(initialData?.template || "creatif");
+  const [hasManuallyPickedTemplate, setHasManuallyPickedTemplate] = useState(Boolean(initialData?.template));
 
   const initialSelected = initialData?.projects.map((p) => p.projectId) || [];
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>(initialSelected);
@@ -57,6 +99,7 @@ export function SubPortfolioForm({
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setLabel(val);
+
     if (autoSlug) {
       const generated = val
         .toLowerCase()
@@ -65,6 +108,18 @@ export function SubPortfolioForm({
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "");
       setSlug(generated);
+
+      // Auto-détection intelligente du template si non sélectionné manuellement
+      if (!hasManuallyPickedTemplate) {
+        const lower = val.toLowerCase();
+        if (lower.includes("dev") || lower.includes("web") || lower.includes("mobile") || lower.includes("code")) {
+          setTemplate("developpeur");
+        } else if (lower.includes("video") || lower.includes("montage") || lower.includes("film")) {
+          setTemplate("immersif");
+        } else if (lower.includes("freelance") || lower.includes("business")) {
+          setTemplate("devcreative");
+        }
+      }
     }
   };
 
@@ -86,6 +141,9 @@ export function SubPortfolioForm({
 
   return (
     <form action={formAction} className="space-y-8 max-w-4xl">
+      {/* Champ caché pour le template */}
+      <input type="hidden" name="template" value={template} />
+
       {/* En-tête */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -100,7 +158,7 @@ export function SubPortfolioForm({
               {isEditing ? "Modifier le sous-portfolio" : "Créer un sous-portfolio sur-mesure"}
             </h1>
             <p className="text-xs text-[#64748B]">
-              Configurez une URL personnalisée et sélectionnez les projets à afficher pour votre recruteur ou client.
+              Configurez une URL personnalisée, un template visuel adapté et filtrez les réalisations ciblées.
             </p>
           </div>
         </div>
@@ -151,7 +209,7 @@ export function SubPortfolioForm({
               required
               value={label}
               onChange={handleLabelChange}
-              placeholder="Ex: Candidature DA & Design Graphique"
+              placeholder="Ex: Candidature Développeur Web & Mobile"
               className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 text-[#0F172A] text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:bg-white transition-all"
             />
           </div>
@@ -183,10 +241,60 @@ export function SubPortfolioForm({
                   setAutoSlug(false);
                   setSlug(e.target.value);
                 }}
-                placeholder="design"
+                placeholder="developpeur"
                 className="w-full pl-36 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 text-[#0F172A] font-mono text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:bg-white transition-all font-semibold"
               />
             </div>
+          </div>
+        </div>
+
+        {/* Choix du Template Visuel */}
+        <div>
+          <label className="block text-xs font-semibold text-[#0F172A] uppercase tracking-wider mb-2">
+            Template & Mise en page de la vitrine *
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {TEMPLATES.map((tpl) => {
+              const isSelected = template === tpl.id;
+              const IconComp = tpl.icon;
+
+              return (
+                <div
+                  key={tpl.id}
+                  onClick={() => {
+                    setTemplate(tpl.id);
+                    setHasManuallyPickedTemplate(true);
+                  }}
+                  className={`p-4 rounded-xl border-2 transition-all cursor-pointer flex flex-col justify-between select-none ${
+                    isSelected
+                      ? "border-[#F97316] bg-orange-50/40 shadow-sm"
+                      : "border-slate-200/80 bg-slate-50/30 hover:border-slate-300 hover:bg-slate-50/60"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className={`p-2 rounded-lg bg-white border ${tpl.color}`}>
+                        <IconComp className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-[#0F172A]">{tpl.label}</h4>
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#F97316]">
+                          {tpl.badge}
+                        </span>
+                      </div>
+                    </div>
+                    {isSelected && (
+                      <span className="w-5 h-5 rounded-full bg-[#F97316] text-white flex items-center justify-center shrink-0">
+                        <Check className="w-3 h-3" />
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-[#64748B] leading-relaxed mt-1">
+                    {tpl.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -199,7 +307,7 @@ export function SubPortfolioForm({
             name="description"
             rows={3}
             defaultValue={initialData?.description || ""}
-            placeholder="Ex: Bonjour ! Voici une sélection rigoureuse de mes créations en identité visuelle et branding..."
+            placeholder="Ex: Bonjour ! Voici une sélection rigoureuse de mes créations en code et développement web..."
             className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 text-[#0F172A] text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316] focus:bg-white transition-all resize-y"
           />
         </div>
@@ -214,7 +322,7 @@ export function SubPortfolioForm({
             className="w-4 h-4 text-[#F97316] rounded focus:ring-orange-500"
           />
           <label htmlFor="actif" className="text-sm font-medium text-[#0F172A] cursor-pointer">
-            Lien actif (Accessible aux recruteurs)
+            Lien actif (Accessible publiquement aux recruteurs et clients)
           </label>
         </div>
       </div>
@@ -236,7 +344,7 @@ export function SubPortfolioForm({
             <button
               type="button"
               onClick={selectAll}
-              className="text-xs font-medium text-[#2563EB] hover:underline"
+              className="text-xs font-medium text-[#2563EB] hover:underline cursor-pointer"
             >
               Tout cocher
             </button>
@@ -244,7 +352,7 @@ export function SubPortfolioForm({
             <button
               type="button"
               onClick={deselectAll}
-              className="text-xs font-medium text-slate-500 hover:underline"
+              className="text-xs font-medium text-slate-500 hover:underline cursor-pointer"
             >
               Tout décocher
             </button>
@@ -305,6 +413,7 @@ export function SubPortfolioForm({
           </div>
         )}
       </div>
+
       {/* Barre d'action inférieure */}
       <div className="flex items-center justify-between pt-4 pb-8 border-t border-slate-200">
         <Link

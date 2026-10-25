@@ -288,6 +288,94 @@ export async function getProfileBySlug(slug: string) {
     });
 
     if (profile) return profile;
+
+    // Repli de sécurité : si aucun Profile n'a ce slug directement, vérifier s'il existe un SubPortfolio actif correspondant
+    const subPortfolio = await prisma.subPortfolio.findUnique({
+      where: {
+        slug: normalized,
+        actif: true,
+      },
+      include: {
+        profile: {
+          include: {
+            heroMedia: true,
+            subPortfolio: {
+              include: {
+                projects: {
+                  include: {
+                    project: {
+                      include: {
+                        coverMedia: true,
+                      },
+                    },
+                  },
+                  orderBy: { ordre: "asc" },
+                },
+              },
+            },
+          },
+        },
+        projects: {
+          include: {
+            project: {
+              include: {
+                coverMedia: true,
+              },
+            },
+          },
+          orderBy: { ordre: "asc" },
+        },
+      },
+    });
+
+    if (subPortfolio) {
+      if (subPortfolio.profile) {
+        return subPortfolio.profile;
+      }
+
+      const isDev =
+        normalized.includes("dev") || subPortfolio.label.toLowerCase().includes("dev");
+      const isVideo =
+        normalized.includes("video") || subPortfolio.label.toLowerCase().includes("video");
+      const template = isDev ? "developpeur" : isVideo ? "immersif" : "creatif";
+
+      return {
+        id: `sub-${subPortfolio.id}`,
+        slug: subPortfolio.slug,
+        label: subPortfolio.label,
+        template,
+        accent: "default",
+        hero: {
+          headline: subPortfolio.label,
+          subline: subPortfolio.description || "Portfolio personnalisé de Sylla Youssouf",
+          tagline: subPortfolio.label,
+          ctaPrimary: { label: "Voir mes réalisations", href: "#projets" },
+          ctaSecondary: { label: "Discuter d'un projet", href: "#contact" },
+          media: { kind: "image", alt: subPortfolio.label },
+        } as HeroData,
+        sections: [
+          { key: "hero", visible: true, order: 0 },
+          { key: "projets", visible: true, order: 1 },
+          { key: "competences", visible: true, order: 2 },
+          { key: "apropos", visible: true, order: 3 },
+          { key: "parcours", visible: true, order: 4 },
+          { key: "contact", visible: true, order: 5 },
+        ] as SectionItem[],
+        variables: {},
+        variants: null,
+        about: null,
+        seoTitle: `${subPortfolio.label} — Sylla Youssouf`,
+        seoDescription: subPortfolio.description || `Portfolio ciblé : ${subPortfolio.label}`,
+        heroMediaId: null,
+        heroMedia: null,
+        isDefault: false,
+        actif: true,
+        subPortfolioId: subPortfolio.id,
+        subPortfolio,
+        createdAt: subPortfolio.createdAt,
+        updatedAt: subPortfolio.createdAt,
+      };
+    }
   } catch (error) {
     console.warn(`Avertissement récupération profil [${normalized}] (utilisation du repli) :`, error);
   }

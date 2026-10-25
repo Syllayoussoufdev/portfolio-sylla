@@ -14,6 +14,11 @@ export default async function EditSubPortfolioPage({
     prisma.subPortfolio.findUnique({
       where: { id },
       include: {
+        profile: {
+          select: {
+            template: true,
+          },
+        },
         projects: {
           select: {
             projectId: true,
@@ -43,7 +48,10 @@ export default async function EditSubPortfolioPage({
   return (
     <div className="py-2">
       <SubPortfolioForm
-        initialData={subPortfolio}
+        initialData={{
+          ...subPortfolio,
+          template: subPortfolio.profile?.template || "creatif",
+        }}
         availableProjects={allProjects}
         action={boundUpdateAction}
         isEditing={true}

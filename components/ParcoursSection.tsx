@@ -346,11 +346,13 @@ export function ParcoursSection({ items = [] }: ParcoursSectionProps) {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto shrink-0 mt-1 sm:mt-0">
-                      {milestone.badge && (
-                        <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-[#2563EB] border border-blue-200/60">
-                          {milestone.badge}
-                        </span>
-                      )}
+                      {milestone.badge &&
+                        (!milestone.enCours ||
+                          milestone.badge.trim().toLowerCase() !== "en cours") && (
+                          <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-[#2563EB] border border-blue-200/60">
+                            {milestone.badge}
+                          </span>
+                        )}
 
                       {milestone.enCours && (
                         <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-orange-50 text-[#F97316] border border-orange-200">

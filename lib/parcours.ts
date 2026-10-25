@@ -77,6 +77,8 @@ export async function getParcours(
     return items.filter(
       (item) =>
         item.profilSlugs.length === 0 ||
+        item.profilSlugs.includes("all") ||
+        item.profilSlugs.includes("tous") ||
         item.profilSlugs.includes(targetSlug) ||
         (targetSlug === "default" && item.profilSlugs.includes("/"))
     ) as unknown as ParcoursItemData[];

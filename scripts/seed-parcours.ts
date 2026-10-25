@@ -14,7 +14,7 @@ const PARCOURS_SEED_DATA = [
     badge: "En cours",
     description: "3 projets d'entreprise concrets. Modules : branding et identité visuelle, design graphique et illustration, montage vidéo et motion, stratégie de communication, produits IA et prompts avancés, maquettes Figma UI/UX, développement web moderne.",
     tags: ["IA Générative", "Prompt Engineering", "Branding", "UI/UX Figma", "Montage Vidéo", "Next.js"],
-    profilSlugs: [], // Tous les profils
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 1,
   },
   {
@@ -28,7 +28,7 @@ const PARCOURS_SEED_DATA = [
     badge: "Diplôme supérieur (Bac+3)",
     description: "Formation approfondie en conception d'architectures logicielles, développement full stack moderne, sécurité et gestion de bases de données relationnelles.",
     tags: ["Architecture Web", "Full Stack", "Génie Logiciel", "Bases de Données"],
-    profilSlugs: ["default", "dev"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 2,
   },
   {
@@ -42,7 +42,7 @@ const PARCOURS_SEED_DATA = [
     badge: "Diplôme d'État (Bac+2)",
     description: "Fondamentaux de l'algorithmique, développement orienté objet, modélisation Merise/UML et conception de systèmes d'information.",
     tags: ["Algorithmique", "POO", "Merise", "Systèmes d'Information"],
-    profilSlugs: ["default", "dev"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 3,
   },
   {
@@ -55,7 +55,7 @@ const PARCOURS_SEED_DATA = [
     enCours: false,
     description: "Enseignement scientifique généraliste (Mathématiques, Sciences Physiques et Sciences de la Vie et de la Terre).",
     tags: ["Sciences", "Rigueur Analytique"],
-    profilSlugs: ["default"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 4,
   },
 
@@ -71,7 +71,7 @@ const PARCOURS_SEED_DATA = [
     badge: "Actuel",
     description: "Conception et déploiement d'applications web et de plateformes sur-mesure avec Laravel, React et Next.js. Intégration de maquettes soignées et accompagnement client.",
     tags: ["Laravel", "React", "Next.js", "PostgreSQL", "Tailwind CSS"],
-    profilSlugs: ["default", "dev"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 1,
   },
   {
@@ -86,7 +86,7 @@ const PARCOURS_SEED_DATA = [
     enCours: false,
     description: "Déploiement opérationnel d'un ERP web d'assurance santé, formation pratique des utilisateurs et accompagnement technique de transition numérique.",
     tags: ["ERP Santé", "Déploiement", "Support Utilisateur", "Conduite du Changement"],
-    profilSlugs: ["default", "dev"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 2,
   },
   {
@@ -101,7 +101,7 @@ const PARCOURS_SEED_DATA = [
     enCours: false,
     description: "Développement de modules applicatifs, intégration d'interfaces web responsives et maintenance de fonctionnalités en méthodologie agile.",
     tags: ["Développement Web", "PHP", "JavaScript", "Agile"],
-    profilSlugs: ["default", "dev"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 3,
   },
 
@@ -117,7 +117,7 @@ const PARCOURS_SEED_DATA = [
     description: "Stratégie de contenu, référencement naturel (SEO), acquisition de trafic, présence sur les réseaux sociaux et analyse d'audience.",
     url: "https://learndigital.withgoogle.com/digitalgarage",
     tags: ["Marketing Digital", "Stratégie de Contenu", "SEO", "Réseaux Sociaux"],
-    profilSlugs: ["default", "design"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 1,
   },
   {
@@ -130,7 +130,7 @@ const PARCOURS_SEED_DATA = [
     badge: "ID: 60ffa166",
     description: "Fondamentaux de l'intelligence artificielle, des modèles de langage (LLM) et des outils d'IA appliquée à la productivité et aux produits modernes.",
     tags: ["IA Moderne", "LLM", "Prompting", "Cisco Academy"],
-    profilSlugs: [], // Tous les profils
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 2,
   },
   {
@@ -143,7 +143,7 @@ const PARCOURS_SEED_DATA = [
     badge: "Cisco Verified",
     description: "Compréhension du rôle des données dans l'apprentissage automatique (Machine Learning), analyse de données et opportunités en Data Analytics.",
     tags: ["Data Science", "Machine Learning", "Data Analytics"],
-    profilSlugs: ["default", "dev"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 3,
   },
   {
@@ -157,7 +157,7 @@ const PARCOURS_SEED_DATA = [
     description: "Ingénierie de prompts avancée et création de contenus percutants assistés par l'IA générative pour le marketing et la publicité.",
     url: "https://coursera.org/verify/4TC256C839K6",
     tags: ["Prompt Engineering", "IA Générative", "Marketing", "Copywriting"],
-    profilSlugs: ["default", "design"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 4,
   },
   {
@@ -171,7 +171,7 @@ const PARCOURS_SEED_DATA = [
     description: "Développement d'applications basées sur des modèles de langage (LLM) avec le framework LangChain, gestion de chaînes et d'agents.",
     url: "https://coursera.org/verify/KV0KAMESKPYK",
     tags: ["LangChain", "LLMs", "Python", "IA Agents"],
-    profilSlugs: ["default", "dev"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 5,
   },
   {
@@ -185,7 +185,7 @@ const PARCOURS_SEED_DATA = [
     description: "Gestion avancée des schémas de bases de données, ORM Django et contrôle des migrations en production.",
     url: "https://coursera.org/verify/HVMURDPKMI1N",
     tags: ["Django", "Python", "Migrations", "Bases de Données"],
-    profilSlugs: ["default", "dev"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 6,
   },
   {
@@ -199,7 +199,7 @@ const PARCOURS_SEED_DATA = [
     description: "Programmation orientée objet en PHP moderne : classes, héritage, interfaces, encapsulation et conception modulaire.",
     url: "https://coursera.org/verify/SNRCAZYIKJ65",
     tags: ["PHP", "POO", "Architecture Modulaire"],
-    profilSlugs: ["default", "dev"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 7,
   },
   {
@@ -213,7 +213,7 @@ const PARCOURS_SEED_DATA = [
     badge: "Sommet Professionnel",
     description: "Participation au grand sommet de la communication digitale africaine : nouvelles tendances de contenu, marques et stratégies d'influence.",
     tags: ["Communication Digitale", "Événement Pro", "Networking", "Tendances"],
-    profilSlugs: ["default", "design"],
+    profilSlugs: [], // Tous les profils (universel)
     ordre: 8,
   },
 ];

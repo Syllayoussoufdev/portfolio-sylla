@@ -105,7 +105,7 @@ export function ProjectForm({ initialData, action, isEditing }: ProjectFormProps
   const [coverImageUrl, setCoverImageUrl] = useState(
     initialData?.coverImage || initialData?.coverMedia?.url || ""
   );
-  const [coverImageError, setCoverImageError] = =State(false);
+  const [coverImageError, setCoverImageError] = useState(false);
 
   // Gestion Galerie ordonnée (ProjectMedia)
   const [galleryItems, setGalleryItems] = useState<{

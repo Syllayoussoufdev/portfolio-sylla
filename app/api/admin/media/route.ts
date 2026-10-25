@@ -211,7 +211,6 @@ export async function DELETE(request: Request) {
       include: {
         coverForProjects: { select: { id: true, titre: true } },
         projectGalleries: { select: { projectId: true } },
-        profilesHero: { select: { id: true } },
       },
     });
 
@@ -221,8 +220,7 @@ export async function DELETE(request: Request) {
     for (const m of mediasToCheck) {
       const isUsed =
         m.coverForProjects.length > 0 ||
-        m.projectGalleries.length > 0 ||
-        m.profilesHero.length > 0;
+        m.projectGalleries.length > 0;
       if (isUsed) {
         skippedCount.used++;
       } else {

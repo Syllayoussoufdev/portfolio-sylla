@@ -4,6 +4,7 @@ import { MotionProvider } from "@/components/motion/MotionProvider";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { CookieBanner } from "@/components/analytics/CookieBanner";
 import { StructuredData } from "@/components/analytics/StructuredData";
+import { FloatingAssistantMount } from "@/components/FloatingAssistantMount";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -118,6 +119,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans bg-[#F9FAFB] text-[#0F172A]">
         <GoogleAnalytics />
         <MotionProvider>{children}</MotionProvider>
+        <FloatingAssistantMount />
         <CookieBanner />
       </body>
     </html>

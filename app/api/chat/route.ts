@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
 
 // Quotas anti-abus (par IP) : 20 messages / 10 min
 const RATE_MAX = 20;
@@ -74,13 +74,15 @@ export async function POST(req: NextRequest) {
   const history = body.messages.slice(-8);
 
   // Cascade de modèles pour résilience maximale sur l'offre gratuite Groq
-  // Modèles actuellement actifs en production sur GroqCloud (mixtral a été retiré par Groq)
+  // Modèles actifs confirmés sur GroqCloud (openai/gpt-oss-20b ultra-rapide en tête)
   const candidateModels = Array.from(
     new Set([
       GROQ_MODEL,
+      "openai/gpt-oss-20b",
+      "openai/gpt-oss-120b",
+      "qwen/qwen3.8-27b",
       "llama-3.3-70b-versatile",
       "llama-3.1-8b-instant",
-      "openai/gpt-oss-20b",
     ].filter(Boolean))
   );
 
@@ -205,38 +207,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  const rawKey = process.env.GROQ_API_KEY || "";
-  const apiKey = rawKey.trim().replace(/^['"]|['"]$/g, "");
-  if (!apiKey) {
-    return Response.json({
-      status: "unconfigured",
-      message: "GROQ_API_KEY is not configured.",
-    });
-  }
-
-  try {
-    const modelsRes = await fetch("https://api.groq.com/openai/v1/models", {
-      headers: { Authorization: `Bearer ${apiKey}` },
-    });
-    const data = await modelsRes.json().catch(() => null);
-
-    const modelIds: string[] = Array.isArray(data?.data)
-      ? data.data
-          .map((m: { id: string }) => m.id)
-          .filter((id: string) => !id.includes("whisper") && !id.includes("guard"))
-      : [];
-
-    return Response.json({
-      status: "ok",
-      apiKeyConfigured: true,
-      apiKeyPrefix: apiKey.slice(0, 6) + "...",
-      groqModelEnv: process.env.GROQ_MODEL || "(non défini, défaut: llama-3.3-70b-versatile)",
-      availableChatModels: modelIds,
-    });
-  } catch (err) {
-    return Response.json({
-      status: "error",
-      message: err instanceof Error ? err.message : String(err),
-    });
-  }
+  return Response.json({
+    status: "ok",
+    service: "chatbot-assistant-sylla",
+    configured: Boolean(process.env.GROQ_API_KEY),
+  });
 }

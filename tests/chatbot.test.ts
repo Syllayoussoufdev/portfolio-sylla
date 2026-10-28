@@ -1,10 +1,18 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildChatbotSystemPrompt } from "../lib/chatbot-context";
-import { POST } from "../app/api/chat/route";
+import { POST, GET } from "../app/api/chat/route";
 import { NextRequest } from "next/server";
 
 test("Assistant Virtuel & Chatbot Flottant (Groq / Llama 3)", async (t) => {
+  await t.test("doit retourner un status ok sur la route GET", async () => {
+    const res = await GET();
+    assert.strictEqual(res.status, 200);
+    const data = await res.json();
+    assert.strictEqual(data.status, "ok");
+    assert.strictEqual(data.service, "chatbot-assistant-sylla");
+  });
+
   await t.test("doit construire un system prompt complet avec le profil et les données métier", async () => {
     const prompt = await buildChatbotSystemPrompt();
     assert.ok(prompt.length > 500, "Le prompt système doit être richement documenté");

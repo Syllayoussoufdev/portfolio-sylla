@@ -74,12 +74,18 @@ export async function POST(req: NextRequest) {
   const history = body.messages.slice(-8);
 
   // Cascade de modèles pour résilience maximale sur l'offre gratuite Groq
+  // Modèles actuellement actifs en production sur GroqCloud (mixtral a été retiré par Groq)
   const candidateModels = Array.from(
-    new Set([GROQ_MODEL, "llama-3.1-8b-instant", "mixtral-8x7b-32768"].filter(Boolean))
+    new Set([
+      GROQ_MODEL,
+      "llama-3.3-70b-versatile",
+      "llama-3.1-8b-instant",
+      "openai/gpt-oss-20b",
+    ].filter(Boolean))
   );
 
   let upstream: Response | null = null;
-  let lastErrorDetail = "";
+  const errors: Array<{ model: string; status: number; detail: string }> = [];
 
   for (const model of candidateModels) {
     try {
@@ -104,8 +110,9 @@ export async function POST(req: NextRequest) {
       }
 
       // Si erreur, on capture le détail
-      lastErrorDetail = await res.text().catch(() => "");
-      console.warn(`[chatbot] Tentative modèle ${model} échouée (${res.status}) :`, lastErrorDetail.slice(0, 300));
+      const text = await res.text().catch(() => "");
+      errors.push({ model, status: res.status, detail: text });
+      console.warn(`[chatbot] Tentative modèle ${model} échouée (${res.status}) :`, text.slice(0, 300));
 
       // Si 401 (clé API invalide), inutile de tester d'autres modèles, c'est la clé
       if (res.status === 401) {
@@ -113,29 +120,37 @@ export async function POST(req: NextRequest) {
         break;
       }
     } catch (err) {
-      lastErrorDetail = err instanceof Error ? err.message : String(err);
-      console.error(`[chatbot] Exception fetch modèle ${model} :`, lastErrorDetail);
+      const msg = err instanceof Error ? err.message : String(err);
+      errors.push({ model, status: 0, detail: msg });
+      console.error(`[chatbot] Exception fetch modèle ${model} :`, msg);
     }
   }
 
   if (!upstream || !upstream.ok || !upstream.body) {
+    // On extrait l'erreur la plus informative (en priorité celle du modèle principal)
+    const primaryError = errors[0];
+    const lastError = errors[errors.length - 1];
+    const chosen = primaryError || lastError;
+
     let parsedMessage = "";
-    try {
-      const parsed = JSON.parse(lastErrorDetail);
-      parsedMessage = parsed.error?.message || "";
-    } catch {
-      parsedMessage = lastErrorDetail.slice(0, 200);
+    if (chosen?.detail) {
+      try {
+        const parsed = JSON.parse(chosen.detail);
+        parsedMessage = parsed.error?.message || "";
+      } catch {
+        parsedMessage = chosen.detail.slice(0, 200);
+      }
     }
 
-    const status = upstream?.status || 502;
+    const status = upstream?.status || primaryError?.status || 502;
     let userMsg = "L'assistant est momentanément indisponible. Écrivez à Youssouf sur WhatsApp.";
 
     if (status === 401) {
       userMsg = `Clé API Groq non reconnue (${parsedMessage || "vérifiez sur console.groq.com/keys"}).`;
-    } else if (status === 429) {
+    } else if (status === 429 || errors.some((e) => e.status === 429)) {
       userMsg = "Quota gratuit Groq temporairement atteint. Réessayez dans une minute ou écrivez sur WhatsApp.";
     } else if (parsedMessage) {
-      userMsg = `Service Groq : ${parsedMessage}`;
+      userMsg = `Service Groq (${chosen?.model || "modèle"}) : ${parsedMessage}`;
     }
 
     return jsonError(userMsg, status === 429 ? 429 : status === 401 ? 401 : 502);
@@ -187,4 +202,41 @@ export async function POST(req: NextRequest) {
       "Cache-Control": "no-store",
     },
   });
+}
+
+export async function GET() {
+  const rawKey = process.env.GROQ_API_KEY || "";
+  const apiKey = rawKey.trim().replace(/^['"]|['"]$/g, "");
+  if (!apiKey) {
+    return Response.json({
+      status: "unconfigured",
+      message: "GROQ_API_KEY is not configured.",
+    });
+  }
+
+  try {
+    const modelsRes = await fetch("https://api.groq.com/openai/v1/models", {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    const data = await modelsRes.json().catch(() => null);
+
+    const modelIds: string[] = Array.isArray(data?.data)
+      ? data.data
+          .map((m: { id: string }) => m.id)
+          .filter((id: string) => !id.includes("whisper") && !id.includes("guard"))
+      : [];
+
+    return Response.json({
+      status: "ok",
+      apiKeyConfigured: true,
+      apiKeyPrefix: apiKey.slice(0, 6) + "...",
+      groqModelEnv: process.env.GROQ_MODEL || "(non défini, défaut: llama-3.3-70b-versatile)",
+      availableChatModels: modelIds,
+    });
+  } catch (err) {
+    return Response.json({
+      status: "error",
+      message: err instanceof Error ? err.message : String(err),
+    });
+  }
 }

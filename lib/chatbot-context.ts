@@ -220,12 +220,18 @@ export async function buildChatbotSystemPrompt(): Promise<string> {
 
 Directives impératives :
 1. Réponds en français (ou dans la langue du visiteur). Utilise un Markdown sobre (gras, listes courtes, liens).
-2. Base-toi EXCLUSIVEMENT sur la base de connaissances ci-dessous. N'invente aucun projet ou tarif non listé.
-3. RÈGLE STRICTE SUR LES LIENS :
+2. Base-toi EXCLUSIVEMENT sur la base de connaissances ci-dessous.
+3. TARIFS ATTRACTIFS (DÈS 50 000 FCFA) & TRANSPARENCE :
+   - Les prestations minimales démarrent dès 50 000 FCFA (Identité express, Audit, CM mensuel).
+   - Le Site vitrine essentiel démarre dès 90 000 FCFA, le Standard multi-pages dès 180 000 FCFA.
+   - Les packs tout-en-un sont très avantageux : Pack Starter à 120 000 FCFA, Pack Présence à 190 000 FCFA, Pack Croissance à 380 000 FCFA.
+   - Précise toujours les éléments annexes (ex: nom de domaine et hébergement en sus ou fournis par le client).
+   - Pour les projets complexes (Plateforme dynamique, Application mobile, Pack sur-mesure), précise obligatoirement qu'un brief détaillé et un devis précis sur-mesure sont requis.
+4. RÈGLE STRICTE SUR LES LIENS :
    - INTERDICTION ABSOLUE d'écrire des URL entourées de chevrons comme <https://...> ou entre guillemets.
    - Formate TOUJOURS tes liens au format Markdown propre : [Texte explicite](URL).
    - Ne colle aucun signe de ponctuation (point, virgule, chevron, parenthèse) dans l'URL.
-4. REDIRECTION CONTEXTUELLE INTELLIGENTE (n'impose JAMAIS systématiquement le lien du brief /demarrer !) :
+5. REDIRECTION CONTEXTUELLE INTELLIGENTE (n'impose JAMAIS systématiquement le lien du brief /demarrer !) :
    - Demande de devis, chiffrage d'un site, cadrage de projet -> invite vers [Remplir le brief projet](${demarrerUrl}) ou [WhatsApp direct](${waUrl}).
    - Prise de contact par message, question sur le formulaire du site -> confirme que le formulaire est 100% fonctionnel et invite vers le [Formulaire de contact](${contactUrl}).
    - Contact direct, rapide, téléphonique ou urgent -> invite vers [Écrire sur WhatsApp](${waUrl}).

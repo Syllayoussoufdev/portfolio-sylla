@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -122,7 +122,7 @@ export function ServicesPacksDevCreative({
               </span>
             </h2>
             <p className="text-sm sm:text-base text-[#334E68]">
-              Chaque pack regroupe les briques essentielles avec un livrable clair, un délai annoncé et un tarif connu d&apos;avance.
+              Tarifs attractifs pensés pour faciliter votre démarrage. Chaque formule détaille clairement les éléments inclus, les options annexes, et les projets nécessitant un cadrage sur brief et devis précis.
             </p>
           </div>
 
@@ -213,20 +213,44 @@ export function ServicesPacksDevCreative({
                     <span>Délai : {pack.delai}</span>
                   </div>
 
-                  {/* Livrables inclus */}
+                  {/* Livrables inclus & Annexes */}
                   <ul className="space-y-2 text-xs">
-                    {pack.servicesInclus.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <CheckCircle2
-                          className={`w-4 h-4 shrink-0 mt-0.5 ${
-                            isFeatured ? "text-[#0EA5E9]" : "text-[#2563EB]"
-                          }`}
-                        />
-                        <span className={isFeatured ? "text-white/90" : "text-[#0A1D37]"}>
-                          {item}
-                        </span>
-                      </li>
-                    ))}
+                    {pack.servicesInclus.map((item, idx) => {
+                      const isAnnexe = /annexe|option/i.test(item);
+                      const isWarning = /⚠️|requis|brief|devis précis/i.test(item);
+                      return (
+                        <li key={idx} className="flex items-start gap-2">
+                          {isWarning ? (
+                            <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
+                          ) : isAnnexe ? (
+                            <span className="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0 mt-1.5" />
+                          ) : (
+                            <CheckCircle2
+                              className={`w-4 h-4 shrink-0 mt-0.5 ${
+                                isFeatured ? "text-[#0EA5E9]" : "text-[#2563EB]"
+                              }`}
+                            />
+                          )}
+                          <span
+                            className={
+                              isWarning
+                                ? isFeatured
+                                  ? "text-amber-300 font-semibold text-[11px]"
+                                  : "text-amber-700 font-semibold text-[11px]"
+                                : isAnnexe
+                                ? isFeatured
+                                  ? "text-white/60 italic text-[11px]"
+                                  : "text-[#526D82] italic text-[11px]"
+                                : isFeatured
+                                ? "text-white/90"
+                                : "text-[#0A1D37]"
+                            }
+                          >
+                            {item}
+                          </span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
 
@@ -271,7 +295,7 @@ export function ServicesPacksDevCreative({
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
           <div>
             <span className="text-xs font-mono uppercase tracking-wider text-[#2563EB] font-bold">
-              Prestations par famille · Règle « Apport Réel »
+              Prestations dès 50 000 FCFA · Transparence Inclus vs Annexes
             </span>
             <h3 className="text-2xl sm:text-4xl font-bold mt-1 font-[family-name:var(--font-dm-sans)]">
               Catalogue des 5 familles de services
@@ -342,18 +366,38 @@ export function ServicesPacksDevCreative({
                     </p>
                   </div>
 
-                  {/* Livrables mesurables */}
-                  <div className="p-3.5 rounded-2xl bg-[#F0F7FF]/80 space-y-1.5">
+                  {/* Livrables & Éléments annexes */}
+                  <div className="p-3.5 rounded-2xl bg-[#F0F7FF]/80 space-y-2">
                     <div className="text-[10px] font-mono uppercase tracking-wider text-[#526D82] font-bold">
-                      Livrables inclus :
+                      Détail de la prestation :
                     </div>
                     <ul className="space-y-1.5 text-xs text-[#0A1D37]">
-                      {offer.livrables.map((liv, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#0EA5E9] shrink-0 mt-0.5" />
-                          <span>{liv}</span>
-                        </li>
-                      ))}
+                      {offer.livrables.map((liv, i) => {
+                        const isAnnexe = /annexe|option/i.test(liv);
+                        const isWarning = /⚠️|requis|brief|devis précis/i.test(liv);
+                        return (
+                          <li key={i} className="flex items-start gap-2">
+                            {isWarning ? (
+                              <ShieldCheck className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                            ) : isAnnexe ? (
+                              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0 mt-1.5" />
+                            ) : (
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#0EA5E9] shrink-0 mt-0.5" />
+                            )}
+                            <span
+                              className={
+                                isWarning
+                                  ? "text-amber-800 font-semibold text-[11px]"
+                                  : isAnnexe
+                                  ? "text-[#526D82] italic text-[11px]"
+                                  : "text-[#0A1D37]"
+                              }
+                            >
+                              {liv}
+                            </span>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 </div>
@@ -378,6 +422,12 @@ export function ServicesPacksDevCreative({
                       </strong>
                     </div>
                   </div>
+
+                  {/brief|devis précis/i.test(offer.prixLabel || "") && (
+                    <div className="inline-flex items-center gap-1.5 text-[10px] font-bold text-amber-800 bg-amber-100/70 border border-amber-200/80 px-2.5 py-1 rounded-full w-full justify-center">
+                      <span>📋 Projet sur-mesure · Brief & devis précis requis</span>
+                    </div>
+                  )}
 
                   {isAvailable ? (
                     <button

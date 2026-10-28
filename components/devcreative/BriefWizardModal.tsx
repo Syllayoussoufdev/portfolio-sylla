@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -34,51 +34,51 @@ export const PROJECT_TYPES = [
     id: "presence-en-ligne",
     label: "Site Vitrine & Présence Web",
     desc: "Site rapide et moderne pour convertir vos visiteurs en clients",
-    priceHint: "dès 200 000 FCFA",
+    priceHint: "dès 90 000 FCFA",
     icon: Globe,
   },
   {
     id: "saas-plateforme",
     label: "Plateforme Web / SaaS / E-commerce",
     desc: "Application dynamique sur-mesure avec back-office de gestion",
-    priceHint: "dès 600 000 FCFA",
+    priceHint: "dès 350 000 FCFA · Sur brief",
     icon: Layers,
   },
   {
     id: "mobile-business",
     label: "Application Mobile Business",
     desc: "iOS & Android (commande, suivi, fidélisation, paiement)",
-    priceHint: "Sur devis",
+    priceHint: "dès 450 000 FCFA · Sur brief",
     icon: Smartphone,
   },
   {
     id: "conception-identite",
     label: "Identité Visuelle & Design",
     desc: "Logo, charte graphique, maquettes UI/UX et supports de marque",
-    priceHint: "dès 100 000 FCFA",
+    priceHint: "dès 50 000 FCFA",
     icon: Palette,
   },
   {
     id: "pack-lancement",
-    label: "Pack Lancement (Identité + Site)",
+    label: "Pack Starter Lancement (Logo + Site)",
     desc: "Formule clé en main : Identité express + Site vitrine essentiel",
-    priceHint: "270 000 FCFA",
+    priceHint: "120 000 FCFA",
     icon: Sparkles,
   },
   {
     id: "missions-ponctuelles",
     label: "Mission Ponctuelle / Audit / IA",
     desc: "Revue de code, dépannage, automatisation ou renfort technique",
-    priceHint: "Forfait / Journée",
+    priceHint: "dès 50 000 FCFA",
     icon: Wrench,
   },
 ] as const;
 
 export const BUDGET_RANGES = [
-  { id: "100k-250k FCFA", label: "100 000 – 250 000 FCFA", sub: "Identité express ou site vitrine simple" },
-  { id: "250k-500k FCFA", label: "250 000 – 500 000 FCFA", sub: "Pack Lancement ou site standard complet" },
-  { id: "500k-1M FCFA", label: "500 000 – 1 000 000 FCFA", sub: "Plateforme dynamique, Pack Croissance ou Mobile" },
-  { id: "+1M FCFA / Sur devis", label: "+ 1 000 000 FCFA / Sur devis", sub: "Écosystème complet ou application sur-mesure" },
+  { id: "50k-150k FCFA", label: "50 000 – 150 000 FCFA", sub: "Identité express, landing page ou mission ciblée" },
+  { id: "150k-350k FCFA", label: "150 000 – 350 000 FCFA", sub: "Pack Starter, Pack Présence ou site standard multi-pages" },
+  { id: "350k-600k FCFA", label: "350 000 – 600 000 FCFA", sub: "Pack Croissance ou plateforme web avec back-office" },
+  { id: "+600k FCFA / Sur devis", label: "+ 600 000 FCFA / Sur devis", sub: "Application mobile business, écosystème ou projet sur-mesure" },
 ] as const;
 
 export const DEADLINE_OPTIONS = [

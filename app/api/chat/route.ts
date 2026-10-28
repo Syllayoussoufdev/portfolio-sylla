@@ -35,9 +35,13 @@ function jsonError(message: string, status: number) {
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.GROQ_API_KEY;
+  const rawKey = process.env.GROQ_API_KEY || "";
+  const apiKey = rawKey.trim().replace(/^['"]|['"]$/g, "");
   if (!apiKey) {
-    return jsonError("L'assistant n'est pas encore configuré. Contactez Youssouf sur WhatsApp.", 503);
+    return jsonError(
+      "L'assistant n'est pas encore configuré. Contactez Youssouf directement sur WhatsApp.",
+      503
+    );
   }
 
   const ip =
@@ -48,7 +52,9 @@ export async function POST(req: NextRequest) {
   const rate = checkRateLimit(rateKey, RATE_MAX, RATE_WINDOW_MS);
   if (!rate.allowed) {
     return jsonError(
-      `Vous avez envoyé beaucoup de messages. Réessayez dans ${Math.ceil(rate.retryAfterSeconds / 60)} min ou écrivez directement sur WhatsApp.`,
+      `Vous avez envoyé beaucoup de messages. Réessayez dans ${Math.ceil(
+        rate.retryAfterSeconds / 60
+      )} min ou écrivez directement sur WhatsApp.`,
       429
     );
   }
@@ -65,8 +71,8 @@ export async function POST(req: NextRequest) {
   const systemPrompt = await buildChatbotSystemPrompt();
   const pageContext = body.page ? `\n\nLe visiteur consulte actuellement la page : ${body.page}` : "";
 
-  // On ne garde que les 12 derniers échanges pour limiter les tokens
-  const history = body.messages.slice(-12);
+  // On ne garde que les 10 derniers échanges pour économiser les tokens
+  const history = body.messages.slice(-10);
 
   let upstream: Response;
   const callGroq = (model: string) =>
@@ -80,14 +86,14 @@ export async function POST(req: NextRequest) {
         model,
         stream: true,
         temperature: 0.5,
-        max_tokens: 600,
+        max_tokens: 500,
         messages: [{ role: "system", content: systemPrompt + pageContext }, ...history],
       }),
     });
 
   try {
     upstream = await callGroq(GROQ_MODEL);
-    // Quota gratuit du modèle principal atteint → bascule sur le modèle de secours
+    // Quota temporaire du modèle 70B atteint → bascule immédiate sur 8B
     if (upstream.status === 429 && GROQ_FALLBACK_MODEL !== GROQ_MODEL) {
       upstream = await callGroq(GROQ_FALLBACK_MODEL);
     }
@@ -99,11 +105,16 @@ export async function POST(req: NextRequest) {
   if (!upstream.ok || !upstream.body) {
     const detail = await upstream.text().catch(() => "");
     console.error(`[chatbot] Erreur Groq ${upstream.status} :`, detail.slice(0, 500));
-    const msg =
-      upstream.status === 429
-        ? "L'assistant reçoit beaucoup de demandes. Réessayez dans un instant ou écrivez sur WhatsApp."
-        : "L'assistant est momentanément indisponible. Écrivez à Youssouf sur WhatsApp.";
-    return jsonError(msg, upstream.status === 429 ? 429 : 502);
+
+    let msg = "L'assistant est momentanément indisponible. Écrivez à Youssouf sur WhatsApp.";
+    if (upstream.status === 401) {
+      msg =
+        "Clé API Groq non reconnue ou expirée. Vérifiez que la clé est bien saisie sans guillemets sur console.groq.com.";
+    } else if (upstream.status === 429) {
+      msg = "L'assistant reçoit beaucoup de demandes en ce moment. Réessayez dans une minute ou écrivez sur WhatsApp.";
+    }
+
+    return jsonError(msg, upstream.status === 429 ? 429 : upstream.status === 401 ? 401 : 502);
   }
 
   // Conversion du flux SSE OpenAI-compatible en simple flux de texte
@@ -131,7 +142,7 @@ export async function POST(req: NextRequest) {
               const delta: string | undefined = json.choices?.[0]?.delta?.content;
               if (delta) controller.enqueue(encoder.encode(delta));
             } catch {
-              // fragment JSON incomplet : ignoré
+              // fragment JSON partiel ignoré
             }
           }
         }

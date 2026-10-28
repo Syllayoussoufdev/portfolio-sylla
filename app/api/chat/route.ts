@@ -8,7 +8,6 @@ export const dynamic = "force-dynamic";
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
-const GROQ_FALLBACK_MODEL = process.env.GROQ_FALLBACK_MODEL || "llama-3.1-8b-instant";
 
 // Quotas anti-abus (par IP) : 20 messages / 10 min
 const RATE_MAX = 20;
@@ -71,50 +70,75 @@ export async function POST(req: NextRequest) {
   const systemPrompt = await buildChatbotSystemPrompt();
   const pageContext = body.page ? `\n\nLe visiteur consulte actuellement la page : ${body.page}` : "";
 
-  // On ne garde que les 10 derniers échanges pour économiser les tokens
-  const history = body.messages.slice(-10);
+  // On ne garde que les 8 derniers échanges pour économiser les tokens
+  const history = body.messages.slice(-8);
 
-  let upstream: Response;
-  const callGroq = (model: string) =>
-    fetch(GROQ_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model,
-        stream: true,
-        temperature: 0.5,
-        max_tokens: 500,
-        messages: [{ role: "system", content: systemPrompt + pageContext }, ...history],
-      }),
-    });
+  // Cascade de modèles pour résilience maximale sur l'offre gratuite Groq
+  const candidateModels = Array.from(
+    new Set([GROQ_MODEL, "llama-3.1-8b-instant", "mixtral-8x7b-32768"].filter(Boolean))
+  );
 
-  try {
-    upstream = await callGroq(GROQ_MODEL);
-    // Quota temporaire du modèle 70B atteint → bascule immédiate sur 8B
-    if (upstream.status === 429 && GROQ_FALLBACK_MODEL !== GROQ_MODEL) {
-      upstream = await callGroq(GROQ_FALLBACK_MODEL);
+  let upstream: Response | null = null;
+  let lastErrorDetail = "";
+
+  for (const model of candidateModels) {
+    try {
+      const res = await fetch(GROQ_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model,
+          stream: true,
+          temperature: 0.5,
+          max_tokens: 500,
+          messages: [{ role: "system", content: systemPrompt + pageContext }, ...history],
+        }),
+      });
+
+      if (res.ok && res.body) {
+        upstream = res;
+        break;
+      }
+
+      // Si erreur, on capture le détail
+      lastErrorDetail = await res.text().catch(() => "");
+      console.warn(`[chatbot] Tentative modèle ${model} échouée (${res.status}) :`, lastErrorDetail.slice(0, 300));
+
+      // Si 401 (clé API invalide), inutile de tester d'autres modèles, c'est la clé
+      if (res.status === 401) {
+        upstream = res;
+        break;
+      }
+    } catch (err) {
+      lastErrorDetail = err instanceof Error ? err.message : String(err);
+      console.error(`[chatbot] Exception fetch modèle ${model} :`, lastErrorDetail);
     }
-  } catch (err) {
-    console.error("[chatbot] Groq injoignable :", err);
-    return jsonError("L'assistant est momentanément indisponible. Écrivez à Youssouf sur WhatsApp.", 502);
   }
 
-  if (!upstream.ok || !upstream.body) {
-    const detail = await upstream.text().catch(() => "");
-    console.error(`[chatbot] Erreur Groq ${upstream.status} :`, detail.slice(0, 500));
-
-    let msg = "L'assistant est momentanément indisponible. Écrivez à Youssouf sur WhatsApp.";
-    if (upstream.status === 401) {
-      msg =
-        "Clé API Groq non reconnue ou expirée. Vérifiez que la clé est bien saisie sans guillemets sur console.groq.com.";
-    } else if (upstream.status === 429) {
-      msg = "L'assistant reçoit beaucoup de demandes en ce moment. Réessayez dans une minute ou écrivez sur WhatsApp.";
+  if (!upstream || !upstream.ok || !upstream.body) {
+    let parsedMessage = "";
+    try {
+      const parsed = JSON.parse(lastErrorDetail);
+      parsedMessage = parsed.error?.message || "";
+    } catch {
+      parsedMessage = lastErrorDetail.slice(0, 200);
     }
 
-    return jsonError(msg, upstream.status === 429 ? 429 : upstream.status === 401 ? 401 : 502);
+    const status = upstream?.status || 502;
+    let userMsg = "L'assistant est momentanément indisponible. Écrivez à Youssouf sur WhatsApp.";
+
+    if (status === 401) {
+      userMsg = `Clé API Groq non reconnue (${parsedMessage || "vérifiez sur console.groq.com/keys"}).`;
+    } else if (status === 429) {
+      userMsg = "Quota gratuit Groq temporairement atteint. Réessayez dans une minute ou écrivez sur WhatsApp.";
+    } else if (parsedMessage) {
+      userMsg = `Service Groq : ${parsedMessage}`;
+    }
+
+    return jsonError(userMsg, status === 429 ? 429 : status === 401 ? 401 : 502);
   }
 
   // Conversion du flux SSE OpenAI-compatible en simple flux de texte
@@ -142,7 +166,7 @@ export async function POST(req: NextRequest) {
               const delta: string | undefined = json.choices?.[0]?.delta?.content;
               if (delta) controller.enqueue(encoder.encode(delta));
             } catch {
-              // fragment JSON partiel ignoré
+              // fragment partiel ignoré
             }
           }
         }

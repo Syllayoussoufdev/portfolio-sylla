@@ -18,8 +18,13 @@ test("Assistant Virtuel & Chatbot Flottant (Groq / Llama 3)", async (t) => {
     assert.ok(prompt.length > 500, "Le prompt système doit être richement documenté");
     assert.match(prompt, /Sylla Youssouf/i);
     assert.match(prompt, /WhatsApp/i);
+    assert.match(prompt, /LinkedIn/i);
+    assert.match(prompt, /\/contact/i);
+    assert.match(prompt, /\/liens/i);
+    assert.match(prompt, /\/demarrer/i);
     assert.match(prompt, /FCFA/i);
     assert.match(prompt, /CONNAISSANCES/i);
+    assert.match(prompt, /REDIRECTION CONTEXTUELLE/i);
   });
 
   await t.test("doit retourner un code 503 propre si GROQ_API_KEY est manquante", async () => {

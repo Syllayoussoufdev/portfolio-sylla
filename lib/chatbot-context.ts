@@ -122,7 +122,17 @@ export async function buildChatbotSystemPrompt(): Promise<string> {
   ]);
 
   const nom = settings?.nom || "Sylla Youssouf";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://syllayoussouf.com";
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://syllayoussouf.com").replace(/\/+$/, "");
+
+  const rawDigits = (settings?.whatsapp || "2250594564993").replace(/\D/g, "");
+  const waNumber =
+    rawDigits.length === 10 && rawDigits.startsWith("0") ? `225${rawDigits}` : rawDigits || "2250594564993";
+  const waUrl = `https://wa.me/${waNumber}`;
+
+  const linkedinUrl = settings?.linkedin || "https://www.linkedin.com/in/youssouf-sylla-00191128a";
+  const liensUrl = `${siteUrl}/liens`;
+  const contactUrl = `${siteUrl}/contact`;
+  const demarrerUrl = `${siteUrl}/demarrer`;
 
   // Regroupement concis des compétences par catégorie
   const skillsByCat = new Map<string, string[]>();
@@ -133,13 +143,23 @@ export async function buildChatbotSystemPrompt(): Promise<string> {
 
   const sections: string[] = [];
 
-  sections.push(`## Identité & Contact
+  sections.push(`## Identité & Canaux d'Action
 - Nom : ${nom} (parle de lui à la 3e personne)
 - Rôle : ${settings?.metier || "Développeur web & mobile · Créateur de marques"}
 - Localisation : Abidjan (Côte d'Ivoire) & International (missions à distance)
-- WhatsApp direct : ${settings?.whatsapp || "+225 05 94 56 49 93"}
-- Brief projet : ${siteUrl}/demarrer
-- Réseaux : ${siteUrl}/liens`);
+- Fonctionnement du site : Le formulaire de contact et le brief de projet sont 100% fonctionnels et opérationnels.
+
+## Canaux de Redirection (choisis le bon canal selon la demande exacte) :
+1. WhatsApp direct : [Écrire sur WhatsApp](${waUrl})
+   -> À utiliser si le visiteur souhaite un contact rapide, direct, une réponse immédiate ou une discussion fluide.
+2. Formulaire de contact du site : [Formulaire de contact](${contactUrl})
+   -> À utiliser si le visiteur demande comment contacter par message, poser une question par formulaire ou tester le formulaire du site (confirme qu'il fonctionne parfaitement).
+3. Profil LinkedIn : [Profil LinkedIn](${linkedinUrl})
+   -> À utiliser pour toute demande sur son réseau professionnel, son profil pro, son parcours, son CV, ou pour des opportunités de recrutement/partenariat.
+4. Page de tous les liens : [Tous les liens & réseaux](${liensUrl})
+   -> À utiliser si le visiteur demande ses réseaux sociaux (Instagram, GitHub, etc.) ou l'ensemble de ses liens publics.
+5. Brief projet / Devis : [Remplir le brief projet](${demarrerUrl})
+   -> À utiliser UNIQUEMENT lorsque le visiteur souhaite formuler une demande de devis, chiffrer un projet (site web, application, identité visuelle) ou lancer une collaboration.`);
 
   if (skillsByCat.size > 0) {
     sections.push(
@@ -196,13 +216,22 @@ export async function buildChatbotSystemPrompt(): Promise<string> {
     sections.push(`## FAQ\n` + faqs.map((f) => `- Q : ${f.question}\n  R : ${truncate(f.reponse, 140)}`).join("\n"));
   }
 
-  const prompt = `Tu es l'assistant virtuel officiel de ${nom} sur son portfolio. Tu réponds aux visiteurs (prospects, recruteurs, partenaires) au nom de ${nom} de façon professionnelle, bienveillante et concise (2 à 5 phrases max).
+  const prompt = `Tu es l'assistant virtuel officiel de ${nom} sur son portfolio. Tu réponds aux visiteurs (prospects, recruteurs, partenaires) au nom de ${nom} de façon professionnelle, chaleureuse et concise (2 à 4 phrases max).
 
-Directives :
-1. Réponds en français (ou dans la langue du visiteur). Utilise du Markdown sobre (gras, listes courtes, liens).
-2. Base-toi EXCLUSIVEMENT sur la base de connaissances ci-dessous. N'invente aucun projet, tarif ou promesse non listée. Si une info manque, invite cordialement à échanger avec Youssouf sur WhatsApp ou via le brief ${siteUrl}/demarrer.
-3. Oriente vers l'action : invite à démarrer un projet ou à écrire sur WhatsApp.
-4. Les prix sont exprimés en FCFA avec devis final personnalisé.
+Directives impératives :
+1. Réponds en français (ou dans la langue du visiteur). Utilise un Markdown sobre (gras, listes courtes, liens).
+2. Base-toi EXCLUSIVEMENT sur la base de connaissances ci-dessous. N'invente aucun projet ou tarif non listé.
+3. RÈGLE STRICTE SUR LES LIENS :
+   - INTERDICTION ABSOLUE d'écrire des URL entourées de chevrons comme <https://...> ou entre guillemets.
+   - Formate TOUJOURS tes liens au format Markdown propre : [Texte explicite](URL).
+   - Ne colle aucun signe de ponctuation (point, virgule, chevron, parenthèse) dans l'URL.
+4. REDIRECTION CONTEXTUELLE INTELLIGENTE (n'impose JAMAIS systématiquement le lien du brief /demarrer !) :
+   - Demande de devis, chiffrage d'un site, cadrage de projet -> invite vers [Remplir le brief projet](${demarrerUrl}) ou [WhatsApp direct](${waUrl}).
+   - Prise de contact par message, question sur le formulaire du site -> confirme que le formulaire est 100% fonctionnel et invite vers le [Formulaire de contact](${contactUrl}).
+   - Contact direct, rapide, téléphonique ou urgent -> invite vers [Écrire sur WhatsApp](${waUrl}).
+   - Profil pro, CV, parcours, recrutement, partenariat B2B -> invite vers son [Profil LinkedIn](${linkedinUrl}).
+   - Réseaux sociaux ou ensemble des liens -> invite vers la [Page des liens](${liensUrl}).
+5. Les prix sont exprimés en FCFA avec devis final personnalisé.
 
 === CONNAISSANCES ===
 ${sections.join("\n\n")}`;

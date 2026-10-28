@@ -81,46 +81,105 @@ function ChatbotGlyph({ className = "w-6 h-6" }: { className?: string }) {
   );
 }
 
-/** Rendu Markdown minimal et sûr (gras, liens, listes) sans dangerouslySetInnerHTML */
+/**
+ * Nettoie une URL pour éviter toute pollution (chevrons < >, guillemets,
+ * ponctuation finale collée comme points, virgules, ou entités encodées %3E).
+ */
+function cleanUrl(raw: string): { href: string; trailing: string } {
+  let href = (raw || "").trim();
+  let trailing = "";
+
+  // Retirer les chevrons, guillemets ou parenthèses ouvrantes au début
+  href = href.replace(/^[<"'(]+/, "");
+
+  // Retirer en boucle la ponctuation et caractères de fermeture à la fin de l'URL
+  while (href.length > 0) {
+    if (/[>\]\)"'.,;:!?]$/.test(href)) {
+      trailing = href.slice(-1) + trailing;
+      href = href.slice(0, -1);
+    } else if (/%3e$/i.test(href)) {
+      trailing = ">" + trailing;
+      href = href.slice(0, -3);
+    } else if (/&gt;$/i.test(href)) {
+      trailing = ">" + trailing;
+      href = href.slice(0, -4);
+    } else {
+      break;
+    }
+  }
+
+  return { href, trailing };
+}
+
+/** Rendu Markdown minimal et sûr (gras, liens propres, listes) sans dangerouslySetInnerHTML */
 function renderInline(text: string, keyPrefix: string): ReactNode[] {
   const nodes: ReactNode[] = [];
-  const regex = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)\s]+\)|https?:\/\/[^\s)]+)/g;
+  // Reconnaît :
+  // 1. **texte gras**
+  // 2. [label](url)
+  // 3. autolink <https://...>
+  // 4. url brute https://...
+  const regex = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)\s]+\)|<https?:\/\/[^>\s]+>|https?:\/\/[^\s]+)/g;
   let last = 0;
   let match: RegExpExecArray | null;
   let i = 0;
+
   while ((match = regex.exec(text)) !== null) {
     if (match.index > last) nodes.push(text.slice(last, match.index));
     const token = match[0];
     const key = `${keyPrefix}-${i++}`;
+
     if (token.startsWith("**")) {
-      nodes.push(<strong key={key}>{token.slice(2, -2)}</strong>);
+      nodes.push(
+        <strong key={key} className="font-semibold text-slate-900">
+          {token.slice(2, -2)}
+        </strong>
+      );
     } else {
       let label = token;
-      let href = token;
+      let rawHref = token;
+      const isAutolink = token.startsWith("<") && token.endsWith(">");
+
       const md = /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(token);
       if (md) {
         label = md[1];
-        href = md[2];
+        rawHref = md[2];
       }
+
+      const { href, trailing } = cleanUrl(rawHref);
+
+      if (isAutolink) {
+        label = href;
+      } else if (label === rawHref) {
+        label = href;
+      }
+
       const safe = /^(https?:\/\/|\/|#|mailto:|tel:)/.test(href);
-      nodes.push(
-        safe ? (
+      if (safe && href.length > 0) {
+        const isExternal = href.startsWith("http");
+        nodes.push(
           <a
             key={key}
             href={href}
-            target={href.startsWith("http") ? "_blank" : undefined}
-            rel="noopener noreferrer"
-            className="underline font-medium text-[#F97316] break-words"
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+            className="inline-flex items-center gap-0.5 font-medium text-[#EA580C] hover:text-[#C2410C] underline decoration-[#F97316]/50 hover:decoration-[#EA580C] transition-colors break-words"
           >
             {label}
           </a>
-        ) : (
-          label
-        )
-      );
+        );
+      } else {
+        nodes.push(label);
+      }
+
+      // N'afficher le caractère de ponctuation collé que s'il ne s'agissait pas d'un chevron d'autolink <...>
+      if (trailing && !isAutolink) {
+        nodes.push(trailing);
+      }
     }
     last = match.index + token.length;
   }
+
   if (last < text.length) nodes.push(text.slice(last));
   return nodes;
 }

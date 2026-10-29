@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 export const OFFER_FAMILIES = [
-  { id: "conception", label: "1. Conception & Identité", shortLabel: "Conception" },
-  { id: "strategie", label: "2. Stratégie Digitale", shortLabel: "Stratégie" },
-  { id: "presence-en-ligne", label: "3. Présence en ligne & Web", shortLabel: "Présence Web" },
-  { id: "mobile-business", label: "4. Plateforme Mobile Business", shortLabel: "Mobile Business" },
-  { id: "missions-ponctuelles", label: "5. Missions Ponctuelles & Audit", shortLabel: "Missions Tech" },
+  { id: "conception", label: "1. Conception & Identité", shortLabel: "Identité & Design" },
+  { id: "strategie", label: "2. Publicité Facebook & Stratégie", shortLabel: "Facebook Ads & Stratégie" },
+  { id: "presence-en-ligne", label: "3. Sites Web & Pages Sociales", shortLabel: "Sites Web & Pages" },
+  { id: "missions-ponctuelles", label: "4. Automatisation n8n & Tech", shortLabel: "n8n & Automatisation" },
+  { id: "mobile-business", label: "5. Plateforme Mobile Business", shortLabel: "Mobile Business" },
 ] as const;
 
 export const OFFER_STATUSES = ["DISPONIBLE", "BIENTOT", "LISTE_ATTENTE"] as const;

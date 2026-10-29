@@ -115,7 +115,7 @@ export const INITIAL_SERVICE_OFFERS: Omit<ServiceOfferData, "id" | "project">[] 
     visible: true,
   },
 
-  // Famille 2 : Stratégie Digitale
+  // Famille 2 : Stratégie Digitale & Publicité Facebook
   {
     slug: "audit-express-reseaux",
     famille: "strategie",
@@ -139,6 +139,55 @@ export const INITIAL_SERVICE_OFFERS: Omit<ServiceOfferData, "id" | "project">[] 
     visible: true,
   },
   {
+    slug: "campagnes-facebook-classiques",
+    famille: "strategie",
+    titre: "Campagnes Publicitaires Facebook & Meta Ads Classiques",
+    accroche:
+      "Attirez rapidement de nouveaux prospects qualifiés grâce à des annonces sponsorisées percutantes sur Facebook et Instagram.",
+    livrables: [
+      "Inclus : Création et paramétrage du compte publicitaire Meta Ads Manager & liaison sécurisée à la page",
+      "Inclus : Conception de 3 visuels publicitaires percutants (formats Feed 1:1 + Stories/Reels 9:16)",
+      "Inclus : Rédaction des copies publicitaires (accroche + texte de vente orienté conversion directe WhatsApp)",
+      "Inclus : Ciblage démographique précis (zone géographique, centres d'intérêt, tranche d'âge)",
+      "Inclus : Suivi, optimisation du coût par lead (CPL) et rapport de performance synthétique",
+      "Annexe : Budget publicitaire média payé directement à Meta à la charge du client (recommandé dès 20 000 FCFA)",
+    ],
+    delai: "3 à 5 jours",
+    prixDepuis: 50000,
+    prixLabel: "dès 50 000 FCFA / campagne",
+    unite: "unique",
+    phase: 1,
+    statut: "DISPONIBLE",
+    projectId: null,
+    ordre: 4,
+    visible: true,
+  },
+  {
+    slug: "publicite-facebook-ciblee-pixel",
+    famille: "strategie",
+    titre: "Publicité Facebook Ciblée, Pixel Meta & Retargeting",
+    accroche:
+      "Ne perdez plus aucun visiteur : traquez les conversions sur votre site web et relancez les prospects chauds grâce au reciblage.",
+    livrables: [
+      "Inclus : Installation technique complète du Pixel Meta & de l'API de conversions sur votre site web",
+      "Inclus : Configuration des événements clés (clics WhatsApp, envois de brief, pages clés consultées)",
+      "Inclus : Création d'audiences personnalisées chaudes & audiences similaires (Lookalike)",
+      "Inclus : Campagnes de reciblage publicitaire (retargeting) pour convertir les visiteurs hésitants",
+      "Inclus : A/B testing créatif et optimisation du retour sur investissement publicitaire (ROAS)",
+      "⚠️ REQUIS : Projet nécessitant obligatoirement un brief détaillé et un devis précis selon vos volumes",
+      "Annexe : Budget média publicitaire Meta à définir selon vos objectifs de croissance",
+    ],
+    delai: "5 à 8 jours",
+    prixDepuis: 90000,
+    prixLabel: "dès 90 000 FCFA (Sur brief & devis précis)",
+    unite: "unique",
+    phase: 1,
+    statut: "DISPONIBLE",
+    projectId: null,
+    ordre: 5,
+    visible: true,
+  },
+  {
     slug: "strategie-communication",
     famille: "strategie",
     titre: "Stratégie de Communication & Acquisition",
@@ -157,11 +206,35 @@ export const INITIAL_SERVICE_OFFERS: Omit<ServiceOfferData, "id" | "project">[] 
     phase: 1,
     statut: "DISPONIBLE",
     projectId: null,
-    ordre: 4,
+    ordre: 6,
     visible: true,
   },
 
   // Famille 3 : Présence en ligne & Web
+  {
+    slug: "ouverture-gestion-page-facebook",
+    famille: "presence-en-ligne",
+    titre: "Création, Paramétrage Pro & Optimisation de Page Facebook & Instagram",
+    accroche:
+      "Donnez à votre entreprise une vitrine sociale officielle, crédible, sécurisée et parfaitement reliée à WhatsApp.",
+    livrables: [
+      "Inclus : Création ou remise aux normes professionnelles de votre Page Facebook & compte Instagram Pro",
+      "Inclus : Configuration Meta Business Suite, sécurité 2FA, rôles d'équipe et coordonnées d'entreprise",
+      "Inclus : Photo de profil officielle calibrée + bannière de couverture professionnelle haute définition",
+      "Inclus : Bouton d'action direct vers votre WhatsApp Business (+ message de bienvenue pré-configuré)",
+      "Inclus : Optimisation SEO des biographies, catégories, services, horaires et liens vers votre site",
+      "Annexe / Option : Animation continue et publication de contenus (voir formule Community Management)",
+    ],
+    delai: "2 à 4 jours",
+    prixDepuis: 50000,
+    prixLabel: "dès 50 000 FCFA",
+    unite: "unique",
+    phase: 1,
+    statut: "DISPONIBLE",
+    projectId: null,
+    ordre: 7,
+    visible: true,
+  },
   {
     slug: "site-vitrine-essentiel",
     famille: "presence-en-ligne",
@@ -183,7 +256,7 @@ export const INITIAL_SERVICE_OFFERS: Omit<ServiceOfferData, "id" | "project">[] 
     phase: 1,
     statut: "DISPONIBLE",
     projectId: null,
-    ordre: 5,
+    ordre: 8,
     visible: true,
   },
   {
@@ -207,7 +280,7 @@ export const INITIAL_SERVICE_OFFERS: Omit<ServiceOfferData, "id" | "project">[] 
     phase: 1,
     statut: "DISPONIBLE",
     projectId: null,
-    ordre: 6,
+    ordre: 9,
     visible: true,
   },
   {
@@ -230,7 +303,7 @@ export const INITIAL_SERVICE_OFFERS: Omit<ServiceOfferData, "id" | "project">[] 
     phase: 1,
     statut: "DISPONIBLE",
     projectId: null,
-    ordre: 7,
+    ordre: 10,
     visible: true,
   },
   {
@@ -253,7 +326,7 @@ export const INITIAL_SERVICE_OFFERS: Omit<ServiceOfferData, "id" | "project">[] 
     phase: 1,
     statut: "DISPONIBLE",
     projectId: null,
-    ordre: 8,
+    ordre: 11,
     visible: true,
   },
   {
@@ -274,11 +347,59 @@ export const INITIAL_SERVICE_OFFERS: Omit<ServiceOfferData, "id" | "project">[] 
     phase: 1,
     statut: "DISPONIBLE",
     projectId: null,
-    ordre: 9,
+    ordre: 12,
     visible: true,
   },
 
-  // Famille 4 : Plateforme Mobile Business
+  // Famille 4 : Automatisation n8n & Tech
+  {
+    slug: "automatisation-n8n-ia",
+    famille: "missions-ponctuelles",
+    titre: "Automatisation n8n, Workflows & Connecteurs Métier",
+    accroche:
+      "Gagnez des heures chaque semaine : automatisez vos flux de leads, notifications instantanées WhatsApp/Email et synchronisations CRM.",
+    livrables: [
+      "Inclus : Conception et paramétrage de scénarios n8n sur-mesure (capture de leads, alertes WhatsApp, CRM)",
+      "Inclus : Connexion de vos outils (Formulaires Web, Google Sheets, Notion, CRM, passerelles de paiement)",
+      "Inclus : Déploiement sécurisé sur serveur cloud (n8n Cloud ou instance self-hosted sécurisée)",
+      "Inclus : Tests de robustesse de bout en bout et guide vidéo de prise en main (15 min)",
+      "Annexe / Option : Maintenance mensuelle des scénarios et ajouts de nouveaux flux complexes",
+      "⚠️ REQUIS : Pour les architectures multi-systèmes avec logique conditionnelle avancée, brief et devis précis requis",
+    ],
+    delai: "3 à 7 jours",
+    prixDepuis: 50000,
+    prixLabel: "dès 50 000 FCFA / workflow",
+    unite: "unique",
+    phase: 1,
+    statut: "DISPONIBLE",
+    projectId: null,
+    ordre: 13,
+    visible: true,
+  },
+  {
+    slug: "mission-ponctuelle-expertise",
+    famille: "missions-ponctuelles",
+    titre: "Intervention Rapide, Revue de Code & Dépannage",
+    accroche:
+      "Débloquez rapidement un problème technique, sécurisez votre architecture ou accélérez une livraison en cours.",
+    livrables: [
+      "Inclus : Diagnostic technique rapide et identification de la source du blocage",
+      "Inclus : Correction de bugs critiques ou optimisation de performances",
+      "Inclus : Livrable mesurable et rapport d'intervention validé en fin de mission",
+      "Tarif : Dès 50 000 FCFA par intervention ciblée ou devis après échange WhatsApp",
+    ],
+    delai: "1 à 3 jours",
+    prixDepuis: 50000,
+    prixLabel: "dès 50 000 FCFA / intervention",
+    unite: "journee",
+    phase: 1,
+    statut: "DISPONIBLE",
+    projectId: null,
+    ordre: 14,
+    visible: true,
+  },
+
+  // Famille 5 : Plateforme Mobile Business
   {
     slug: "application-mobile-business",
     famille: "mobile-business",
@@ -299,31 +420,7 @@ export const INITIAL_SERVICE_OFFERS: Omit<ServiceOfferData, "id" | "project">[] 
     phase: 1,
     statut: "DISPONIBLE",
     projectId: null,
-    ordre: 10,
-    visible: true,
-  },
-
-  // Famille 5 : Missions Ponctuelles & Tech
-  {
-    slug: "mission-ponctuelle-expertise",
-    famille: "missions-ponctuelles",
-    titre: "Intervention Rapide, Revue de Code & Dépannage",
-    accroche:
-      "Débloquez rapidement un problème technique, sécurisez votre architecture ou accélérez une livraison en cours.",
-    livrables: [
-      "Inclus : Diagnostic technique rapide et identification de la source du blocage",
-      "Inclus : Correction de bugs critiques ou optimisation de performances",
-      "Inclus : Livrable mesurable et rapport d'intervention validé en fin de mission",
-      "Tarif : Dès 50 000 FCFA par intervention ciblée ou devis après échange WhatsApp",
-    ],
-    delai: "1 à 3 jours",
-    prixDepuis: 50000,
-    prixLabel: "dès 50 000 FCFA / intervention",
-    unite: "journee",
-    phase: 1,
-    statut: "DISPONIBLE",
-    projectId: null,
-    ordre: 11,
+    ordre: 15,
     visible: true,
   },
 ];
@@ -360,6 +457,7 @@ export const INITIAL_SERVICE_PACKS: Omit<ServicePackData, "id">[] = [
     servicesInclus: [
       "Inclus : Identité de marque complète (Logo, déclinaisons, charte graphique et typographies)",
       "Inclus : Site vitrine multi-pages (jusqu'à 4-5 pages : Accueil, Services, Réalisations, Contact)",
+      "Inclus : Création & paramétrage professionnel de votre Page Facebook & compte Instagram Pro",
       "Inclus : Kit visuel réseaux sociaux (templates de posts cohérents prêts à publier)",
       "Inclus : Intégration WhatsApp direct, SEO technique et configuration Google Analytics",
       "Annexe / Option : Animation mensuelle des réseaux (formule CM en supplément optionnel)",
@@ -381,9 +479,10 @@ export const INITIAL_SERVICE_PACKS: Omit<ServicePackData, "id">[] = [
     servicesInclus: [
       "Inclus : Identité de marque complète & Brand Book détaillé",
       "Inclus : Site vitrine standard multi-pages avec back-office dynamique d'administration",
+      "Inclus : Lancement de campagne publicitaire Facebook ciblée avec Pixel Meta & tracking WhatsApp",
       "Inclus : Stratégie de communication & plan de conversion WhatsApp sur 60 jours",
       "Inclus : 1 mois de maintenance technique et support prioritaire offert",
-      "Annexe / Option : Campagnes de publicité sponsorisée (budget média client à définir)",
+      "Annexe / Option : Budget publicitaire média Meta Ads supplémentaire (selon objectifs de volume)",
     ],
     resultat: "Un écosystème digital complet conçu pour générer un flux régulier de demandes qualifiées.",
     phase: 1,
@@ -402,6 +501,7 @@ export const INITIAL_SERVICE_PACKS: Omit<ServicePackData, "id">[] = [
     servicesInclus: [
       "Inclus : Identité de marque intégrale + Direction artistique haut de gamme",
       "Inclus : Plateforme web dynamique ou application sur-mesure avec base de données et back-office",
+      "Inclus : Workflows d'automatisation n8n (alertes leads WhatsApp, CRM et notifications clients)",
       "Inclus : Architecture sécurisée, notifications automatisées et tableau de bord de gestion",
       "Inclus : 3 mois de maintenance technique, suivi et support prioritaire WhatsApp",
       "⚠️ REQUIS : Projet nécessitant un brief et un devis précis sur-mesure selon votre cahier des charges",

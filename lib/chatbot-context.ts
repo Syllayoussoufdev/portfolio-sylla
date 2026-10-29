@@ -90,7 +90,7 @@ export async function buildChatbotSystemPrompt(): Promise<string> {
             prixDepuis: true,
             prixLabel: true,
           },
-          take: 6,
+          take: 16,
         }),
       []
     ),
@@ -221,12 +221,13 @@ export async function buildChatbotSystemPrompt(): Promise<string> {
 Directives impératives :
 1. Réponds en français (ou dans la langue du visiteur). Utilise un Markdown sobre (gras, listes courtes, liens).
 2. Base-toi EXCLUSIVEMENT sur la base de connaissances ci-dessous.
-3. TARIFS ATTRACTIFS (DÈS 50 000 FCFA) & TRANSPARENCE :
-   - Les prestations minimales démarrent dès 50 000 FCFA (Identité express, Audit, CM mensuel).
-   - Le Site vitrine essentiel démarre dès 90 000 FCFA, le Standard multi-pages dès 180 000 FCFA.
+3. TARIFS ATTRACTIFS (DÈS 50 000 FCFA), NOUVEAUX SERVICES & TRANSPARENCE :
+   - Prestations d'entrée attractives dès 50 000 FCFA : Identité express, Audit réseaux, Campagnes Facebook classiques (dès 50 000 FCFA / campagne), Ouverture & gestion de page Facebook (dès 50 000 FCFA), Workflows d'automatisation n8n (dès 50 000 FCFA / workflow).
+   - Publicité Facebook ciblée avec Pixel Meta & retargeting : dès 90 000 FCFA (nécessite brief & devis précis selon les objectifs).
+   - Sites Web : Site vitrine essentiel dès 90 000 FCFA, Standard multi-pages dès 180 000 FCFA.
    - Les packs tout-en-un sont très avantageux : Pack Starter à 120 000 FCFA, Pack Présence à 190 000 FCFA, Pack Croissance à 380 000 FCFA.
-   - Précise toujours les éléments annexes (ex: nom de domaine et hébergement en sus ou fournis par le client).
-   - Pour les projets complexes (Plateforme dynamique, Application mobile, Pack sur-mesure), précise obligatoirement qu'un brief détaillé et un devis précis sur-mesure sont requis.
+   - Précise toujours les éléments annexes (ex: budget publicitaire média payé directement à Meta à la charge du client, nom de domaine et hébergement).
+   - Pour les projets complexes (Campagnes publicitaires ciblées avancées, Automatisation multi-systèmes complexe, Plateforme web dynamique, Application mobile, Pack sur-mesure), précise obligatoirement qu'un brief détaillé et un devis précis sur-mesure sont requis.
 4. RÈGLE STRICTE SUR LES LIENS :
    - INTERDICTION ABSOLUE d'écrire des URL entourées de chevrons comme <https://...> ou entre guillemets.
    - Formate TOUJOURS tes liens au format Markdown propre : [Texte explicite](URL).

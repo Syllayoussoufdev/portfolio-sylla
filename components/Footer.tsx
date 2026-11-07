@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { GithubIcon, LinkedinIcon, TwitterIcon, InstagramIcon } from "./icons";
+import { SyllaBrandLogo } from "./icons/SyllaBrandLogo";
 import { Mail, MessageCircle, ArrowUp } from "lucide-react";
 
 export interface FooterSettings {
@@ -43,7 +44,8 @@ export function Footer({ settings }: FooterProps) {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Identité issue de SiteSettings */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <SyllaBrandLogo variant="squircle" className="w-6 h-6 rounded-md shadow-xs transition-transform group-hover:scale-105" />
             <span className="font-bebas text-xl text-[var(--ink)] tracking-wide">
               {displayName.toUpperCase()}
             </span>

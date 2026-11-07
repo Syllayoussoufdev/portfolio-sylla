@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRight, Menu, X, FileText, Sparkles } from "lucide-react";
 import { useMotion } from "@/components/motion/MotionProvider";
+import { SyllaBrandLogo } from "@/components/icons/SyllaBrandLogo";
 import type { SectionItem } from "@/lib/validations/profile";
 
 export interface NavbarSettings {
@@ -224,8 +225,8 @@ export function Navbar({ settings, sections, slug }: NavbarProps) {
           onClick={(e) => handleNavClick(e, "hero")}
           className="flex items-center gap-3 group"
         >
-          <div className="w-8 h-8 rounded-xl bg-[var(--ink)] text-[var(--bg)] flex items-center justify-center font-bebas text-lg shadow-xs transition-transform group-hover:scale-105">
-            {initials}
+          <div className="w-8 h-8 rounded-xl overflow-hidden flex items-center justify-center shadow-xs transition-transform group-hover:scale-105">
+            <SyllaBrandLogo variant="squircle" className="w-full h-full" />
           </div>
           <div className="flex flex-col">
             <span className="font-bebas text-xl text-[var(--ink)] tracking-wide leading-none">

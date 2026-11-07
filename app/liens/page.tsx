@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, ArrowUpRight, Rocket, CheckCircle2 } from "lucide-react";
+import { SyllaBrandLogo } from "@/components/icons/SyllaBrandLogo";
 
 export const metadata: Metadata = {
   title: "Sylla Youssouf — Solutions Technologiques & Stratégie Digitale",
@@ -91,11 +92,8 @@ function BrandIcon({ type }: { type: string }) {
   switch (type) {
     case "portfolio":
       return (
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#38BDF8] to-[#2563EB] flex items-center justify-center shrink-0 shadow-md shadow-[#0EA5E9]/20">
-          <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="16 18 22 12 16 6" />
-            <polyline points="8 6 2 12 8 18" />
-          </svg>
+        <div className="w-10 h-10 rounded-xl bg-white/[0.08] border border-white/15 flex items-center justify-center shrink-0 shadow-md group-hover:bg-white/[0.14] transition-colors">
+          <SyllaBrandLogo variant="white" className="w-5 h-4" />
         </div>
       );
     case "services":
@@ -227,9 +225,14 @@ export default function LiensPage() {
 
           {/* Nom & Proposition de Valeur Orientée Résultats Business */}
           <div className="space-y-3.5">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#38BDF8]/10 border border-[#38BDF8]/25 text-[#38BDF8] text-[11px] font-semibold tracking-wide">
-              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-              <span>Développeur &amp; Stratège Digital</span>
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-white/[0.08] border border-white/15 flex items-center justify-center p-1 shadow-sm shrink-0">
+                <SyllaBrandLogo variant="white" className="w-full h-full" />
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.06] border border-white/15 text-zinc-300 text-[11px] font-semibold tracking-wide">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#38BDF8] shrink-0" />
+                <span>Développeur &amp; Stratège Digital</span>
+              </div>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
@@ -368,7 +371,10 @@ export default function LiensPage() {
 
       {/* Pied de page discret */}
       <footer className="max-w-5xl w-full mx-auto pt-12 mt-12 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#71717A]">
-        <span>© {new Date().getFullYear()} Sylla Youssouf · Stratégie &amp; Solutions Technologiques</span>
+        <div className="flex items-center gap-2">
+          <SyllaBrandLogo variant="white" className="w-4 h-3 opacity-60 shrink-0" />
+          <span>© {new Date().getFullYear()} Sylla Youssouf · Stratégie &amp; Solutions Technologiques</span>
+        </div>
         <Link href="/dev" className="text-[#38BDF8] hover:underline font-medium">
           syllayoussouf.com/dev →
         </Link>

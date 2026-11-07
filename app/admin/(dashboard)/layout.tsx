@@ -1,6 +1,7 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
+import { SyllaBrandLogo } from "@/components/icons/SyllaBrandLogo";
 import { logoutAction } from "../actions/auth";
 import {
   LayoutDashboard,
@@ -39,9 +40,7 @@ export default async function AdminDashboardLayout({
         <div>
           {/* Logo & Titre */}
           <div className="flex items-center gap-3 pb-6 border-b border-slate-100">
-            <div className="w-10 h-10 rounded-xl bg-[#2563EB] flex items-center justify-center text-white shadow-md shadow-blue-500/20 font-bebas text-2xl">
-              S
-            </div>
+            <SyllaBrandLogo variant="squircle" className="w-10 h-10 rounded-xl shadow-md shrink-0" />
             <div>
               <div className="font-bebas text-2xl tracking-wide text-[#0F172A] leading-none">
                 SYLLA BACKOFFICE

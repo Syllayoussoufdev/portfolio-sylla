@@ -194,15 +194,6 @@ export function Navbar({ settings, sections, slug }: NavbarProps) {
     };
   }, [mobileMenuOpen]);
 
-  // Initiales pour le monogramme
-  const initials = displayName
-    .split(" ")
-    .map((w) => w[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase() || "SY";
-
   const CtaIcon = ctaConfig.icon;
 
   return (

@@ -170,6 +170,7 @@ export function SectionRenderer({
           <ServicesPacksDevCreative
             offers={devCreativeCatalog?.offers}
             packs={devCreativeCatalog?.packs}
+            settings={settings}
           />
         );
       }

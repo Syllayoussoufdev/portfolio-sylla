@@ -1,4 +1,4 @@
-﻿import { Metadata } from "next";
+import { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { getDevCreativeCatalog } from "@/lib/devcreative";
@@ -47,6 +47,7 @@ export default async function ServicesCatalogPage() {
         <ServicesPacksDevCreative
           offers={catalog.offers}
           packs={catalog.packs}
+          settings={settings}
         />
       </main>
 

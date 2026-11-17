@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -415,6 +415,7 @@ export function ProjectsDevCreative({
                             src={previewImg}
                             alt=""
                             fill
+                            unoptimized
                             sizes="180px"
                             className="object-cover"
                           />
@@ -500,6 +501,7 @@ export function ProjectsDevCreative({
                       src={imgUrl}
                       alt={project.titre}
                       fill
+                      unoptimized
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -574,6 +576,7 @@ export function ProjectsDevCreative({
                 }
                 alt={activeProjectPrompt.titre}
                 fill
+                unoptimized
                 sizes="(max-width: 768px) 100vw, 680px"
                 className="object-cover"
               />

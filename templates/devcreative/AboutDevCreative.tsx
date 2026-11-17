@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
@@ -239,6 +239,7 @@ export function AboutDevCreative({ settings, faqItems = [] }: AboutDevCreativePr
                   src={card.image}
                   alt={card.title}
                   fill
+                  unoptimized
                   sizes="(max-width: 640px) 100vw, 240px"
                   className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
                 />

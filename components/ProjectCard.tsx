@@ -40,6 +40,10 @@ export function ProjectCard({ project }: { project: ProjectData }) {
           <img
             src={imageSrc}
             alt={imageAlt}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "/images/projects/portfolio-cv-personnel.jpg";
+            }}
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-103"
           />
         ) : (

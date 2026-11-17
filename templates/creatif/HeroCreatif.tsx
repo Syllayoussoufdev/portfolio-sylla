@@ -267,6 +267,7 @@ export function HeroCreatif({
                 alt="Sylla — Moment candide"
                 fill
                 sizes="150px"
+                unoptimized
                 className="object-cover"
               />
             </div>
@@ -286,6 +287,7 @@ export function HeroCreatif({
                 alt="Sylla — Studio focus"
                 fill
                 sizes="150px"
+                unoptimized
                 className="object-cover grayscale hover:grayscale-0 transition-all"
               />
             </div>
@@ -307,6 +309,7 @@ export function HeroCreatif({
                   alt={imageAlt}
                   fill
                   priority
+                  unoptimized
                   sizes="(max-width: 640px) 260px, 320px"
                   className="object-cover object-center group-hover:scale-104 transition-transform duration-700 ease-out"
                 />

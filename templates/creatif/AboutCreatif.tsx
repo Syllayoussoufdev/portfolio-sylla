@@ -150,6 +150,7 @@ export function AboutCreatif({ settings }: AboutCreatifProps) {
                 src="/sylla.jpg"
                 alt={`${displayName} au studio`}
                 fill
+                unoptimized
                 sizes="(max-width: 640px) 240px, 270px"
                 className="object-cover transition-transform duration-700 hover:scale-104"
               />

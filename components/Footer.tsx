@@ -2,9 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { GithubIcon, LinkedinIcon, TwitterIcon, InstagramIcon } from "./icons";
+import { GithubIcon, LinkedinIcon, TwitterIcon, InstagramIcon, BehanceIcon } from "./icons";
 import { SyllaBrandLogo } from "./icons/SyllaBrandLogo";
-import { Mail, MessageCircle, ArrowUp } from "lucide-react";
+import { Mail, MessageCircle, ArrowUp, MapPin } from "lucide-react";
 
 export interface FooterSettings {
   nom?: string | null;
@@ -42,17 +42,32 @@ export function Footer({ settings }: FooterProps) {
   return (
     <footer className="border-t border-[var(--border)] bg-[var(--surface)] text-[var(--ink)] py-12 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        {/* Identité issue de SiteSettings */}
+        {/* Identité issue de SiteSettings & NAP Google */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <Link href="/" className="flex items-center gap-2.5 group">
             <SyllaBrandLogo variant="squircle" className="w-6 h-6 rounded-md shadow-xs transition-transform group-hover:scale-105" />
             <span className="font-bebas text-xl text-[var(--ink)] tracking-wide">
-              {displayName.toUpperCase()}
+              SYLLA YOUSSOUF
             </span>
           </Link>
-          <p className="text-xs text-[var(--subtle)] mt-1 font-mono">
-            {displayMetier ? `${displayMetier} · ` : ""}Tous droits réservés &copy; {currentYear}
+          <p className="text-xs font-semibold text-[#0F172A] mt-1">
+            Communication Digitale &amp; Web
           </p>
+          <div className="text-[11px] text-[var(--subtle)] mt-1 font-mono flex flex-wrap items-center justify-center md:justify-start gap-x-2.5 gap-y-1">
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="w-3 h-3 text-[#2563EB]" />
+              <span>Abidjan, Côte d&apos;Ivoire</span>
+            </span>
+            <span>•</span>
+            <a
+              href="tel:+2250594564993"
+              className="hover:text-[var(--accent)] transition-colors font-medium text-[#0F172A]"
+            >
+              +225 05 94 56 49 93
+            </a>
+            <span>•</span>
+            <span>&copy; {currentYear}</span>
+          </div>
         </div>
 
         {/* Liens de navigation rapides */}
@@ -168,6 +183,26 @@ export function Footer({ settings }: FooterProps) {
               <InstagramIcon className="w-4 h-4" />
             </a>
           )}
+
+          <a
+            href="https://www.behance.net/youssoufsylla"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Portfolio Behance"
+            className="p-2 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition-colors border border-slate-200/60"
+          >
+            <BehanceIcon className="w-4 h-4" />
+          </a>
+
+          <a
+            href="https://maps.google.com/?q=Sylla+Youssouf+Abidjan"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Fiche Google Business • Abidjan"
+            className="p-2 rounded-xl text-slate-500 hover:text-red-500 hover:bg-slate-50 transition-colors border border-slate-200/60"
+          >
+            <MapPin className="w-4 h-4 text-red-500" />
+          </a>
 
           <Link
             href="#hero"

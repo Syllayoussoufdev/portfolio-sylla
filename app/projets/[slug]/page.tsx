@@ -19,6 +19,9 @@ import {
   Layers,
   Sparkles,
   CheckCircle2,
+  AlertCircle,
+  Cpu,
+  TrendingUp,
 } from "lucide-react";
 import { GithubIcon, FigmaIcon, CanvaIcon, DriveIcon, YoutubeIcon } from "@/components/icons";
 
@@ -50,6 +53,31 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
       description: project.description,
       images: project.coverImage ? [project.coverImage] : [],
     },
+  };
+}
+
+interface ParsedCaseStudy {
+  probleme: string | null;
+  solution: string | null;
+  resultatsContenu: string | null;
+  resultatsList: string[];
+}
+
+function parseCaseStudy(contenu: string | null, resultats: string[]): ParsedCaseStudy | null {
+  if (!contenu) return null;
+
+  const hasStructured = /###\s*(?:1\.|Le problème)/i.test(contenu);
+  if (!hasStructured) return null;
+
+  const pMatch = contenu.match(/###\s*1\.[^\n]*\n([\s\S]*?)(?=###\s*2\.|\n#|$)/i);
+  const sMatch = contenu.match(/###\s*2\.[^\n]*\n([\s\S]*?)(?=###\s*3\.|\n#|$)/i);
+  const rMatch = contenu.match(/###\s*3\.[^\n]*\n([\s\S]*?)$/i);
+
+  return {
+    probleme: pMatch ? pMatch[1].trim() : null,
+    solution: sMatch ? sMatch[1].trim() : null,
+    resultatsContenu: rMatch ? rMatch[1].trim() : null,
+    resultatsList: resultats || [],
   };
 }
 
@@ -128,6 +156,9 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
     month: "long",
     year: "numeric",
   }).format(project.createdAt);
+
+  // Étude de cas structurée (Problème, Solution, Résultats)
+  const caseStudy = parseCaseStudy(project.contenu, project.resultats);
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col">
@@ -291,47 +322,148 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-14">
           {/* Colonne Principale : Récit & Résolution */}
           <div className="lg:col-span-2 space-y-8">
-            <section className="glass p-6 sm:p-8 rounded-3xl">
-              <h2 className="font-bebas text-2xl sm:text-3xl text-[#0F172A] tracking-wide mb-4">
-                DÉMARCHE &amp; RÉALISATION
-              </h2>
-
-              {project.contenu ? (
-                <div className="prose prose-slate max-w-none text-sm sm:text-base leading-relaxed text-[#334155] whitespace-pre-line space-y-4 font-sans">
-                  {project.contenu}
-                </div>
-              ) : (
-                <div className="space-y-4 text-sm text-[#475569] leading-relaxed">
-                  <p>
-                    Ce projet combine une approche créative méticuleuse et une implémentation
-                    technique orientée résultat. L&apos;objectif principal était de délivrer une
-                    expérience fluide, esthétique et directement opérationnelle pour les utilisateurs.
-                  </p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                    <div className="p-4 rounded-2xl bg-white/70 border border-slate-200/60">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-[#0F172A] mb-1">
-                        <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
-                        <span>Conception Hybride</span>
-                      </div>
-                      <p className="text-xs text-[#64748B]">
-                        Du prototype interactif Figma jusqu&apos;au développement final.
-                      </p>
-                    </div>
-
-                    <div className="p-4 rounded-2xl bg-white/70 border border-slate-200/60">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-[#0F172A] mb-1">
-                        <CheckCircle2 className="w-4 h-4 text-[#F97316]" />
-                        <span>Qualité &amp; Performance</span>
-                      </div>
-                      <p className="text-xs text-[#64748B]">
-                        Optimisation des flux, accessibilité et design épuré sans superflu.
-                      </p>
+            {caseStudy ? (
+              <div className="space-y-6">
+                {/* Bloc 1 : Le problème du client */}
+                <section className="glass p-6 sm:p-8 rounded-3xl border border-amber-200/70 bg-gradient-to-br from-amber-50/40 via-white to-white shadow-xs">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="w-10 h-10 rounded-2xl bg-amber-100/90 text-amber-700 flex items-center justify-center shrink-0">
+                      <AlertCircle className="w-5 h-5 text-amber-600" />
+                    </span>
+                    <div>
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-amber-700 font-semibold block">
+                        Étape 1 • Contexte &amp; Enjeux
+                      </span>
+                      <h2 className="font-bebas text-2xl sm:text-3xl text-[#0F172A] tracking-wide">
+                        1. LE PROBLÈME DU CLIENT
+                      </h2>
                     </div>
                   </div>
-                </div>
-              )}
-            </section>
+                  <div className="prose prose-slate max-w-none text-sm sm:text-base leading-relaxed text-[#334155] whitespace-pre-line font-sans">
+                    {caseStudy.probleme}
+                  </div>
+                </section>
+
+                {/* Bloc 2 : La solution technique & design */}
+                <section className="glass p-6 sm:p-8 rounded-3xl border border-blue-200/70 bg-gradient-to-br from-blue-50/40 via-white to-white shadow-xs">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="w-10 h-10 rounded-2xl bg-blue-100/90 text-[#2563EB] flex items-center justify-center shrink-0">
+                      <Cpu className="w-5 h-5 text-[#2563EB]" />
+                    </span>
+                    <div>
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-[#2563EB] font-semibold block">
+                        Étape 2 • Conception &amp; Implémentation
+                      </span>
+                      <h2 className="font-bebas text-2xl sm:text-3xl text-[#0F172A] tracking-wide">
+                        2. LA SOLUTION TECHNIQUE &amp; DESIGN
+                      </h2>
+                    </div>
+                  </div>
+                  <div className="prose prose-slate max-w-none text-sm sm:text-base leading-relaxed text-[#334155] whitespace-pre-line font-sans">
+                    {caseStudy.solution}
+                  </div>
+                </section>
+
+                {/* Bloc 3 : Les résultats concrets obtenus */}
+                <section className="glass p-6 sm:p-8 rounded-3xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50/40 via-white to-white shadow-xs">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="w-10 h-10 rounded-2xl bg-emerald-100/90 text-emerald-700 flex items-center justify-center shrink-0">
+                      <TrendingUp className="w-5 h-5 text-emerald-600" />
+                    </span>
+                    <div>
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-emerald-700 font-semibold block">
+                        Étape 3 • Impact &amp; Mesures
+                      </span>
+                      <h2 className="font-bebas text-2xl sm:text-3xl text-[#0F172A] tracking-wide">
+                        3. LES RÉSULTATS CONCRETS OBTENUS
+                      </h2>
+                    </div>
+                  </div>
+
+                  {caseStudy.resultatsContenu && (
+                    <div className="prose prose-slate max-w-none text-sm sm:text-base leading-relaxed text-[#334155] whitespace-pre-line font-sans mb-4">
+                      {caseStudy.resultatsContenu}
+                    </div>
+                  )}
+
+                  {caseStudy.resultatsList && caseStudy.resultatsList.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                      {caseStudy.resultatsList.map((res, idx) => (
+                        <div
+                          key={idx}
+                          className="p-3.5 rounded-2xl bg-emerald-50/80 border border-emerald-200/60 flex items-start gap-2.5 text-xs text-[#0F172A]"
+                        >
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                          <span className="leading-snug font-medium">{res}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              </div>
+            ) : (
+              <section className="glass p-6 sm:p-8 rounded-3xl">
+                <h2 className="font-bebas text-2xl sm:text-3xl text-[#0F172A] tracking-wide mb-4">
+                  DÉMARCHE &amp; RÉALISATION
+                </h2>
+
+                {project.contenu ? (
+                  <div className="prose prose-slate max-w-none text-sm sm:text-base leading-relaxed text-[#334155] whitespace-pre-line space-y-4 font-sans">
+                    {project.contenu}
+                  </div>
+                ) : (
+                  <div className="space-y-4 text-sm text-[#475569] leading-relaxed">
+                    <p>
+                      Ce projet combine une approche créative méticuleuse et une implémentation
+                      technique orientée résultat. L&apos;objectif principal était de délivrer une
+                      expérience fluide, esthétique et directement opérationnelle pour les utilisateurs.
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                      <div className="p-4 rounded-2xl bg-white/70 border border-slate-200/60">
+                        <div className="flex items-center gap-2 text-xs font-semibold text-[#0F172A] mb-1">
+                          <CheckCircle2 className="w-4 h-4 text-[#2563EB]" />
+                          <span>Conception Hybride</span>
+                        </div>
+                        <p className="text-xs text-[#64748B]">
+                          Du prototype interactif Figma jusqu&apos;au développement final.
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-white/70 border border-slate-200/60">
+                        <div className="flex items-center gap-2 text-xs font-semibold text-[#0F172A] mb-1">
+                          <CheckCircle2 className="w-4 h-4 text-[#F97316]" />
+                          <span>Qualité &amp; Performance</span>
+                        </div>
+                        <p className="text-xs text-[#64748B]">
+                          Optimisation des flux, accessibilité et design épuré sans superflu.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {project.resultats && project.resultats.length > 0 && (
+                  <div className="mt-8 pt-6 border-t border-slate-200/70">
+                    <h3 className="font-bebas text-xl text-[#0F172A] tracking-wide mb-3 flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4 text-emerald-600" />
+                      <span>RÉSULTATS OBTENUS</span>
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {project.resultats.map((res, idx) => (
+                        <div
+                          key={idx}
+                          className="p-3.5 rounded-2xl bg-emerald-50/80 border border-emerald-200/60 flex items-start gap-2.5 text-xs text-[#0F172A]"
+                        >
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                          <span className="leading-snug font-medium">{res}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </section>
+            )}
 
             {/* Galerie média interactive si plus d'images sont disponibles */}
             {galleryImages.length > 1 && (
@@ -358,6 +490,24 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
               </h3>
 
               <div className="space-y-3 text-xs">
+                {project.client && (
+                  <div>
+                    <span className="text-[#64748B] block font-mono">Client</span>
+                    <span className="font-semibold text-[#0F172A] mt-0.5 block">
+                      {project.client}
+                    </span>
+                  </div>
+                )}
+
+                {project.secteur && (
+                  <div>
+                    <span className="text-[#64748B] block font-mono">Secteur</span>
+                    <span className="font-semibold text-[#0F172A] mt-0.5 block">
+                      {project.secteur}
+                    </span>
+                  </div>
+                )}
+
                 <div>
                   <span className="text-[#64748B] block font-mono">Domaines &amp; Rôle</span>
                   <span className="font-semibold text-[#0F172A] mt-0.5 block">

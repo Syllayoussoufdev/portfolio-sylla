@@ -15,6 +15,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
+      url: `${baseUrl}/dev`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 1.0,
+    },
+    {
       url: `${baseUrl}/projets`,
       lastModified: new Date(),
       changeFrequency: "weekly",
@@ -62,7 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let profileRoutes: MetadataRoute.Sitemap = [];
   try {
     const activeProfiles = await prisma.profile.findMany({
-      where: { actif: true, slug: { not: "default" } },
+      where: { actif: true, slug: { notIn: ["default", "dev"] } },
       select: { slug: true, updatedAt: true },
     });
 

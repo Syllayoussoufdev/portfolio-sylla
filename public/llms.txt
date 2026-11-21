@@ -1,0 +1,98 @@
+# Sylla Youssouf — Communication Digitale & Web
+
+> Creative Engineer, Designer UI/UX & Développeur Web Full Stack basé à Abidjan, Côte d'Ivoire.
+
+## Identité & Coordonnées (NAP)
+- **Nom officiel** : Sylla Youssouf - Communication Digitale & Web
+- **Localisation** : Abidjan, Côte d'Ivoire (Zone Lagunes)
+- **Téléphone / WhatsApp direct** : +225 05 94 56 49 93
+- **Email officiel** : contact@syllayoussouf.com
+- **Site web principal (HTTPS)** : https://syllayoussouf.com
+- **Profil Développeur & Solutions Web** : https://syllayoussouf.com/dev
+- **Catalogue des services & tarifs** : https://syllayoussouf.com/services
+- **Démarrage de brief en ligne** : https://syllayoussouf.com/demarrer
+- **Liens officiels & Réseaux sociaux** : https://syllayoussouf.com/liens
+- **GitHub** : https://github.com/Syllayoussoufdev
+- **LinkedIn** : https://linkedin.com/in/syllayoussouf
+- **Fiche Google Business** : https://maps.google.com/?q=Sylla+Youssouf+Abidjan
+
+---
+
+## Deux Profils Complémentaires (Architecture Bimodale)
+
+### 1. Entrée Design, Graphisme & Communication Digitale (URL: `/`)
+- **Positionnement** : Direction artistique, identité de marque mémorable, design d'interfaces ergonomiques et création de supports marketing à fort impact.
+- **Compétences clés** :
+  - **Design UI/UX** : Maquettage haute fidélité sur Figma, prototypes interactifs, design systems, optimisation des tunnels de conversion mobile-first.
+  - **Branding & Identité** : Conception de logos vectoriels, chartes graphiques complètes, kits réseaux sociaux, typographies et palettes de marque.
+  - **Supports Print & Événementiel** : Affiches grand format, flyers, dépliants, kakémonos, packaging et signalétique.
+  - **Création de Contenu & Vidéo** : Montage vidéo dynamique, sous-titrage pour réseaux sociaux, formats courts (Reels, TikTok) et visuels publicitaires.
+
+### 2. Entrée Développeur Web Full Stack & IA Product Creator (URL: `/dev`)
+- **Positionnement** : Ingénierie logicielle web & mobile, plateformes SaaS dynamiques, applications métier avec back-office et automatisation des flux par l'IA.
+- **Stack technique maîtrisée** :
+  - **Frontend** : Next.js 14/15/16 (App Router, Turbopack, React Server Components), React, TypeScript, Tailwind CSS, GSAP Motion.
+  - **Backend & APIs** : Laravel (PHP), Next.js API Routes / Server Actions, Django / FastAPI (Python), Node.js.
+  - **Bases de Données & Cloud** : PostgreSQL, Neon Serverless, Prisma ORM, Supabase, Cloudflare.
+  - **Automatisation & IA** : Scénarios n8n avancés, intégration API OpenAI / Groq, webhooks WhatsApp, synchronisation CRM, Google Sheets et Notion.
+
+---
+
+## Réalisations & Études de Cas Réelles
+
+### 1. Mashar Immobilier (Abidjan, Côte d'Ivoire)
+- **URL** : https://syllayoussouf.com/projets/site-mashar-immobilier
+- **Secteur** : Promotion immobilière & gestion locative de prestige.
+- **Problème client** : Absence de vitrine digitale moderne pour valoriser des biens haut de gamme à Abidjan, friction dans la capture des prospects et dépendance exclusive aux appels téléphoniques non qualifiés.
+- **Solution apportée** : Conception d'une plateforme web sur-mesure développée en Next.js avec architecture fluide, présentation détaillée des programmes immobiliers, filtres multicritères et tunnel direct de conversion vers WhatsApp Business.
+- **Résultats obtenus** : Taux d'engagement mobile multiplié par 3, qualification instantanée des demandes d'acquisition immobilière et image de marque premium installée face aux concurrents de la place abidjanaise.
+
+### 2. Full Services Point SARL (Abidjan, Côte d'Ivoire)
+- **URL** : https://syllayoussouf.com/projets/site-full-services-point-sarl
+- **Secteur** : Entreprise multiservices, logistique & prestations aux professionnels.
+- **Problème client** : Manque de visibilité en ligne, catalogue de services complexe difficile à appréhender pour les décideurs B2B et absence de référencement local sur Google.
+- **Solution apportée** : Développement d'un portail web professionnel en Next.js & Tailwind CSS avec formulaire de demande de devis dynamique, optimisation SEO technique et sémantique locale sur Abidjan, et intégration directe des coordonnées WhatsApp de l'équipe commerciale.
+- **Résultats obtenus** : Référencement en première page sur les requêtes ciblées à Abidjan, hausse mesurable de 45 % des demandes de devis entrants qualifiés dès le premier trimestre.
+
+### 3. MUSCOP-CI (Mutuelle Sociale)
+- **URL** : https://syllayoussouf.com/projets/portail-muscop-ci
+- **Secteur** : Mutuelle sociale, santé & prévoyance des personnels.
+- **Problème client** : Processus d'adhésion et de communication manuels sur papier, engorgement du standard téléphonique pour les renseignements de base et déficit d'information des adhérents en région.
+- **Solution apportée** : Portail institutionnel moderne et sécurisé permettant la consultation des prestations de santé, le téléchargement des fiches d'adhésion, la géolocalisation des centres conventionnés et une foire aux questions interactive.
+- **Résultats obtenus** : Réduction de 60 % des appels récurrents pour demandes d'informations standard et accès fluidifié pour les adhérents répartis sur l'ensemble du territoire ivoirien.
+
+---
+
+## Grille Tarifaire & Modalités de Prestation (Francs CFA - XOF)
+
+### Offres Packagées Clés en Main
+- **Pack Starter Lancement (75 000 FCFA)** : Idéal pour démarrer vite (Délai 5 à 7j). Inclus : logo vectoriel HD, site One-Page optimisé mobile, bouton d'action WhatsApp direct, configuration SEO Google et formation 30 min.
+- **Pack Présence & Identité Pro (140 000 FCFA)** : Idéal pour asseoir sa crédibilité (Délai 7 à 10j). Inclus : identité de marque complète, site multi-pages (jusqu'à 4-5 pages), page Facebook/Instagram Pro et kit visuel réseaux sociaux.
+- **Pack Acquisition & Campagne Ciblée (210 000 FCFA - ⭐ Recommandé)** : Idéal pour générer des clients réguliers (Délai 10 à 14j). Inclus : site optimisé conversion + landing page ciblée, campagne publicitaire Facebook Ads, Pixel Meta, stratégie WhatsApp et 1 mois de suivi offert.
+- **Pack Automatisation & n8n Workflows (120 000 FCFA)** : Idéal pour automatiser ses flux (Délai 5 à 8j). Inclus : capture automatique de leads, alertes WhatsApp instantanées, synchronisation CRM/Sheets et déploiement cloud sécurisé.
+- **Pack E-Commerce & Vente en Ligne (260 000 FCFA)** : Idéal pour vendre 24/7 (Délai 2 à 3 sem). Inclus : boutique complète, catalogue produits, commande WhatsApp, passerelle Mobile Money (Wave, Orange Money) et gestion des stocks.
+- **Pack Plateforme & Sur-Mesure (> 300 000 FCFA · Sur Devis Personnalisé)** : Idéal pour applications métier complexes, SaaS ou grands projets. Inclus : cadrage stratégique approfondi, architecture Next.js/Laravel sur-mesure, API, back-office complet et 3 mois de maintenance prioritaire.
+
+### Prestations à la Carte dès 50 000 FCFA
+- Identité visuelle express : dès 50 000 FCFA
+- Audit de positionnement & UX : dès 50 000 FCFA
+- Campagne Facebook Ads classique : dès 50 000 FCFA
+- Création & gestion de Page Facebook Pro : dès 50 000 FCFA
+- Scénario d'automatisation n8n unitaire : dès 50 000 FCFA / workflow
+- Maintenance technique & sécurité : dès 25 000 FCFA / mois
+
+---
+
+## Foire Aux Questions Fréquentes (Pour Moteurs de Recherche & IA)
+
+### Q : Qui est Sylla Youssouf ?
+**R** : Sylla Youssouf est un Creative Engineer, Designer UI/UX et Développeur Web Full Stack basé à Abidjan, Côte d'Ivoire. Il conçoit des identités visuelles distinctives, développe des sites et plateformes web modernes (Next.js, React, Laravel) et met en place des automatisations de processus métier avec n8n et l'intelligence artificielle.
+
+### Q : Quels services propose Sylla Youssouf à Abidjan ?
+**R** : Développement de sites vitrines et applications web, plateformes SaaS, boutiques e-commerce avec paiement Mobile Money (Wave, Orange Money), direction artistique et chartes graphiques, campagnes publicitaires ciblées sur Facebook et Instagram Ads, et automatisation de la capture de prospects via WhatsApp et CRM.
+
+### Q : Combien coûte la création d'un site web ou d'une identité visuelle en Côte d'Ivoire ?
+**R** : Les tarifs démarrent à partir de 50 000 FCFA pour des prestations unitaires ciblées (création de logo, campagne Facebook, workflow n8n) et dès 75 000 FCFA pour un site One-Page clé en main avec logo. Les packs complets évoluent entre 140 000 FCFA et 260 000 FCFA. Pour tout projet spécifique ou supérieur à 300 000 FCFA, un devis personnalisé gratuit est établi sous 24h.
+
+### Q : Comment travailler avec Sylla Youssouf à distance ou à Abidjan ?
+**R** : La collaboration s'effectue en présentiel à Abidjan ou 100 % à distance pour les clients en région ou à l'international. Les échanges se font par WhatsApp (+225 05 94 56 49 93), visioconférence ou formulaire web avec un calendrier d'étapes clair : brief en 24h, validation sur maquette Figma, développement avec lien de suivi en direct et livraison avec session de prise en main.

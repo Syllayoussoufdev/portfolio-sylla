@@ -10,6 +10,7 @@ import { trackVisit } from "@/lib/analytics";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { SectionRenderer } from "@/components/SectionRenderer";
+import { FaqSection } from "@/components/FaqSection";
 import { ImmersiveCursor } from "@/components/motion/ImmersiveCursor";
 import type { HeroData, SectionItem } from "@/lib/validations/profile";
 
@@ -147,6 +148,8 @@ export default async function ProfilPage({ params }: ProfilPageProps) {
             devCreativeCatalog={devCreativeCatalog}
           />
         ))}
+        {/* Section FAQ optimisée SEO local & IA */}
+        {profile.template !== "devcreative" && <FaqSection />}
       </main>
       <Footer settings={settings} />
     </div>

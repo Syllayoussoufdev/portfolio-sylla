@@ -584,35 +584,51 @@ export const INITIAL_TESTIMONIALS: Omit<TestimonialData, "id">[] = [
 
 export const INITIAL_FAQ_ITEMS: Omit<FaqItemData, "id">[] = [
   {
+    question: "Qui est Sylla Youssouf ?",
+    reponse:
+      "Sylla Youssouf est un Creative Engineer, Designer UI/UX, Graphiste et Développeur Web Full Stack basé à Abidjan, Côte d'Ivoire. Il conçoit des identités de marque mémorables, développe des plateformes web modernes et réactives (Next.js, React, Laravel, Django) et automatise les processus métier avec l'IA et n8n.",
+    categorie: "Profil & Expertise",
+    ordre: 1,
+    visible: true,
+  },
+  {
+    question: "Quels services propose Sylla Youssouf à Abidjan ?",
+    reponse:
+      "Sylla Youssouf propose : 1) Développement Web & Mobile (One-Page, SaaS, E-commerce avec paiement Wave/Orange Money), 2) Design UI/UX & Graphique (Figma, identités visuelles, packaging, print), 3) Communication Digitale (campagnes Facebook/Instagram Ads, gestion de pages, vidéo courte), 4) Automatisation IA & n8n (capture de leads, alertes WhatsApp et intégration CRM).",
+    categorie: "Services & Solutions",
+    ordre: 2,
+    visible: true,
+  },
+  {
+    question: "Combien coûte la création d'un site web ou d'une identité visuelle en Côte d'Ivoire ?",
+    reponse:
+      "Les tarifs débutent dès 50 000 FCFA pour des prestations unitaires ciblées (création de logo, campagne Facebook, scénario n8n) et dès 75 000 FCFA pour un site One-Page moderne clé en main avec logo. Les packs métiers complets s'étendent de 140 000 FCFA à 260 000 FCFA. Pour tout projet spécifique supérieur à 300 000 FCFA, un devis personnalisé gratuit est établi sous 24h.",
+    categorie: "Tarifs & Devis",
+    ordre: 3,
+    visible: true,
+  },
+  {
+    question: "Comment travailler avec Sylla Youssouf à distance ou à Abidjan ?",
+    reponse:
+      "La collaboration s'effectue en direct à Abidjan ou 100 % à distance pour les clients en région et à l'international : échange initial sur WhatsApp (+225 05 94 56 49 93) ou via le formulaire, devis et calendrier sous 24h, validation des maquettes Figma, développement avec lien de suivi interactif et formation à la livraison.",
+    categorie: "Collaboration",
+    ordre: 4,
+    visible: true,
+  },
+  {
     question: "Comment se déroule un projet du premier contact jusqu'à la mise en ligne ?",
     reponse:
       "Tout se passe en 4 étapes claires : 1) Brief & Cadrage (définition de vos objectifs, livrables et planning), 2) Maquette & Direction artistique (validation visuelle avant de coder), 3) Développement & Tests (création rapide sur serveur de prévisualisation), 4) Mise en ligne & Prise en main (déploiement et formation pour gérer votre contenu).",
     categorie: "Méthode",
-    ordre: 1,
+    ordre: 5,
     visible: true,
   },
   {
     question: "Quels sont les délais moyens de livraison ?",
     reponse:
-      "Comptez 5 à 7 jours pour une Identité Express, 7 à 10 jours pour un Site Vitrine Essentiel, et 12 à 15 jours pour un Site Standard ou un Pack Lancement. Chaque devis inclut une date de livraison ferme.",
+      "Comptez 3 à 5 jours pour une Identité Express, 5 à 7 jours pour un Pack Starter One-Page, 7 à 10 jours pour un Pack Présence Pro, et 10 à 14 jours pour un Pack Acquisition ou E-Commerce. Chaque devis inclut une date de livraison ferme.",
     categorie: "Délais",
-    ordre: 2,
-    visible: true,
-  },
-  {
-    question: "Comment fonctionnent les règlements et les tarifs en FCFA ?",
-    reponse:
-      "Les tarifs affichés sont transparents. Après validation du devis sur WhatsApp ou par email, le projet démarre avec un acompte d'engagement, puis le solde à la validation finale avant mise en production.",
-    categorie: "Tarifs & Paiement",
-    ordre: 3,
-    visible: true,
-  },
-  {
-    question: "Pourquoi certaines offres affichent le statut « Bientôt » ou « Liste d'attente » ?",
-    reponse:
-      "Pour garantir une qualité irréprochable et respecter chaque délai annoncé, j'ouvre mes prestations par phases. Les offres de Phase 1 sont immédiatement réservables ; vous pouvez rejoindre la liste d'attente des Phases 2 et 3 pour être prévenu en priorité dès l'ouverture d'un créneau.",
-    categorie: "Disponibilité",
-    ordre: 4,
+    ordre: 6,
     visible: true,
   },
   {
@@ -620,7 +636,7 @@ export const INITIAL_FAQ_ITEMS: Omit<FaqItemData, "id">[] = [
     reponse:
       "Oui, à 100 %. Chaque site ou plateforme dynamique est livré avec un back-office d'administration sécurisé et intuitif qui vous permet de mettre à jour vos contenus sans toucher une seule ligne de code.",
     categorie: "Autonomie",
-    ordre: 5,
+    ordre: 7,
     visible: true,
   },
 ];

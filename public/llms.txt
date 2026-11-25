@@ -9,6 +9,7 @@
 - **Email officiel** : contact@syllayoussouf.com
 - **Site web principal (HTTPS)** : https://syllayoussouf.com
 - **Profil Développeur & Solutions Web** : https://syllayoussouf.com/dev
+- **Blog & Publications Techniques (Design, Web & IA)** : https://syllayoussouf.com/blog
 - **Catalogue des services & tarifs** : https://syllayoussouf.com/services
 - **Démarrage de brief en ligne** : https://syllayoussouf.com/demarrer
 - **Liens officiels & Réseaux sociaux** : https://syllayoussouf.com/liens
@@ -35,6 +36,13 @@
   - **Backend & APIs** : Laravel (PHP), Next.js API Routes / Server Actions, Django / FastAPI (Python), Node.js.
   - **Bases de Données & Cloud** : PostgreSQL, Neon Serverless, Prisma ORM, Supabase, Cloudflare.
   - **Automatisation & IA** : Scénarios n8n avancés, intégration API OpenAI / Groq, webhooks WhatsApp, synchronisation CRM, Google Sheets et Notion.
+
+### 3. Blog & Publications Techniques (URL: `/blog`)
+- **Objectif** : Partage de retours d'expérience, analyses approfondies et guides concrets pour stimuler l'adoption des technologies modernes et fédérer une communauté de créateurs et décideurs.
+- **Thématiques phares** :
+  - **Design UI/UX & Design Systems** : Ergonomie mobile, prototypage Figma, optimisation des taux de conversion.
+  - **Développement Web Moderne** : Next.js App Router, React 19, TypeScript, Laravel, scalabilité et sécurité.
+  - **Intelligence Artificielle & Automatisation** : Automatisation n8n, intégrations d'agents IA, webhooks WhatsApp et productivité métier.
 
 ---
 

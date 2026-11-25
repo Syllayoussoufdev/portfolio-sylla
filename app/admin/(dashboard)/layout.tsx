@@ -19,6 +19,7 @@ import {
   GraduationCap,
   Package,
   Briefcase,
+  Newspaper,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -67,6 +68,14 @@ export default async function AdminDashboardLayout({
             >
               <FolderKanban className="w-4 h-4" />
               <span>Projets</span>
+            </Link>
+
+            <Link
+              href="/admin/blog"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-[#475569] hover:bg-purple-50 hover:text-purple-600 transition-colors"
+            >
+              <Newspaper className="w-4 h-4 text-purple-600" />
+              <span>Blog &amp; Articles</span>
             </Link>
 
             <Link

@@ -81,6 +81,12 @@ export function Footer({ settings }: FooterProps) {
           <Link href="/#projets" className="hover:text-[var(--accent)] transition-colors">
             Projets
           </Link>
+          <Link href="/blog" className="hover:text-[var(--accent)] transition-colors font-semibold text-[#0F172A]">
+            Blog
+          </Link>
+          <Link href="/services" className="hover:text-[var(--accent)] transition-colors">
+            Services
+          </Link>
           <Link href="/#competences" className="hover:text-[var(--accent)] transition-colors">
             Compétences
           </Link>

@@ -132,6 +132,7 @@ model Media {
   coverForProjects Project[]      @relation("ProjectCoverMedia")
   projectGalleries ProjectMedia[]
   heroForProfiles  Profile[]      @relation("ProfileHeroMedia")
+  coverForBlogPosts BlogPost[]    @relation("BlogPostCoverMedia")
 
   @@index([publicId])
   @@index([createdAt])
@@ -421,4 +422,39 @@ model WaitlistEntry {
 
   @@index([offreVisee])
   @@index([createdAt])
+}
+
+// ----------------------------------------------------
+// 12. Articles de Blog Personnel (Design, Dev & IA)
+// ----------------------------------------------------
+enum PostStatus {
+  BROUILLON
+  PUBLIE
+}
+
+model BlogPost {
+  id           String     @id @default(cuid())
+  titre        String
+  slug         String     @unique
+  description  String     @db.Text
+  contenu      String     @db.Text
+  coverImage   String?
+  categorie    String     // "Design UI/UX" | "Développement Web" | "Intelligence Artificielle" | "Stratégie Digitale"
+  tags         String[]   @default([])
+  tempsLecture Int        @default(5)
+  statut       PostStatus @default(PUBLIE)
+  featured     Boolean    @default(false)
+  vuesCount    Int        @default(0)
+  publishedAt  DateTime   @default(now())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  coverMediaId String?
+  coverMedia   Media?     @relation("BlogPostCoverMedia", fields: [coverMediaId], references: [id], onDelete: SetNull)
+
+  @@index([slug])
+  @@index([statut])
+  @@index([categorie])
+  @@index([publishedAt])
+  @@index([featured])
 }

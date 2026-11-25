@@ -48,14 +48,20 @@ export function Navbar({ settings, sections, slug }: NavbarProps) {
   const isSubPortfolio =
     pathname !== "/" &&
     !pathname.startsWith("/admin") &&
-    !pathname.startsWith("/projets/");
+    !pathname.startsWith("/projets/") &&
+    !pathname.startsWith("/blog") &&
+    !pathname.startsWith("/services") &&
+    !pathname.startsWith("/demarrer") &&
+    !pathname.startsWith("/liens");
 
   const basePath = isSubPortfolio ? pathname : "";
 
   // Liens de navigation dynamiques selon les sections réellement actives (sans doubler "Contact")
   const navLinks = useMemo(() => {
+    let baseList: { id: string; href: string; label: string }[] = [];
+
     if (sections && sections.length > 0) {
-      return sections
+      baseList = sections
         .filter((s) => s.visible && s.key !== "contact" && SECTION_CONFIG[s.key])
         .sort((a, b) => a.order - b.order)
         .map((s) => {
@@ -66,15 +72,21 @@ export function Navbar({ settings, sections, slug }: NavbarProps) {
             label: cfg.label,
           };
         });
+    } else {
+      // Repli par défaut propre
+      baseList = [
+        { id: "hero", href: `${basePath}#hero`, label: "Accueil" },
+        { id: "a-propos", href: `${basePath}#a-propos`, label: "À propos" },
+        { id: "projets", href: `${basePath}#projets`, label: "Projets" },
+        { id: "competences", href: `${basePath}#competences`, label: "Compétences" },
+        { id: "parcours", href: `${basePath}#parcours`, label: "Parcours" },
+      ];
     }
 
-    // Repli par défaut propre
+    // Toujours exposer l'entrée Blog pour générer du trafic et de l'engagement
     return [
-      { id: "hero", href: `${basePath}#hero`, label: "Accueil" },
-      { id: "a-propos", href: `${basePath}#a-propos`, label: "À propos" },
-      { id: "projets", href: `${basePath}#projets`, label: "Projets" },
-      { id: "competences", href: `${basePath}#competences`, label: "Compétences" },
-      { id: "parcours", href: `${basePath}#parcours`, label: "Parcours" },
+      ...baseList,
+      { id: "blog", href: "/blog", label: "Blog" },
     ];
   }, [sections, basePath]);
 
@@ -127,6 +139,12 @@ export function Navbar({ settings, sections, slug }: NavbarProps) {
 
       lastScrollY.current = currentScrollY;
 
+      // Si on est sur une page du blog, marquer Blog comme actif
+      if (pathname.startsWith("/blog")) {
+        setActiveSection("blog");
+        return;
+      }
+
       // Détection fiable de la section active
       const sectionIds = ["hero", "a-propos", "projets", "competences", "parcours", "contact"];
       const scrollPosition = window.scrollY + window.innerHeight;
@@ -161,6 +179,10 @@ export function Navbar({ settings, sections, slug }: NavbarProps) {
     e: React.MouseEvent<HTMLAnchorElement>,
     targetId: string
   ) => {
+    if (targetId === "blog") {
+      setMobileMenuOpen(false);
+      return;
+    }
     const el = document.getElementById(targetId);
     if (el) {
       e.preventDefault();
@@ -171,6 +193,8 @@ export function Navbar({ settings, sections, slug }: NavbarProps) {
       }
       window.history.pushState(null, "", `${basePath}#${targetId}`);
       setActiveSection(targetId);
+      setMobileMenuOpen(false);
+    } else {
       setMobileMenuOpen(false);
     }
   };
